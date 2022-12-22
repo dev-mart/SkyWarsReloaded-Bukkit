@@ -1,0 +1,21 @@
+name: SkyWarsReloaded
+main: net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloadedPlugin
+version: 6.0.0
+api-version: 1.16
+author: Devmart
+description: Bukkit's best Skywars plugin.
+depend:
+  - WorldEdit
+softdepend:
+  - FastAsyncWorldEdit
+
+commands:
+  skywars:
+    description: Main command.
+    aliases: [ skywarsreloaded, sw, swr ]
+  skywarsmap:
+    description: Map management command.
+    aliases: [ swmap, swm ]
+  skywarskit:
+    description: Kit management command.
+    aliases: [ swkit, swk ]

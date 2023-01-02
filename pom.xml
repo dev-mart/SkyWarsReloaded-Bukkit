@@ -64,6 +64,7 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+        <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>net.devmart</groupId>
             <artifactId>skywars-core</artifactId>
@@ -177,6 +178,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>net.devmart</include>
+                                    <include>io.papermc:paperlib</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

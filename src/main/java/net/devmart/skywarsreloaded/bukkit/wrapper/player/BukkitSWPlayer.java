@@ -199,7 +199,6 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
         final Location location = new Location(bukkitWorld, x, y, z);
         PaperLib.teleportAsync(player, location).thenAccept(successFuture::complete);
         return successFuture;
-
     }
 
     @Override

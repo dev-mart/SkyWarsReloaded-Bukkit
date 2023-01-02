@@ -68,7 +68,11 @@ public class SchemWorldLoader extends BukkitWorldLoader {
         CompletableFuture<Void> future = new CompletableFuture<>();
 
         // This won't do anything in 1.11 or lower -> will be laggier
-        PaperLib.getChunkAtAsync(createdWorld.getSpawnLocation()).thenAccept(chunk -> {
+        Location sl = createdWorld.getSpawnLocation();
+        World world = sl.getWorld();
+        if (world == null) throw new IllegalStateException("How is the world null? We just made it!!");
+
+        PaperLib.getChunkAtAsyncUrgently(world, sl.getBlockX() / 16, sl.getBlockZ() / 16, true).thenAccept(chunk -> {
             future.complete(null);
         });
         return future;

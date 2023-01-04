@@ -166,6 +166,14 @@
                             <pattern>io.papermc.lib</pattern>
                             <shadedPattern>net.devmart.skywarsreloaded.bukkit.paperlib</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>redis.clients.jedis</pattern>
+                            <shadedPattern>net.devmart.skywarsreloaded.core.jedis</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.apache.commons.pool2</pattern>
+                            <shadedPattern>net.devmart.skywarsreloaded.core.apache.pool2</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
@@ -179,6 +187,8 @@
                                 <includes>
                                     <include>net.devmart</include>
                                     <include>io.papermc:paperlib</include>
+                                    <include>org.apache.commons:commons-pool2</include>
+                                    <include>redis.clients:jedis</include>
                                 </includes>
                             </artifactSet>
                         </configuration>

@@ -89,6 +89,16 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public String getString(Enum<?> property) {
+        return getString(property.toString());
+    }
+
+    @Override
+    public String getString(Enum<?> property, String defaultValue) {
+        return getString(property.toString(), defaultValue);
+    }
+
+    @Override
     public int getInt(String property) {
         return getInt(property, this.defaultFileConfiguration.getInt(property, 0));
     }
@@ -96,6 +106,16 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     @Override
     public int getInt(String property, int defaultValue) {
         return fileConfiguration.getInt(property, defaultValue);
+    }
+
+    @Override
+    public int getInt(Enum<?> property) {
+        return getInt(property.toString());
+    }
+
+    @Override
+    public int getInt(Enum<?> property, int defaultValue) {
+        return getInt(property.toString(), defaultValue);
     }
 
     @Override
@@ -109,8 +129,23 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public double getDouble(Enum<?> property) {
+        return getDouble(property.toString());
+    }
+
+    @Override
+    public double getDouble(Enum<?> property, double defaultValue) {
+        return getDouble(property.toString(), defaultValue);
+    }
+
+    @Override
     public List<String> getStringList(String property) {
         return fileConfiguration.getStringList(property);
+    }
+
+    @Override
+    public List<String> getStringList(Enum<?> property) {
+        return getStringList(property.toString());
     }
 
     @Override
@@ -124,8 +159,23 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public List<?> getList(Enum<?> property) {
+        return getList(property.toString());
+    }
+
+    @Override
+    public List<?> getList(Enum<?> property, List<?> defaultValue) {
+        return getList(property.toString(), defaultValue);
+    }
+
+    @Override
     public List<Map<?, ?>> getMapList(String property) {
         return fileConfiguration.getMapList(property);
+    }
+
+    @Override
+    public List<Map<?, ?>> getMapList(Enum<?> property) {
+        return getMapList(property.toString());
     }
 
     @Override
@@ -144,6 +194,11 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public List<Item> getItemList(Enum<?> property) {
+        return getItemList(property.toString());
+    }
+
+    @Override
     public Map<String, String> getStringMap(String property) {
         ConfigurationSection section = this.fileConfiguration.getConfigurationSection(property);
         if (section == null) return new HashMap<>();
@@ -152,6 +207,11 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
             convertedMap.put(entry.getKey(), entry.getValue().toString());
         }
         return convertedMap;
+    }
+
+    @Override
+    public Map<String, String> getStringMap(Enum<?> toString) {
+        return getStringMap(toString.toString());
     }
 
     @Override
@@ -165,6 +225,16 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public boolean getBoolean(Enum<?> property) {
+        return getBoolean(property.toString());
+    }
+
+    @Override
+    public boolean getBoolean(Enum<?> property, boolean defaultValue) {
+        return getBoolean(property.toString(), defaultValue);
+    }
+
+    @Override
     public Object get(String property) {
         return get(property, this.defaultFileConfiguration.get(property, null));
     }
@@ -172,6 +242,16 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     @Override
     public Object get(String property, Object defaultValue) {
         return fileConfiguration.get(property, defaultValue);
+    }
+
+    @Override
+    public Object get(Enum<?> property) {
+        return get(property.toString());
+    }
+
+    @Override
+    public Object get(Enum<?> property, Object defaultValue) {
+        return get(property.toString(), defaultValue);
     }
 
     @Override
@@ -197,8 +277,18 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public void set(Enum<?> property, Object value) {
+        set(property.toString(), value);
+    }
+
+    @Override
     public boolean isSet(String property) {
         return fileConfiguration.isSet(property);
+    }
+
+    @Override
+    public boolean isSet(Enum<?> property) {
+        return isSet(property.toString());
     }
 
     @Override
@@ -207,10 +297,20 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public boolean contains(Enum<?> property) {
+        return contains(property.toString());
+    }
+
+    @Override
     public Set<String> getKeys(String property) {
         final ConfigurationSection sect = fileConfiguration.getConfigurationSection(property);
         if (sect == null) return new HashSet<>();
         return sect.getKeys(false);
+    }
+
+    @Override
+    public Set<String> getKeys(Enum<?> property) {
+        return getKeys(property.toString());
     }
 
     @Override
@@ -229,8 +329,18 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public Item getItem(Enum<?> category) {
+        return getItem(category.toString());
+    }
+
+    @Override
     public Item getItem(String category) {
         return getItem(category, null);
+    }
+
+    @Override
+    public Item getItem(Enum<?> category, Item def) {
+        return getItem(category.toString(), def);
     }
 
     @Override
@@ -244,8 +354,18 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public SWCoord getCoord(Enum<?> property, SWCoord def) {
+        return getCoord(property.toString(), def);
+    }
+
+    @Override
     public SWCoord getCoord(String property) {
         return getCoord(property, null);
+    }
+
+    @Override
+    public SWCoord getCoord(Enum<?> property) {
+        return getCoord(property.toString());
     }
 
     @Override
@@ -284,9 +404,19 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public Message getMessage(Enum<?> property) {
+        return getMessage(property.toString());
+    }
+
+    @Override
     public Message getMessage(String property, String def) {
         if (!contains(property)) return new CoreMessage(plugin, def);
         return new CoreMessage(plugin, getString(property));
+    }
+
+    @Override
+    public Message getMessage(Enum<?> property, String def) {
+        return getMessage(property.toString(), def);
     }
 
     @Override
@@ -336,6 +466,11 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
                 }
             });
         }
+    }
+
+    @Override
+    public void loadUnlockableData(Unlockable unlockable, Enum<?> property) {
+        loadUnlockableData(unlockable, property.toString());
     }
 
     @Override

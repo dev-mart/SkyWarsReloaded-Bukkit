@@ -11,6 +11,7 @@ import net.devmart.skywarsreloaded.core.wrapper.entity.AbstractSWPlayer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -107,7 +108,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Override
     public void setChestplate(Item chestplate) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        player.getInventory().setHelmet(((BukkitItem) chestplate).getBukkitItem());
+        player.getInventory().setChestplate(((BukkitItem) chestplate).getBukkitItem());
     }
 
     @Override
@@ -119,7 +120,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Override
     public void setLeggings(Item leggings) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        player.getInventory().setHelmet(((BukkitItem) leggings).getBukkitItem());
+        player.getInventory().setLeggings(((BukkitItem) leggings).getBukkitItem());
     }
 
     @Override
@@ -131,7 +132,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Override
     public void setBoots(Item boots) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        player.getInventory().setHelmet(((BukkitItem) boots).getBukkitItem());
+        player.getInventory().setBoots(((BukkitItem) boots).getBukkitItem());
     }
 
     @Override
@@ -319,5 +320,21 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     public void closeInventory() {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
         this.player.closeInventory();
+    }
+
+    @Override
+    public void clearArmor() {
+        if (this.player == null) throw new NullPointerException("Bukkit player is null");
+        this.player.getInventory().setArmorContents(new ItemStack[4]);
+    }
+
+    @Override
+    public void removePotionEffect(String value) {
+        if (this.player == null) throw new NullPointerException("Bukkit player is null");
+        try {
+            this.player.removePotionEffect(Objects.requireNonNull(PotionEffectType.getByName(value.toUpperCase())));
+        } catch (Exception e) {
+            plugin.getLogger().error("No potion effect type could be found with the name '" + value + "' when removing.");
+        }
     }
 }

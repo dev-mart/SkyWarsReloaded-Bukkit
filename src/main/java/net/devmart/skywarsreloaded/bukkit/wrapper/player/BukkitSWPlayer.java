@@ -1,6 +1,5 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.player;
 
-import io.papermc.lib.PaperLib;
 import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCompletableFuture;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
@@ -8,15 +7,13 @@ import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.server.BukkitSWInventory;
-import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWWorld;
-import net.devmart.skywarsreloaded.core.utils.CoreSWCCompletableFuture;
-import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
 import net.devmart.skywarsreloaded.core.wrapper.entity.AbstractSWPlayer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class BukkitSWPlayer extends AbstractSWPlayer {
@@ -24,9 +21,15 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Nullable
     private Player player;
     private SWInventory inventory;
+    private BukkitSWEntity entityParent;
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, UUID uuid, boolean online) {
         super(plugin, uuid, online);
+        try {
+            this.entityParent = new BukkitSWEntity(plugin, Objects.requireNonNull(Bukkit.getEntity(uuid)));
+        } catch (NullPointerException e) {
+            plugin.getLogger().error("Bukkit player with UUID '" + uuid + "' could not be found.");
+        }
     }
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, Player playerIn, boolean online) {
@@ -139,31 +142,22 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
 
     @Override
     public SWCoord getLocation() throws NullPointerException {
-        if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        final Location location = player.getLocation();
-        return new CoreSWCoord(new BukkitSWWorld((BukkitSkyWarsReloaded) plugin, location.getWorld()), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        return this.entityParent.getLocation();
     }
 
     @Override
     public void teleport(SWCoord coord) {
-        String worldName = coord.getWorld() == null ? getLocation().getWorld().getName() : coord.getWorld().getName();
-        teleport(worldName, coord.xPrecise(), coord.yPrecise(), coord.zPrecise(), coord.yaw(), coord.pitch());
+        this.entityParent.teleport(coord);
     }
 
     @Override
     public void teleport(String world, double x, double y, double z) throws NullPointerException {
-        if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        World bukkitWorld = Bukkit.getWorld(world);
-        if (bukkitWorld == null) return;
-        player.teleport(new Location(bukkitWorld, x, y, z));
+        this.entityParent.teleport(world, x, y, z);
     }
 
     @Override
     public void teleport(String world, double x, double y, double z, float yaw, float pitch) throws NullPointerException {
-        if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        World bukkitWorld = Bukkit.getWorld(world);
-        if (bukkitWorld == null) return;
-        player.teleport(new Location(bukkitWorld, x, y, z, yaw, pitch));
+        this.entityParent.teleport(world, x, y, z, yaw, pitch);
     }
 
     @Override
@@ -190,15 +184,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
 
     @Override
     public SWCompletableFuture<Boolean> teleportAsync(String world, double x, double y, double z) {
-        World bukkitWorld = Bukkit.getWorld(world);
-        CoreSWCCompletableFuture<Boolean> successFuture = new CoreSWCCompletableFuture<>(this.plugin);
-        if (bukkitWorld == null || player == null) {
-            successFuture.complete(false);
-            return successFuture;
-        }
-        final Location location = new Location(bukkitWorld, x, y, z);
-        PaperLib.teleportAsync(player, location).thenAccept(successFuture::complete);
-        return successFuture;
+        return this.entityParent.teleportAsync(world, x, y, z);
     }
 
     @Override
@@ -275,14 +261,12 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
 
     @Override
     public double getHealth() {
-        if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        return this.player.getHealth();
+        return entityParent.getHealth();
     }
 
     @Override
     public void setHealth(double health) {
-        if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        this.player.setHealth(health);
+        entityParent.setHealth(health);
     }
 
     @Override
@@ -311,8 +295,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
 
     @Override
     public void setFireTicks(int ticks) {
-        if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        this.player.setFireTicks(ticks);
+        this.entityParent.setFireTicks(ticks);
     }
 
     @Override

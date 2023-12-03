@@ -2,21 +2,26 @@ package net.devmart.skywarsreloaded.bukkit.utils;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.utils.Item;
+import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloadedPlugin;
 import net.devmart.skywarsreloaded.bukkit.wrapper.item.BukkitSWEnchantmentType;
 import net.devmart.skywarsreloaded.core.utils.AbstractItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class BukkitItem extends AbstractItem {
+public class BukkitItem extends AbstractItem implements ConfigurationSerializable {
 
     private final SkyWarsReloaded plugin;
     private ItemStack itemStack;
@@ -250,4 +255,16 @@ public class BukkitItem extends AbstractItem {
     public Item clone() {
         return new BukkitItem(plugin, itemStack.clone());
     }
+
+    @NotNull
+    @Override
+    public Map<String, Object> serialize() {
+        return itemStack.serialize();
+    }
+
+    public static BukkitItem deserialize(Map<String, Object> map) {
+        BukkitSkyWarsReloadedPlugin plugin = (BukkitSkyWarsReloadedPlugin) Bukkit.getPluginManager().getPlugin("SkyWarsReloaded");
+        return new BukkitItem(plugin.getPlugin(), ItemStack.deserialize(map));
+    }
+
 }

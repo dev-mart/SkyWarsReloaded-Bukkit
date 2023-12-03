@@ -14,19 +14,23 @@ public class BukkitSWLogger extends AbstractSWLogger {
         this.bukkitLogger = bukkitLoggerIn;
     }
 
-    @Override
-    public void info(String message) {
-        this.bukkitLogger.info(message);
+    private String getParsedMessage(String message, Object... args) {
+        if (args == null || args.length == 0) return message;
+        return String.format(message, args);
     }
 
     @Override
-    public void warn(String message) {
-        this.bukkitLogger.warning(message);
+    public void info(String message, Object... args) {
+        this.bukkitLogger.info(getParsedMessage(message, args));
     }
 
     @Override
-    public void error(String message) {
-        this.bukkitLogger.severe(message);
+    public void warn(String message, Object... args) {
+        this.bukkitLogger.warning(getParsedMessage(message, args));
     }
 
+    @Override
+    public void error(String message, Object... args) {
+        this.bukkitLogger.severe(getParsedMessage(message, args));
+    }
 }

@@ -180,13 +180,20 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public List<Item> getItemList(String property) {
-        final List<Map<?, ?>> mapList = getMapList(property);
+        final List<?> list = getList(property, new ArrayList<>());
         List<Item> items = new ArrayList<>();
 
-        mapList.forEach(map -> {
-            if (map != null) {
-                final Item item = plugin.getItemManager().getItem((Map<String, Object>) map);
+        list.forEach(object -> {
+            if (object != null) {
+                Item item = null;
+                if (object instanceof Item) {
+                    item = (Item) object;
+                } else if (object instanceof Map) {
+                    item = plugin.getItemManager().getItem((Map<String, Object>) object);
+                }
+
                 if (item != null) items.add(item);
+                else plugin.getLogger().error("Invalid item found in list for property '" + property + "': " + object.getClass().getName());
             }
         });
 

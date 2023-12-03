@@ -44,4 +44,8 @@ public class BukkitSkyWarsReloadedPlugin extends JavaPlugin {
         else
             throw new IllegalStateException("You can't change the SkyWars implementation after onEnable() was already called!");
     }
+
+    public BukkitSkyWarsReloaded getPlugin() {
+        return plugin;
+    }
 }

@@ -262,7 +262,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
             if (item.getAmount() != 1) fileConfiguration.set(property + ".amount", item.getAmount());
             if (item.getDamage() > 0) fileConfiguration.set(property + ".damage", item.getDamage());
             if (item.getDurability() > 0) fileConfiguration.set(property + ".durability", item.getDurability());
-            if (item.getDisplayName() != null && item.getDisplayName().equals(""))
+            if (item.getDisplayName() != null && item.getDisplayName().isEmpty())
                 fileConfiguration.set(property + ".display-name", item.getDisplayName());
             if (item.getLore() != null) fileConfiguration.set(property + ".lore", item.getLore());
             if (!item.getEnchantments().isEmpty())
@@ -449,10 +449,10 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
         ConfigurationSection section = fileConfiguration.getConfigurationSection(property);
         if (section == null) return;
 
-        unlockable.setNeedPermission(section.getBoolean(KitProperties.REQUIREMENTS_PERMISSION.toString(), false));
-        unlockable.setCost(section.getInt(KitProperties.REQUIREMENTS_COST.toString(), 0));
-        if (section.contains(KitProperties.REQUIREMENTS_STATS.toString())) {
-            section.getConfigurationSection(KitProperties.REQUIREMENTS_STATS.toString()).getKeys(false).forEach(stat -> {
+        unlockable.setNeedPermission(section.getBoolean(KitProperties.REQUIREMENTS_PERMISSION, false));
+        unlockable.setCost(section.getInt(KitProperties.REQUIREMENTS_COST, 0));
+        if (section.contains(KitProperties.REQUIREMENTS_STATS)) {
+            section.getConfigurationSection(KitProperties.REQUIREMENTS_STATS).getKeys(false).forEach(stat -> {
                 try {
                     PlayerStat playerStat = PlayerStat.fromString(stat);
                     if (playerStat == null) {

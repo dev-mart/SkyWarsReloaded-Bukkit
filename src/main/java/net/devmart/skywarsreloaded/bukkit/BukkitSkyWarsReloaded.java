@@ -79,8 +79,8 @@ public class BukkitSkyWarsReloaded extends AbstractSkyWarsReloaded {
 
     @Override
     public void initGameInstanceManager() {
-        if (getConfig().getBoolean(ConfigProperties.PROXY_ENABLED.toString()) &&
-                getConfig().getString(ConfigProperties.PROXY_SERVER_TYPE.toString()).equalsIgnoreCase("GAME")) {
+        if (getConfig().getBoolean(ConfigProperties.PROXY_ENABLED) &&
+                getConfig().getString(ConfigProperties.PROXY_SERVER_TYPE).equalsIgnoreCase("GAME")) {
             setGameInstanceManager(new CoreRemoteGameInstanceManager(this));
         } else {
             setGameInstanceManager(new BukkitGameInstanceManager(this));
@@ -159,7 +159,7 @@ public class BukkitSkyWarsReloaded extends AbstractSkyWarsReloaded {
 
     @Override
     public void initWorldLoader() {
-        if (getConfig().getBoolean(ConfigProperties.ENABLE_SLIME_WORLD_MANAGER.toString(), false)) {
+        if (getConfig().getBoolean(ConfigProperties.ENABLE_SLIME_WORLD_MANAGER, false)) {
             if (((Plugin) plugin).getServer().getPluginManager().isPluginEnabled("SlimeWorldManager")) {
                 // SWM found! yay
                 setWorldLoader(new SlimeWorldLoader(this));

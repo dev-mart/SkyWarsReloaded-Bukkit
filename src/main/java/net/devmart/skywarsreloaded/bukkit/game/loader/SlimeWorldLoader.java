@@ -43,7 +43,7 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
         this.slimeWorldManagerPlugin = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
         assert this.slimeWorldManagerPlugin != null;
 
-        slimeLoaderType = this.plugin.getConfig().getString(ConfigProperties.SLIME_WORLD_LOADER.toString(), "file");
+        slimeLoaderType = this.plugin.getConfig().getString(ConfigProperties.SLIME_WORLD_LOADER, "file");
         slimeLoader = slimeWorldManagerPlugin.getLoader(slimeLoaderType);
 
         this.templatePropertyMap = new HashMap<>();
@@ -123,7 +123,7 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
 
     @Override
     public void deleteWorldInstance(LocalGameInstance gameWorld) {
-        String spawnLocationStr = this.plugin.getDataConfig().getString(RuntimeDataProperties.LOBBY_SPAWN.toString(), null);
+        String spawnLocationStr = this.plugin.getDataConfig().getString(RuntimeDataProperties.LOBBY_SPAWN, null);
         SWCoord coord = null;
         try {
             coord = new CoreSWCoord(this.plugin, spawnLocationStr);

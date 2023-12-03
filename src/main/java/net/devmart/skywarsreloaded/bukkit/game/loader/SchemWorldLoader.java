@@ -89,7 +89,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
         // todo: Later make this work with FAWE
         CompletableFuture<Boolean> futureOk = CompletableFuture.completedFuture(true);
 
-        File schemFolder = new File(plugin.getDataFolder(), FolderProperties.WORLD_SCHEMATICS_FOLDER.toString());
+        File schemFolder = new File(plugin.getDataFolder(), FolderProperties.WORLD_SCHEMATICS_FOLDER);
         String schemFileName = gameWorld.getTemplate().getName() + ".schem";
 
         File schemFile = new File(schemFolder, schemFileName);
@@ -125,7 +125,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
             return;
         }
 
-        final SWCoord loc = plugin.getDataConfig().getCoord(RuntimeDataProperties.LOBBY_SPAWN.toString());
+        final SWCoord loc = plugin.getDataConfig().getCoord(RuntimeDataProperties.LOBBY_SPAWN);
 
         for (SWPlayer player : gameWorld.getWorld().getAllPlayers()) {
             player.teleport(loc);
@@ -141,7 +141,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
 
     @Override
     public void deleteMap(GameTemplate gameTemplate, boolean forceUnloadInstances) {
-        File schemFolder = new File(plugin.getDataFolder(), FolderProperties.WORLD_SCHEMATICS_FOLDER.toString());
+        File schemFolder = new File(plugin.getDataFolder(), FolderProperties.WORLD_SCHEMATICS_FOLDER);
         String schemFileName = gameTemplate.getName() + ".schem";
 
         File schemFile = new File(schemFolder, schemFileName);

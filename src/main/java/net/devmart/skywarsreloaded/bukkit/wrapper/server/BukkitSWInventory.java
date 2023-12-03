@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -110,4 +111,17 @@ public class BukkitSWInventory implements SWInventory {
         return this.inventory.getViewers().stream().anyMatch(viewer -> viewer.getUniqueId().equals(player.getUuid()));
     }
 
+    @Override
+    public void clearArmor() {
+        if (inventory.getType() == InventoryType.PLAYER) {
+            ((PlayerInventory) inventory).setArmorContents(new ItemStack[4]);
+        }
+    }
+
+    @Override
+    public void setItemInOffHand(Item item) {
+        if (inventory.getType() == InventoryType.PLAYER) {
+            ((PlayerInventory) inventory).setItemInOffHand(((BukkitItem) item).getBukkitItem());
+        }
+    }
 }

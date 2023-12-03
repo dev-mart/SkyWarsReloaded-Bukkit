@@ -4,6 +4,7 @@ import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.bukkit.wrapper.player.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.core.utils.AbstractEffect;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -15,9 +16,12 @@ public class BukkitEffect extends AbstractEffect {
     public BukkitEffect(SkyWarsReloaded plugin, String input) {
         super(plugin, input);
         try {
-            effect = new PotionEffect(PotionEffectType.getByName(getType()), getDuration(), getStrength(), true, showParticles());
+            effect = new PotionEffect(PotionEffectType.getByKey(NamespacedKey.fromString(getType())), getDuration(), getStrength(), true, showParticles());
         } catch (Exception e) {
-            plugin.getLogger().error(String.format("Failed to load bukkit effect from string %s. Using the default: %d. (%s)", input, 1, e.getClass().getName() + ": " + e.getLocalizedMessage()));
+            plugin.getLogger().error(
+                    "Failed to load bukkit effect from string %s. Using the default: %d. (%s)",
+                    input, 1, e.getClass().getName() + ": " + e.getLocalizedMessage()
+            );
         }
     }
 

@@ -105,7 +105,7 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
     }
 
     @Override
-    public CompletableFuture<Void> createEmptyWorld(LocalGameInstance gameWorld) {
+    public CompletableFuture<Void> createEmptyWorld(LocalGameInstance gameInstance) {
         // Create a new and empty property map
         SlimePropertyMap properties = new SlimePropertyMap();
 
@@ -114,7 +114,7 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
         properties.setInt(SlimeProperties.SPAWN_Y, 64);
         properties.setInt(SlimeProperties.SPAWN_Z, 0);
         synchronized (templatePropertyMap) {
-            templatePropertyMap.put(gameWorld, properties);
+            templatePropertyMap.put(gameInstance, properties);
         }
 
         // This is run async anyway, there is no point executing it under another async task
@@ -161,19 +161,19 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
     }
 
     @Override
-    public CompletableFuture<Boolean> save(LocalGameInstance gameWorld) {
+    public CompletableFuture<Boolean> save(LocalGameInstance gameInstance) {
         boolean successful = true;
         try {
-            assert gameWorld instanceof BukkitLocalGameInstance;
+            assert gameInstance instanceof BukkitLocalGameInstance;
             SlimeWorld slimeWorld;
             synchronized (slimeWorldMap) {
-                slimeWorld = this.slimeWorldMap.get(gameWorld);
+                slimeWorld = this.slimeWorldMap.get(gameInstance);
             }
 
             if (slimeWorld.isReadOnly()) {
                 successful = false;
             } else {
-                ((BukkitLocalGameInstance) gameWorld).getBukkitWorld().save();
+                ((BukkitLocalGameInstance) gameInstance).getBukkitWorld().save();
             }
 
         } catch (Exception e) {

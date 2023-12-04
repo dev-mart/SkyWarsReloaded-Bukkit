@@ -13,11 +13,11 @@ public abstract class BukkitWorldLoader extends AbstractWorldLoader {
     }
 
     @Override
-    public void updateWorldBorder(LocalGameInstance gameWorld) {
-        World world = ((BukkitLocalGameInstance) gameWorld).getBukkitWorld();
+    public void updateWorldBorder(LocalGameInstance gameInstance) {
+        World world = ((BukkitLocalGameInstance) gameInstance).getBukkitWorld();
         if (world == null) return;
 
         world.getWorldBorder().setCenter(0, 0);
-        world.getWorldBorder().setSize(gameWorld.getTemplate().getBorderRadius());
+        world.getWorldBorder().setSize(gameInstance.getTemplate().getBorderRadius());
     }
 }

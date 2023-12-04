@@ -17,7 +17,7 @@ public class BukkitGameInstanceManager extends CoreLocalGameInstanceManager {
     }
 
     @Override
-    public CompletableFuture<LocalGameInstance> createGameWorld(GameTemplate data) {
+    public CompletableFuture<LocalGameInstance> createGameInstance(GameTemplate data) {
         final List<LocalGameInstance> idleInstances = getIdleGameInstances();
         if (data != null && idleInstances.size() > 0) {
             final LocalGameInstance localGameInstance = idleInstances.get(0);
@@ -25,7 +25,7 @@ public class BukkitGameInstanceManager extends CoreLocalGameInstanceManager {
         }
 
         LocalGameInstance localGameInstance = new BukkitLocalGameInstance((BukkitSkyWarsReloaded) plugin, UUID.randomUUID(), data);
-        this.registerGameWorld(localGameInstance);
+        this.registerGameInstance(localGameInstance);
         return CompletableFuture.completedFuture(localGameInstance);
     }
 }

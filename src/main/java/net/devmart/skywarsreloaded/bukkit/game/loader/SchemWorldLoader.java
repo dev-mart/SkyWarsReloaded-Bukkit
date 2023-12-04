@@ -51,8 +51,8 @@ public class SchemWorldLoader extends BukkitWorldLoader {
     }
 
     @Override
-    public CompletableFuture<Void> createEmptyWorld(LocalGameInstance gameWorld) {
-        WorldCreator creator = new WorldCreator(gameWorld.getWorldName());
+    public CompletableFuture<Void> createEmptyWorld(LocalGameInstance gameInstance) {
+        WorldCreator creator = new WorldCreator(gameInstance.getWorldName());
         creator.generateStructures(false);
         creator.type(WorldType.FLAT);
 
@@ -82,7 +82,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
      * Pastes the schematic into the world.
      *
      * @param gameWorld GameWorld to paste into
-     * @return true if the schematic existed
+     * @return CompletableFuture that yields true if the schematic existed, false otherwise
      */
     public CompletableFuture<Boolean> pasteTemplateSchematic(LocalGameInstance gameWorld) throws IllegalStateException, IllegalArgumentException {
         CompletableFuture<Boolean> futureFail = CompletableFuture.completedFuture(false);
@@ -155,8 +155,8 @@ public class SchemWorldLoader extends BukkitWorldLoader {
     }
 
     @Override
-    public void createBasePlatform(LocalGameInstance gameWorld) {
-        World world = ((BukkitLocalGameInstance) gameWorld).getBukkitWorld();
+    public void createBasePlatform(LocalGameInstance gameInstance) {
+        World world = ((BukkitLocalGameInstance) gameInstance).getBukkitWorld();
         if (world == null) return;
 
         world.getBlockAt(
@@ -167,9 +167,11 @@ public class SchemWorldLoader extends BukkitWorldLoader {
     }
 
     @Override
-    public CompletableFuture<Boolean> save(LocalGameInstance gameWorld) {
-        boolean successful = plugin.getSchematicManager().saveGameWorldToSchematic(gameWorld, plugin.getUtils()
-                .getWorldEditWorld(gameWorld.getWorldName()));
+    public CompletableFuture<Boolean> save(LocalGameInstance gameInstance) {
+        boolean successful = plugin.getSchematicManager().saveGameWorldToSchematic(
+                gameInstance,
+                plugin.getUtils().getWorldEditWorld(gameInstance.getWorldName())
+        );
         return CompletableFuture.completedFuture(successful);
     }
 }

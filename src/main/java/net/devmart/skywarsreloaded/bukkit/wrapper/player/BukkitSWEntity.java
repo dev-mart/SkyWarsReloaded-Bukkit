@@ -15,6 +15,8 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
+import java.util.UUID;
+
 public class BukkitSWEntity extends AbstractSWEntity {
 
     private final SkyWarsReloaded plugin;
@@ -24,6 +26,12 @@ public class BukkitSWEntity extends AbstractSWEntity {
         super(entity.getUniqueId());
         this.plugin = plugin;
         this.entity = entity;
+    }
+
+    public BukkitSWEntity(SkyWarsReloaded plugin, UUID uuid) {
+        super(uuid);
+        this.plugin = plugin;
+        this.entity = Bukkit.getEntity(uuid);
     }
 
     public Entity getEntity() {

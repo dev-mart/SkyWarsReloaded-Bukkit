@@ -22,15 +22,11 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Nullable
     private Player player;
     private SWInventory inventory;
-    private BukkitSWEntity entityParent;
+    private final BukkitSWEntity entityParent;
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, UUID uuid, boolean online) {
         super(plugin, uuid, online);
-        try {
-            this.entityParent = new BukkitSWEntity(plugin, Objects.requireNonNull(Bukkit.getEntity(uuid)));
-        } catch (NullPointerException e) {
-            plugin.getLogger().error("Bukkit player with UUID '" + uuid + "' could not be found.");
-        }
+        this.entityParent = new BukkitSWEntity(plugin, uuid);
     }
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, Player playerIn, boolean online) {

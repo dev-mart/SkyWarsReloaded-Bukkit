@@ -1,7 +1,7 @@
 package net.devmart.skywarsreloaded.bukkit.listener;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
-import net.devmart.skywarsreloaded.api.enums.DeathReason;
+import net.devmart.skywarsreloaded.api.enums.DeathCause;
 import net.devmart.skywarsreloaded.api.listener.PlatformSWEventListener;
 import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
@@ -224,7 +224,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     public void onEntityDamage(EntityDamageEvent event) {
         // Get data
         SWEntity entity = plugin.getEntityManager().getEntityByUUID(event.getEntity().getUniqueId());
-        DeathReason reason = DeathReason.fromString(event.getCause().name());
+        DeathCause reason = DeathCause.fromString(event.getCause().name());
         double damage = event.getDamage();
         double finalDamage = event.getFinalDamage();
 
@@ -265,7 +265,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
         // Get data
         SWEntity entity = plugin.getEntityManager().getEntityByUUID(event.getEntity().getUniqueId());
         SWEntity damager = plugin.getEntityManager().getEntityByUUID(event.getDamager().getUniqueId());
-        DeathReason reason = DeathReason.fromString(event.getCause().name());
+        DeathCause reason = DeathCause.fromString(event.getCause().name());
         double damage = event.getDamage();
         double finalDamage = event.getFinalDamage();
 

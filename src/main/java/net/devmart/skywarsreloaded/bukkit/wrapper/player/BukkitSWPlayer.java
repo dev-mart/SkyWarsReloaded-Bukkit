@@ -22,7 +22,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Nullable
     private Player player;
     private SWInventory inventory;
-    private final BukkitSWEntity entityParent;
+    private BukkitSWEntity entityParent;
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, UUID uuid, boolean online) {
         super(plugin, uuid, online);
@@ -241,6 +241,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Override
     public void fetchParentPlayer() {
         this.player = Bukkit.getPlayer(this.getUuid());
+        this.entityParent = new BukkitSWEntity(plugin, this.getUuid());
         if (this.player != null) this.inventory = new BukkitSWInventory(plugin, player.getInventory(), "Inventory");
     }
 

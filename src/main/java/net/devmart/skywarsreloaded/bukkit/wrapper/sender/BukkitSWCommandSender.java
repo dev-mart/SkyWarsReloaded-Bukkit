@@ -1,5 +1,6 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.sender;
 
+import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.core.wrapper.sender.AbstractSWCommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
@@ -7,8 +8,9 @@ public class BukkitSWCommandSender extends AbstractSWCommandSender {
 
     private final ConsoleCommandSender sender;
 
-    public BukkitSWCommandSender(ConsoleCommandSender senderIn) {
-        this.sender = senderIn;
+    public BukkitSWCommandSender(SkyWarsReloaded plugin, ConsoleCommandSender sender) {
+        super(plugin);
+        this.sender = sender;
     }
 
     @Override

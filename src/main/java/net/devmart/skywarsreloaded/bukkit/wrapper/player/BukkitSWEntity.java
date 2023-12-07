@@ -47,7 +47,8 @@ public class BukkitSWEntity extends AbstractSWEntity {
 
     @Override
     public void teleport(SWCoord coord) {
-        teleport(coord.getWorld().getName(), coord.xPrecise(), coord.yPrecise(), coord.zPrecise(), coord.yaw(), coord.pitch());
+        String worldName = coord.getWorld() != null ? coord.getWorld().getName() : entity.getWorld().getName();
+        teleport(worldName, coord.xPrecise(), coord.yPrecise(), coord.zPrecise(), coord.yaw(), coord.pitch());
     }
 
     @Override
@@ -68,7 +69,8 @@ public class BukkitSWEntity extends AbstractSWEntity {
 
     @Override
     public SWCompletableFuture<Boolean> teleportAsync(SWCoord coord) {
-        return this.teleportAsync(coord.getWorld().getName(), coord.xPrecise(), coord.yPrecise(), coord.zPrecise());
+        String worldName = coord.getWorld() != null ? coord.getWorld().getName() : entity.getWorld().getName();
+        return this.teleportAsync(worldName, coord.xPrecise(), coord.yPrecise(), coord.zPrecise());
     }
 
     @Override

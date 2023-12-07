@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.UUID;
 
 public class BukkitPlayerManager extends AbstractPlayerManager {
@@ -40,9 +39,8 @@ public class BukkitPlayerManager extends AbstractPlayerManager {
 
     @Override
     public void initAllPlayers() {
-        final List<SWPlayer> players = this.getPlayers();
         for (Player player : Bukkit.getOnlinePlayers()) {
-            players.add(createSWPlayerForPlatform(player));
+            initPlayer(player.getUniqueId());
         }
     }
 }

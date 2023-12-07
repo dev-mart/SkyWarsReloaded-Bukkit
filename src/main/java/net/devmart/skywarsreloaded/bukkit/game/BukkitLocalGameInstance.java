@@ -23,7 +23,9 @@ public class BukkitLocalGameInstance extends AbstractLocalGameInstance {
 
     @Override
     public SWWorld getWorld() {
-        return new BukkitSWWorld((BukkitSkyWarsReloaded) plugin, getBukkitWorld());
+        World bukkitWorld = getBukkitWorld();
+        if (bukkitWorld == null) return null;
+        return new BukkitSWWorld((BukkitSkyWarsReloaded) plugin, bukkitWorld);
     }
 
     @Override

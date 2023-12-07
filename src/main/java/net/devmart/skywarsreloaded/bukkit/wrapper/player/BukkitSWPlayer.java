@@ -74,7 +74,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Override
     public void setSlot(int slot, Item item) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        player.getInventory().setItem(slot, ((BukkitItem) item).getBukkitItem());
+        player.getInventory().setItem(slot, item != null ? ((BukkitItem) item).getBukkitItem() : null);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Override
     public void setHelmet(Item helmet) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        player.getInventory().setHelmet(((BukkitItem) helmet).getBukkitItem());
+        player.getInventory().setHelmet(helmet != null ? ((BukkitItem) helmet).getBukkitItem() : null);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Override
     public void setChestplate(Item chestplate) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        player.getInventory().setChestplate(((BukkitItem) chestplate).getBukkitItem());
+        player.getInventory().setChestplate(chestplate != null ? ((BukkitItem) chestplate).getBukkitItem() : null);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Override
     public void setLeggings(Item leggings) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        player.getInventory().setLeggings(((BukkitItem) leggings).getBukkitItem());
+        player.getInventory().setLeggings(leggings != null ? ((BukkitItem) leggings).getBukkitItem() : null);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Override
     public void setBoots(Item boots) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        player.getInventory().setBoots(((BukkitItem) boots).getBukkitItem());
+        player.getInventory().setBoots(boots != null ? ((BukkitItem) boots).getBukkitItem() : null);
     }
 
     @Override

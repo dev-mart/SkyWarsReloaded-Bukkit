@@ -121,7 +121,7 @@ public class BukkitSWInventory implements SWInventory {
     @Override
     public void setItemInOffHand(Item item) {
         if (inventory.getType() == InventoryType.PLAYER) {
-            ((PlayerInventory) inventory).setItemInOffHand(((BukkitItem) item).getBukkitItem());
+            ((PlayerInventory) inventory).setItemInOffHand(item != null ? ((BukkitItem) item).getBukkitItem() : null);
         }
     }
 

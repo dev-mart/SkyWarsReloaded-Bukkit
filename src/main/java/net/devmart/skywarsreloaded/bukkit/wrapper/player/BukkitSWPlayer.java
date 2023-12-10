@@ -26,13 +26,12 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, UUID uuid, boolean online) {
         super(plugin, uuid, online);
-        this.entityParent = new BukkitSWEntity(plugin, uuid);
+        this.fetchParentPlayer();
     }
 
-    public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, Player playerIn, boolean online) {
-        this(plugin, playerIn.getUniqueId(), online);
-        this.player = playerIn;
-        this.inventory = new BukkitSWInventory(plugin, player.getInventory(), "Inventory");
+    public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, Player player, boolean online) {
+        super(plugin, player.getUniqueId(), online);
+        this.fetchParentPlayer();
     }
 
     @Nullable
@@ -241,7 +240,8 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     @Override
     public void fetchParentPlayer() {
         this.player = Bukkit.getPlayer(this.getUuid());
-        this.entityParent = new BukkitSWEntity(plugin, this.getUuid());
+        this.entityParent = this.player != null ? new BukkitSWEntity(plugin, this.player) : new BukkitSWEntity(plugin, this.getUuid());
+
         if (this.player != null) this.inventory = new BukkitSWInventory(plugin, player.getInventory(), "Inventory");
     }
 
@@ -255,6 +255,30 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     public void setFoodLevel(int foodLevel) {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
         this.player.setFoodLevel(foodLevel);
+    }
+
+    @Override
+    public void setSaturation(float saturation) {
+        if (this.player == null) throw new NullPointerException("Bukkit player is null");
+        this.player.setSaturation(saturation);
+    }
+
+    @Override
+    public float getSaturation() {
+        if (this.player == null) throw new NullPointerException("Bukkit player is null");
+        return this.player.getSaturation();
+    }
+
+    @Override
+    public void resetPlayerTime() {
+        if (this.player == null) throw new NullPointerException("Bukkit player is null");
+        this.player.resetPlayerTime();
+    }
+
+    @Override
+    public void resetPlayerWeather() {
+        if (this.player == null) throw new NullPointerException("Bukkit player is null");
+        this.player.resetPlayerWeather();
     }
 
     @Override

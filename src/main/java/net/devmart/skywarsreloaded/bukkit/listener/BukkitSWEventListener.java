@@ -86,6 +86,18 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     }
 
     @EventHandler
+    public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+        // Get data
+        SWPlayer p = this.getPlayerFromBukkitPlayer(event.getPlayer());
+        SWWorld from = this.plugin.getServer().getWorld(event.getFrom().getName());
+        SWWorld to = this.plugin.getServer().getWorld(event.getPlayer().getWorld().getName());
+
+        // Fire Event
+        SWPlayerChangedWorldEvent swEvent = new CoreSWPlayerChangedWorldEvent(p, from, to);
+        plugin.getEventManager().callEvent(swEvent);
+    }
+
+    @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         // Get data
         SWPlayer p = this.getPlayerFromBukkitPlayer(event.getPlayer());

@@ -353,11 +353,15 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     @Override
     public SWCoord getCoord(String property, SWCoord def) {
         if (!contains(property)) {
-
             return null;
         }
 
-        return new CoreSWCoord(plugin, fileConfiguration.getString(property));
+        try {
+            return new CoreSWCoord(plugin, fileConfiguration.getString(property));
+        } catch (Exception e) {
+            plugin.getLogger().error("Failed to load Coord '" + property + "'. " + e.getClass().getName() + ": " + e.getLocalizedMessage());
+            return def;
+        }
     }
 
     @Override

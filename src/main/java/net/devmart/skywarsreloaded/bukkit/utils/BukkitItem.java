@@ -247,6 +247,11 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
         }
     }
 
+    @Override
+    public boolean isSimilar(Item item) {
+        return itemStack.isSimilar(((BukkitItem) item).getBukkitItem());
+    }
+
     public ItemStack getBukkitItem() {
         return this.itemStack;
     }
@@ -254,6 +259,11 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     @Override
     public Item clone() {
         return new BukkitItem(plugin, itemStack.clone());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof BukkitItem && ((BukkitItem) obj).itemStack.equals(itemStack);
     }
 
     @NotNull

@@ -1,13 +1,16 @@
-package net.devmart.skywarsreloaded.bukkit.wrapper.player;
+package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 
+import net.devmart.skywarsreloaded.api.command.CommandArgumentValidator;
+import net.devmart.skywarsreloaded.api.data.player.stats.SWPlayerData;
+import net.devmart.skywarsreloaded.api.game.gameinstance.GameInstance;
+import net.devmart.skywarsreloaded.api.party.SWParty;
 import net.devmart.skywarsreloaded.api.utils.Item;
-import net.devmart.skywarsreloaded.api.utils.SWCompletableFuture;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
+import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.server.BukkitSWInventory;
-import net.devmart.skywarsreloaded.core.wrapper.entity.AbstractSWPlayer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,22 +19,33 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class BukkitSWPlayer extends AbstractSWPlayer {
+public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
 
     @Nullable
     private Player player;
     private SWInventory inventory;
-    private BukkitSWEntity entityParent;
+
+    private final AtomicBoolean online;
+    private final AtomicBoolean frozen;
+
+    private SWPlayerData playerData;
+    private GameInstance gameWorld;
+    private SWParty party;
+    private final CommandArgumentValidator commandArgumentValidator;
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, UUID uuid, boolean online) {
-        super(plugin, uuid, online);
+        super(plugin, uuid);
+        this.online = new AtomicBoolean(online);
+        this.gameWorld = null;
+        this.frozen = new AtomicBoolean(false);
+        this.commandArgumentValidator = plugin.getCommandManager().createArgumentValidator(this);
         this.fetchParentPlayer();
     }
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, Player player, boolean online) {
-        super(plugin, player.getUniqueId(), online);
-        this.fetchParentPlayer();
+        this(plugin, player.getUniqueId(), online);
     }
 
     @Nullable
@@ -137,26 +151,6 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     }
 
     @Override
-    public SWCoord getLocation() throws NullPointerException {
-        return this.entityParent.getLocation();
-    }
-
-    @Override
-    public void teleport(SWCoord coord) {
-        this.entityParent.teleport(coord);
-    }
-
-    @Override
-    public void teleport(String world, double x, double y, double z) throws NullPointerException {
-        this.entityParent.teleport(world, x, y, z);
-    }
-
-    @Override
-    public void teleport(String world, double x, double y, double z, float yaw, float pitch) throws NullPointerException {
-        this.entityParent.teleport(world, x, y, z, yaw, pitch);
-    }
-
-    @Override
     public void setExp(int level, float exp) {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
         this.player.setLevel(level);
@@ -171,16 +165,6 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
                 Sound.valueOf(sound.toUpperCase()),
                 volume, pitch
         );
-    }
-
-    @Override
-    public SWCompletableFuture<Boolean> teleportAsync(SWCoord coord) {
-        return this.teleportAsync(coord.getWorld().getName(), coord.xPrecise(), coord.yPrecise(), coord.zPrecise());
-    }
-
-    @Override
-    public SWCompletableFuture<Boolean> teleportAsync(String world, double x, double y, double z) {
-        return this.entityParent.teleportAsync(world, x, y, z);
     }
 
     @Override
@@ -222,25 +206,75 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     }
 
     @Override
+    public boolean isOnline() {
+        return online.get();
+    }
+
+    @Override
+    public void setOnline(boolean online) {
+        this.online.set(online);
+    }
+
+    @Override
+    public SWPlayerData getPlayerData() {
+        return this.playerData;
+    }
+
+    @Override
+    public void setPlayerData(SWPlayerData playerData) {
+        this.playerData = playerData;
+    }
+
+    @Override
+    public GameInstance getGameWorld() {
+        return this.gameWorld;
+    }
+
+    @Override
+    public void setGameWorld(GameInstance world) {
+        this.gameWorld = world;
+    }
+
+    @Override
+    public @Nullable SWParty getParty() {
+        return this.party;
+    }
+
+    @Override
+    public void setParty(@Nullable SWParty partyIn) {
+        this.party = partyIn;
+    }
+
+    @Override
+    public CommandArgumentValidator getArgumentValidator() {
+        return this.commandArgumentValidator;
+    }
+
+    @Override
     public void freeze() throws NullPointerException {
-        super.freeze();
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
+        this.frozen.set(true);
         this.player.setAllowFlight(true);
         this.player.setFlying(true);
     }
 
     @Override
     public void unfreeze() throws NullPointerException {
-        super.unfreeze();
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
+        this.frozen.set(false);
         this.player.setAllowFlight(false);
         this.player.setFlying(false);
     }
 
     @Override
+    public boolean isFrozen() {
+        return this.frozen.get();
+    }
+
+    @Override
     public void fetchParentPlayer() {
         this.player = Bukkit.getPlayer(this.getUuid());
-        this.entityParent = this.player != null ? new BukkitSWEntity(plugin, this.player) : new BukkitSWEntity(plugin, this.getUuid());
+        this.entity = this.player;
 
         if (this.player != null) this.inventory = new BukkitSWInventory(plugin, player.getInventory(), "Inventory");
     }
@@ -282,16 +316,6 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     }
 
     @Override
-    public double getHealth() {
-        return entityParent.getHealth();
-    }
-
-    @Override
-    public void setHealth(double health) {
-        entityParent.setHealth(health);
-    }
-
-    @Override
     public boolean isAllowFlight() {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
         return this.player.getAllowFlight();
@@ -313,11 +337,6 @@ public class BukkitSWPlayer extends AbstractSWPlayer {
     public boolean isFlying() {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
         return this.player.isFlying();
-    }
-
-    @Override
-    public void setFireTicks(int ticks) {
-        this.entityParent.setFireTicks(ticks);
     }
 
     @Override

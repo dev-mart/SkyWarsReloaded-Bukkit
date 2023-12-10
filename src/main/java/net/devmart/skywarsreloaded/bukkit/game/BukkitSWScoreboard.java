@@ -2,7 +2,7 @@ package net.devmart.skywarsreloaded.bukkit.game;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.wrapper.player.BukkitSWPlayer;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.core.utils.scoreboards.AbstractSWBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -56,7 +56,7 @@ public class BukkitSWScoreboard extends AbstractSWBoard {
     }
 
     public void setLine(int arg0, String arg1) {
-        Team arg2 = board.getTeam("swr-" + arg0 + ""); // Get the team we need
+        Team arg2 = board.getTeam("swr-" + arg0); // Get the team we need
         if (arg1 == null) arg1 = ""; // Line null, making it empty
 
         if (arg1.contains("%")) {

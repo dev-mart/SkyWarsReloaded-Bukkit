@@ -3,7 +3,7 @@ package net.devmart.skywarsreloaded.bukkit.protocol;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.wrapper.player.BukkitSWPlayer;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWWorld;
 import org.bukkit.World;
 import org.bukkit.block.Block;

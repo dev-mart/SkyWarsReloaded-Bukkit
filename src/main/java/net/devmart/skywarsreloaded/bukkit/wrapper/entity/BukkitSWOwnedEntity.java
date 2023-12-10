@@ -1,4 +1,4 @@
-package net.devmart.skywarsreloaded.bukkit.wrapper.player;
+package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWOwnedEntity;

@@ -1,4 +1,4 @@
-package net.devmart.skywarsreloaded.bukkit.wrapper.player;
+package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 
 import io.papermc.lib.PaperLib;
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
@@ -19,8 +19,8 @@ import java.util.UUID;
 
 public class BukkitSWEntity extends AbstractSWEntity {
 
-    private final SkyWarsReloaded plugin;
-    private final Entity entity;
+    protected final SkyWarsReloaded plugin;
+    protected Entity entity;
 
     public BukkitSWEntity(SkyWarsReloaded plugin, Entity entity) {
         super(entity.getUniqueId());
@@ -40,7 +40,7 @@ public class BukkitSWEntity extends AbstractSWEntity {
 
     @Override
     public SWCoord getLocation() throws NullPointerException {
-        if (this.entity == null) throw new NullPointerException("Bukkit player is null");
+        if (this.entity == null) throw new NullPointerException("Bukkit entity is null");
         final Location location = entity.getLocation();
         return new CoreSWCoord(new BukkitSWWorld((BukkitSkyWarsReloaded) plugin, location.getWorld()), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
@@ -53,7 +53,7 @@ public class BukkitSWEntity extends AbstractSWEntity {
 
     @Override
     public void teleport(String world, double x, double y, double z) throws NullPointerException {
-        if (this.entity == null) throw new NullPointerException("Bukkit player is null");
+        if (this.entity == null) throw new NullPointerException("Bukkit entity is null");
         World bukkitWorld = Bukkit.getWorld(world);
         if (bukkitWorld == null) return;
         entity.teleport(new Location(bukkitWorld, x, y, z));
@@ -61,7 +61,7 @@ public class BukkitSWEntity extends AbstractSWEntity {
 
     @Override
     public void teleport(String world, double x, double y, double z, float yaw, float pitch) throws NullPointerException {
-        if (this.entity == null) throw new NullPointerException("Bukkit player is null");
+        if (this.entity == null) throw new NullPointerException("Bukkit entity is null");
         World bukkitWorld = Bukkit.getWorld(world);
         if (bukkitWorld == null) return;
         entity.teleport(new Location(bukkitWorld, x, y, z, yaw, pitch));
@@ -88,13 +88,13 @@ public class BukkitSWEntity extends AbstractSWEntity {
 
     @Override
     public double getHealth() {
-        if (this.entity == null) throw new NullPointerException("Bukkit player is null");
+        if (this.entity == null) throw new NullPointerException("Bukkit entity is null");
         return (entity instanceof LivingEntity) ? ((LivingEntity) this.entity).getHealth() : 0;
     }
 
     @Override
     public void setHealth(double health) {
-        if (this.entity == null) throw new NullPointerException("Bukkit player is null");
+        if (this.entity == null) throw new NullPointerException("Bukkit entity is null");
         if (entity instanceof LivingEntity) {
             ((LivingEntity) this.entity).setHealth(health);
         }
@@ -102,12 +102,16 @@ public class BukkitSWEntity extends AbstractSWEntity {
 
     @Override
     public void setFireTicks(int ticks) {
-        if (this.entity == null) throw new NullPointerException("Bukkit player is null");
+        if (this.entity == null) throw new NullPointerException("Bukkit entity is null");
         this.entity.setFireTicks(ticks);
     }
 
     @Override
     public String getType() {
         return entity == null ? null : this.entity.getType().name();
+    }
+
+    public SkyWarsReloaded getPlugin() {
+        return plugin;
     }
 }

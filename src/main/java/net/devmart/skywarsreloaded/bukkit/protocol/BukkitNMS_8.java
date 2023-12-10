@@ -11,8 +11,8 @@ import net.devmart.skywarsreloaded.api.wrapper.world.SWChunkGenerator;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.bukkit.wrapper.item.BukkitSWEnchantmentType;
-import net.devmart.skywarsreloaded.bukkit.wrapper.player.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWChunkGenerator;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWWorld;
 import org.bukkit.Bukkit;
@@ -74,7 +74,6 @@ public class BukkitNMS_8 implements NMS {
         }
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public void initReflection() throws ClassNotFoundException, NoSuchFieldException, NoSuchMethodException {
         // 1.8.8 - 1.15.2
         //Classes

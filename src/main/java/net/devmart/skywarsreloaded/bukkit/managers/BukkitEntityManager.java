@@ -4,8 +4,8 @@ import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.manager.EntityManager;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWEntity;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
-import net.devmart.skywarsreloaded.bukkit.wrapper.player.BukkitSWEntity;
-import net.devmart.skywarsreloaded.bukkit.wrapper.player.BukkitSWOwnedEntity;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWEntity;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWOwnedEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 

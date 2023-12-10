@@ -46,7 +46,8 @@ public class BukkitSWKit extends AbstractSWKit {
         getEffects().forEach(s -> {
             try {
                 effects.add(new BukkitEffect(plugin, s));
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         });
     }
 

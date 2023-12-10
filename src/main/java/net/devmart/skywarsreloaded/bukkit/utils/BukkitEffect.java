@@ -2,7 +2,7 @@ package net.devmart.skywarsreloaded.bukkit.utils;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
-import net.devmart.skywarsreloaded.bukkit.wrapper.player.BukkitSWPlayer;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.core.utils.AbstractEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;

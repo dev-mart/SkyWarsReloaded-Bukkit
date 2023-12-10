@@ -132,4 +132,9 @@ public class BukkitSWInventory implements SWInventory {
         }
         return 0;
     }
+
+    @Override
+    public int first(Item item) {
+        return inventory.first(((BukkitItem) item).getBukkitItem());
+    }
 }

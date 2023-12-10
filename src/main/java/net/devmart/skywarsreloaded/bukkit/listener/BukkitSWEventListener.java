@@ -6,6 +6,7 @@ import net.devmart.skywarsreloaded.api.listener.PlatformSWEventListener;
 import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
 import net.devmart.skywarsreloaded.api.utils.gui.SWGuiClickHandler;
+import net.devmart.skywarsreloaded.api.wrapper.entity.SWDroppedItem;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWEntity;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.event.*;
@@ -13,6 +14,7 @@ import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
 import net.devmart.skywarsreloaded.bukkit.managers.BukkitInventoryManager;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWDroppedItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.event.BukkitSWPlayerFoodLevelChangeEvent;
 import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
 import net.devmart.skywarsreloaded.core.wrapper.event.*;
@@ -23,10 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -206,6 +205,10 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
                 new BukkitItem(plugin, event.getItem())
         );
         plugin.getEventManager().callEvent(swEvent);
+
+        if (swEvent.isCancelled()) {
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler
@@ -324,6 +327,34 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
             event.setCancelled(true);
         }
         event.setCurrentItem(((BukkitItem) swEvent.getCurrentItem()).getBukkitItem());
+    }
+
+    @EventHandler
+    public void onItemPickup(EntityPickupItemEvent e) {
+        if (!(e.getEntity() instanceof Player)) return;
+
+        SWPlayer p = this.getPlayerFromBukkitPlayer((Player) e.getEntity());
+        SWDroppedItem item = new BukkitSWDroppedItem(plugin, e.getItem());
+
+        SWPlayerPickupItemEvent swEvent = new CoreSWPlayerPickupItemEvent(p, item, e.getRemaining());
+        plugin.getEventManager().callEvent(swEvent);
+
+        if (swEvent.isCancelled()) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onItemDrop(PlayerDropItemEvent e) {
+        SWPlayer p = this.getPlayerFromBukkitPlayer(e.getPlayer());
+        SWDroppedItem item = new BukkitSWDroppedItem(plugin, e.getItemDrop());
+
+        SWPlayerDropItemEvent swEvent = new CoreSWPlayerDropItemEvent(p, item);
+        plugin.getEventManager().callEvent(swEvent);
+
+        if (swEvent.isCancelled()) {
+            e.setCancelled(true);
+        }
     }
 
     // Utils

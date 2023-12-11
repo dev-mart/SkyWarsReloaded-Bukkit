@@ -4,7 +4,6 @@ import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.wrapper.scheduler.SWRunnable;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.core.wrapper.scheduler.AbstractSWScheduler;
-import net.devmart.skywarsreloaded.core.wrapper.scheduler.CoreSWRunnable;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -23,9 +22,7 @@ public class BukkitSWScheduler extends AbstractSWScheduler {
     @Override
     public <T> CompletableFuture<T> callSyncMethod(Supplier<T> supplier) {
         CompletableFuture<T> future = new CompletableFuture<>();
-        bukkitPlugin.getServer().getScheduler().runTask(bukkitPlugin, () -> {
-            future.complete(supplier.get());
-        });
+        bukkitPlugin.getServer().getScheduler().runTask(bukkitPlugin, () -> future.complete(supplier.get()));
         return future;
     }
 
@@ -52,12 +49,7 @@ public class BukkitSWScheduler extends AbstractSWScheduler {
     @Override
     public SWRunnable runSyncTimer(Runnable runnable, int ticks, int period) {
         BukkitTask task = bukkitPlugin.getServer().getScheduler().runTaskTimer(bukkitPlugin, runnable, ticks, period);
-        final CoreSWRunnable coreSWRunnable = new CoreSWRunnable() {
-            @Override
-            public void run() {
-                runnable.run();
-            }
-        };
+        final SWRunnable coreSWRunnable = this.createRunnable(runnable);
         coreSWRunnable.setTaskId(task.getTaskId());
         return coreSWRunnable;
     }
@@ -65,12 +57,7 @@ public class BukkitSWScheduler extends AbstractSWScheduler {
     @Override
     public SWRunnable runAsyncTimer(Runnable runnable, int ticks, int period) {
         BukkitTask task = bukkitPlugin.getServer().getScheduler().runTaskTimerAsynchronously(bukkitPlugin, runnable, ticks, period);
-        final CoreSWRunnable coreSWRunnable = new CoreSWRunnable() {
-            @Override
-            public void run() {
-                runnable.run();
-            }
-        };
+        final SWRunnable coreSWRunnable = this.createRunnable(runnable);
         coreSWRunnable.setTaskId(task.getTaskId());
         return coreSWRunnable;
     }

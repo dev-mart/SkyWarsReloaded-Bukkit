@@ -8,6 +8,7 @@ depend:
   - WorldEdit
 softdepend:
   - FastAsyncWorldEdit
+  - PlaceholderAPI
 
 commands:
   skywars:

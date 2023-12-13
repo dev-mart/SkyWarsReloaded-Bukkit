@@ -111,7 +111,4 @@ public class BukkitSWEntity extends AbstractSWEntity {
         return entity == null ? null : this.entity.getType().name();
     }
 
-    public SkyWarsReloaded getPlugin() {
-        return plugin;
-    }
 }

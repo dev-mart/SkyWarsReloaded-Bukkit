@@ -3,6 +3,7 @@ package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 import net.devmart.skywarsreloaded.api.command.CommandArgumentValidator;
 import net.devmart.skywarsreloaded.api.data.player.stats.SWPlayerData;
 import net.devmart.skywarsreloaded.api.game.gameinstance.GameInstance;
+import net.devmart.skywarsreloaded.api.hook.SWVaultHook;
 import net.devmart.skywarsreloaded.api.party.SWParty;
 import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
@@ -226,7 +227,7 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     }
 
     @Override
-    public GameInstance getGameWorld() {
+    public GameInstance getGameInstance() {
         return this.gameWorld;
     }
 
@@ -376,5 +377,23 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
         } catch (Exception e) {
             plugin.getLogger().error("No potion effect type could be found with the name '" + value + "' when removing.");
         }
+    }
+
+    @Override
+    public boolean hasBalance(int money) {
+        SWVaultHook vaultHook = plugin.getHookManager().getHook(SWVaultHook.class);
+        return vaultHook != null && vaultHook.isEnabled() && vaultHook.hasBalance(this, money);
+    }
+
+    @Override
+    public boolean depositBalance(int amount) {
+        SWVaultHook vaultHook = plugin.getHookManager().getHook(SWVaultHook.class);
+        return vaultHook != null && vaultHook.isEnabled() && vaultHook.deposit(this, amount);
+    }
+
+    @Override
+    public boolean withdrawBalance(int amount) {
+        SWVaultHook vaultHook = plugin.getHookManager().getHook(SWVaultHook.class);
+        return vaultHook != null && vaultHook.isEnabled() && vaultHook.withdraw(this, amount);
     }
 }

@@ -274,7 +274,9 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
 
     @Override
     public void fetchParentPlayer() {
-        this.player = Bukkit.getPlayer(this.getUuid());
+        if (plugin.getServer().isPrimaryThread()) {
+            this.player = Bukkit.getPlayer(this.getUuid());
+        }
         this.entity = this.player;
 
         if (this.player != null) this.inventory = new BukkitSWInventory(plugin, player.getInventory(), "Inventory");

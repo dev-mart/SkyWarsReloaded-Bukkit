@@ -90,4 +90,9 @@ public class BukkitSWServer extends AbstractSWServer {
     public SWInventory createInventory(String title, String inventoryType) {
         return new BukkitSWInventory(plugin, title, inventoryType);
     }
+
+    @Override
+    public boolean isPrimaryThread() {
+        return bukkitServer.isPrimaryThread();
+    }
 }

@@ -20,7 +20,7 @@ import java.util.UUID;
 public class BukkitSWEntity extends AbstractSWEntity {
 
     protected final SkyWarsReloaded plugin;
-    protected Entity entity;
+    protected Entity entity = null;
 
     public BukkitSWEntity(SkyWarsReloaded plugin, Entity entity) {
         super(entity.getUniqueId());
@@ -31,7 +31,9 @@ public class BukkitSWEntity extends AbstractSWEntity {
     public BukkitSWEntity(SkyWarsReloaded plugin, UUID uuid) {
         super(uuid);
         this.plugin = plugin;
-        this.entity = Bukkit.getEntity(uuid);
+        if (plugin.getServer().isPrimaryThread()) {
+            this.entity = Bukkit.getEntity(uuid);
+        }
     }
 
     public Entity getEntity() {

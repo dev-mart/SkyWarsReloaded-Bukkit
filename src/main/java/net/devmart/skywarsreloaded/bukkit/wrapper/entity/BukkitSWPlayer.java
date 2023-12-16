@@ -1,6 +1,5 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 
-import net.devmart.skywarsreloaded.api.command.CommandArgumentValidator;
 import net.devmart.skywarsreloaded.api.data.player.stats.SWPlayerData;
 import net.devmart.skywarsreloaded.api.game.gameinstance.GameInstance;
 import net.devmart.skywarsreloaded.api.hook.SWVaultHook;
@@ -34,14 +33,12 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     private SWPlayerData playerData;
     private GameInstance gameWorld;
     private SWParty party;
-    private final CommandArgumentValidator commandArgumentValidator;
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, UUID uuid, boolean online) {
         super(plugin, uuid);
         this.online = new AtomicBoolean(online);
         this.gameWorld = null;
         this.frozen = new AtomicBoolean(false);
-        this.commandArgumentValidator = plugin.getCommandManager().createArgumentValidator(this);
         this.fetchParentPlayer();
     }
 
@@ -247,11 +244,6 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     }
 
     @Override
-    public CommandArgumentValidator getArgumentValidator() {
-        return this.commandArgumentValidator;
-    }
-
-    @Override
     public void freeze() throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
         this.frozen.set(true);
@@ -274,7 +266,9 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
 
     @Override
     public void fetchParentPlayer() {
-        this.player = Bukkit.getPlayer(this.getUuid());
+        if (plugin.getServer().isPrimaryThread()) {
+            this.player = Bukkit.getPlayer(this.getUuid());
+        }
         this.entity = this.player;
 
         if (this.player != null) this.inventory = new BukkitSWInventory(plugin, player.getInventory(), "Inventory");

@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 
 public class BukkitNMS_16_19 extends BukkitNMS_14_15 {
 
-    public BukkitNMS_16_19(BukkitSkyWarsReloaded plugin, String serverPackage) {
-        super(plugin, serverPackage);
+    public BukkitNMS_16_19(BukkitSkyWarsReloaded skywars, String serverPackage) {
+        super(skywars, serverPackage);
     }
 
     @Override

@@ -10,8 +10,8 @@ public class BukkitSWOwnedEntity extends BukkitSWEntity implements SWOwnedEntity
     private final String type;
     private SWPlayer owner;
 
-    public BukkitSWOwnedEntity(SkyWarsReloaded plugin, Entity entity, SWPlayer owner) {
-        super(plugin, entity);
+    public BukkitSWOwnedEntity(SkyWarsReloaded skywars, Entity entity, SWPlayer owner) {
+        super(skywars, entity);
         this.type = entity.getType().name();
         this.owner = owner;
     }

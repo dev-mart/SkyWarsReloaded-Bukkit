@@ -14,8 +14,8 @@ import java.util.Random;
 
 public class BukkitNMS_12 extends BukkitNMS_9_11 {
 
-    public BukkitNMS_12(BukkitSkyWarsReloaded plugin, String serverPackage) {
-        super(plugin, serverPackage);
+    public BukkitNMS_12(BukkitSkyWarsReloaded skywars, String serverPackage) {
+        super(skywars, serverPackage);
     }
 
     @Override

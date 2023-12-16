@@ -33,7 +33,7 @@ import java.util.Random;
 
 public class BukkitNMS_8 implements NMS {
 
-    protected final BukkitSkyWarsReloaded plugin;
+    protected final BukkitSkyWarsReloaded skywars;
     protected final String serverVersion;
     protected final int version;
 
@@ -56,10 +56,10 @@ public class BukkitNMS_8 implements NMS {
     // Versioned types
     protected Biome voidBiome;
 
-    public BukkitNMS_8(BukkitSkyWarsReloaded plugin, String serverPackage) {
-        this.plugin = plugin;
+    public BukkitNMS_8(BukkitSkyWarsReloaded skywars, String serverPackage) {
+        this.skywars = skywars;
         this.serverVersion = serverPackage.substring(serverPackage.lastIndexOf('.') + 1);
-        this.version = plugin.getUtils().getServerVersion();
+        this.version = skywars.getUtils().getServerVersion();
 
         try {
             this.initReflection();

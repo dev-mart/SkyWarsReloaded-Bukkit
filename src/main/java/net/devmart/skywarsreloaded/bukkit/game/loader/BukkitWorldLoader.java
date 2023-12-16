@@ -1,15 +1,15 @@
 package net.devmart.skywarsreloaded.bukkit.game.loader;
 
-import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.game.gameinstance.LocalGameInstance;
+import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.game.BukkitLocalGameInstance;
 import net.devmart.skywarsreloaded.core.game.loader.AbstractWorldLoader;
 import org.bukkit.World;
 
 public abstract class BukkitWorldLoader extends AbstractWorldLoader {
 
-    public BukkitWorldLoader(SkyWarsReloaded plugin) {
-        super(plugin);
+    public BukkitWorldLoader(BukkitSkyWarsReloaded skywars) {
+        super(skywars);
     }
 
     @Override

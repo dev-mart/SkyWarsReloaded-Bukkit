@@ -1,6 +1,5 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.scheduler;
 
-import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.wrapper.scheduler.SWRunnable;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.core.wrapper.scheduler.AbstractSWScheduler;
@@ -14,9 +13,9 @@ public class BukkitSWScheduler extends AbstractSWScheduler {
 
     private final JavaPlugin bukkitPlugin;
 
-    public BukkitSWScheduler(final SkyWarsReloaded plugin) {
-        super(plugin);
-        this.bukkitPlugin = ((BukkitSkyWarsReloaded) this.plugin).getBukkitPlugin();
+    public BukkitSWScheduler(BukkitSkyWarsReloaded skywars) {
+        super(skywars);
+        this.bukkitPlugin = skywars.getBukkitPlugin();
     }
 
     @Override

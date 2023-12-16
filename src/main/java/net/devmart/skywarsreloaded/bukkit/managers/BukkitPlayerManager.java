@@ -14,21 +14,21 @@ import java.util.UUID;
 
 public class BukkitPlayerManager extends AbstractPlayerManager {
 
-    public BukkitPlayerManager(BukkitSkyWarsReloaded plugin) {
-        super(plugin);
+    public BukkitPlayerManager(BukkitSkyWarsReloaded skywars) {
+        super(skywars);
     }
 
     @Override
     public SWPlayer createSWPlayerForPlatform(UUID uuid) {
-        if (plugin.getServer().isPrimaryThread()) {
+        if (skywars.getServer().isPrimaryThread()) {
             Player player = Bukkit.getPlayer(uuid);
             return this.createSWPlayerForPlatform(player);
         }
-        return new BukkitSWPlayer((BukkitSkyWarsReloaded) plugin, uuid, true);
+        return new BukkitSWPlayer((BukkitSkyWarsReloaded) skywars, uuid, true);
     }
 
     public SWPlayer createSWPlayerForPlatform(Player player) {
-        return new BukkitSWPlayer((BukkitSkyWarsReloaded) plugin, player, true);
+        return new BukkitSWPlayer((BukkitSkyWarsReloaded) skywars, player, true);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BukkitPlayerManager extends AbstractPlayerManager {
         Entity entity = Bukkit.getEntity(uuid);
         if (entity == null) return null;
 
-        return new BukkitSWEntity(plugin, entity);
+        return new BukkitSWEntity(skywars, entity);
     }
 
     @Override

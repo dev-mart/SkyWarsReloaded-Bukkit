@@ -12,8 +12,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class BukkitGameInstanceManager extends CoreLocalGameInstanceManager {
 
-    public BukkitGameInstanceManager(BukkitSkyWarsReloaded plugin) {
-        super(plugin);
+    public BukkitGameInstanceManager(BukkitSkyWarsReloaded skywars) {
+        super(skywars);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class BukkitGameInstanceManager extends CoreLocalGameInstanceManager {
             localGameInstance.setTemplate(data);
         }
 
-        LocalGameInstance localGameInstance = new BukkitLocalGameInstance((BukkitSkyWarsReloaded) plugin, UUID.randomUUID(), data);
+        LocalGameInstance localGameInstance = new BukkitLocalGameInstance((BukkitSkyWarsReloaded) skywars, UUID.randomUUID(), data);
         this.registerGameInstance(localGameInstance);
         return CompletableFuture.completedFuture(localGameInstance);
     }

@@ -21,20 +21,20 @@ import java.util.stream.Collectors;
 
 public class BukkitSWWorld extends AbstractSWWorld {
 
-    private final BukkitSkyWarsReloaded plugin;
-    private final World bukkitWorld;
-    private final String name;
+    protected final BukkitSkyWarsReloaded skywars;
+    protected final World bukkitWorld;
+    protected final String name;
 
-    public BukkitSWWorld(BukkitSkyWarsReloaded pluginIn, World worldIn) {
-        this.plugin = pluginIn;
-        this.bukkitWorld = worldIn;
-        this.name = worldIn.getName();
+    public BukkitSWWorld(BukkitSkyWarsReloaded skywars, World world) {
+        this.skywars = skywars;
+        this.bukkitWorld = world;
+        this.name = world.getName();
     }
 
     @Override
     public List<SWPlayer> getAllPlayers() {
         return this.bukkitWorld.getPlayers().stream().map(
-                (bPlayer) -> this.plugin.getPlayerManager().getPlayerByUUID(bPlayer.getUniqueId())
+                (bPlayer) -> this.skywars.getPlayerManager().getPlayerByUUID(bPlayer.getUniqueId())
         ).collect(Collectors.toList());
     }
 
@@ -55,17 +55,17 @@ public class BukkitSWWorld extends AbstractSWWorld {
 
     @Override
     public void setBlockAt(SWCoord location, String blockName) {
-        this.setBlockAt(location, blockName == null ? null : new BukkitItem(this.plugin, blockName));
+        this.setBlockAt(location, blockName == null ? null : new BukkitItem(this.skywars, blockName));
     }
 
     @Override
     public SWBlock getBlockAt(int x, int y, int z) {
         final Block bukkitBlock = this.bukkitWorld.getBlockAt(x, y, z);
-        BukkitSWBlock block = new BukkitSWBlock(plugin, bukkitBlock);
+        BukkitSWBlock block = new BukkitSWBlock(skywars, bukkitBlock);
 
         if (block.getMaterial().contains("CHEST") && bukkitBlock.getState() instanceof Chest) {
             Chest chest = (Chest) bukkitBlock.getState();
-            return new BukkitSWChest(this.plugin, chest);
+            return new BukkitSWChest(this.skywars, chest);
         }
 
         return block;
@@ -89,7 +89,7 @@ public class BukkitSWWorld extends AbstractSWWorld {
 
     @Override
     public void unload(boolean saveChunks) {
-        this.plugin.getBukkitPlugin().getServer().unloadWorld(this.bukkitWorld, saveChunks);
+        this.skywars.getBukkitPlugin().getServer().unloadWorld(this.bukkitWorld, saveChunks);
     }
 
     @Override

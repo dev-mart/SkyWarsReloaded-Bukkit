@@ -11,14 +11,14 @@ import net.devmart.skywarsreloaded.core.utils.CoreSWCCompletableFuture;
 
 public class BukkitScoreboardManager extends AbstractScoreboardManager {
 
-    public BukkitScoreboardManager(SkyWarsReloaded plugin) {
-        super(plugin);
+    public BukkitScoreboardManager(SkyWarsReloaded skywars) {
+        super(skywars);
     }
 
     @Override
     public SWCompletableFuture<SWBoard> createScoreboard(SWPlayer player, int lineCount) {
-        final CoreSWCCompletableFuture<SWBoard> future = new CoreSWCCompletableFuture<>(plugin);
-        plugin.getScheduler().runSync(() -> future.complete(new BukkitSWScoreboard(plugin, (BukkitSWPlayer) player, lineCount)));
+        final CoreSWCCompletableFuture<SWBoard> future = new CoreSWCCompletableFuture<>(skywars);
+        skywars.getScheduler().runSync(() -> future.complete(new BukkitSWScoreboard(skywars, (BukkitSWPlayer) player, lineCount)));
         return future;
     }
 }

@@ -13,10 +13,10 @@ import java.util.UUID;
 
 public class BukkitEntityManager implements EntityManager {
 
-    private final SkyWarsReloaded plugin;
+    private final SkyWarsReloaded skywars;
 
-    public BukkitEntityManager(SkyWarsReloaded plugin) {
-        this.plugin = plugin;
+    public BukkitEntityManager(SkyWarsReloaded skywars) {
+        this.skywars = skywars;
     }
 
     @Override
@@ -25,27 +25,27 @@ public class BukkitEntityManager implements EntityManager {
         if (entity == null) return null;
 
         if (entity.getType() == EntityType.PLAYER) {
-            return plugin.getPlayerManager().getPlayerByUUID(uuid);
+            return skywars.getPlayerManager().getPlayerByUUID(uuid);
         } else if (entity instanceof Projectile) {
             Projectile projectile = (Projectile) entity;
 
             SWPlayer owner = null;
             if (projectile.getShooter() instanceof Player) {
-                owner = plugin.getPlayerManager().getPlayerByUUID(((Player) projectile.getShooter()).getUniqueId());
+                owner = skywars.getPlayerManager().getPlayerByUUID(((Player) projectile.getShooter()).getUniqueId());
             }
 
-            return new BukkitSWOwnedEntity(plugin, entity, owner);
+            return new BukkitSWOwnedEntity(skywars, entity, owner);
         } else if (entity instanceof TNTPrimed) {
             TNTPrimed tnt = (TNTPrimed) entity;
 
             SWPlayer owner = null;
             if (tnt.getSource() instanceof Player) {
-                owner = plugin.getPlayerManager().getPlayerByUUID(tnt.getSource().getUniqueId());
+                owner = skywars.getPlayerManager().getPlayerByUUID(tnt.getSource().getUniqueId());
             }
 
-            return new BukkitSWOwnedEntity(plugin, entity, owner);
+            return new BukkitSWOwnedEntity(skywars, entity, owner);
         }
 
-        return new BukkitSWEntity(plugin, entity);
+        return new BukkitSWEntity(skywars, entity);
     }
 }

@@ -23,8 +23,8 @@ public class BukkitSWKit extends AbstractSWKit {
 
     private List<BukkitEffect> effects;
 
-    public BukkitSWKit(SkyWarsReloaded plugin, String id) {
-        super(plugin, id);
+    public BukkitSWKit(SkyWarsReloaded skywars, String id) {
+        super(skywars, id);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class BukkitSWKit extends AbstractSWKit {
         this.effects = new ArrayList<>();
         getEffects().forEach(s -> {
             try {
-                effects.add(new BukkitEffect(plugin, s));
+                effects.add(new BukkitEffect(skywars, s));
             } catch (Exception ignored) {
             }
         });
@@ -67,7 +67,7 @@ public class BukkitSWKit extends AbstractSWKit {
         swp.setBoots(this.boots);
         this.inventory.forEach(playerInv::setItem);
 
-        if (plugin.getUtils().getServerVersion() >= 9) {
+        if (skywars.getUtils().getServerVersion() >= 9) {
             playerInv.setItemInOffHand(this.offHand);
         }
 

@@ -15,15 +15,15 @@ import java.util.UUID;
 
 public class BukkitSWServer extends AbstractSWServer {
 
-    private final BukkitSkyWarsReloaded plugin;
+    private final BukkitSkyWarsReloaded skywars;
     private final Server bukkitServer;
     private final World defaultWorld;
     private final HashMap<UUID, SWWorld> worldCache;
 
-    public BukkitSWServer(BukkitSkyWarsReloaded pluginIn) {
-        super(pluginIn);
-        this.plugin = pluginIn;
-        this.bukkitServer = pluginIn.getBukkitPlugin().getServer();
+    public BukkitSWServer(BukkitSkyWarsReloaded skywars) {
+        super(skywars);
+        this.skywars = skywars;
+        this.bukkitServer = skywars.getBukkitPlugin().getServer();
         this.defaultWorld = this.bukkitServer.getWorlds().get(0);
         this.worldCache = new HashMap<>();
     }
@@ -69,7 +69,7 @@ public class BukkitSWServer extends AbstractSWServer {
 
         // Create wrapper and cache if not yet present
         if (swWorld == null) {
-            swWorld = new BukkitSWWorld(this.plugin, bukkitWorld);
+            swWorld = new BukkitSWWorld(this.skywars, bukkitWorld);
             this.registerWorld(uuid, swWorld);
         }
 
@@ -83,12 +83,12 @@ public class BukkitSWServer extends AbstractSWServer {
 
     @Override
     public SWInventory createInventory(String title, int size) {
-        return new BukkitSWInventory(plugin, title, size);
+        return new BukkitSWInventory(skywars, title, size);
     }
 
     @Override
     public SWInventory createInventory(String title, String inventoryType) {
-        return new BukkitSWInventory(plugin, title, inventoryType);
+        return new BukkitSWInventory(skywars, title, inventoryType);
     }
 
     @Override

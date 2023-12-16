@@ -7,12 +7,12 @@ import net.devmart.skywarsreloaded.core.manager.AbstractKitManager;
 
 public class BukkitKitManager extends AbstractKitManager {
 
-    public BukkitKitManager(SkyWarsReloaded plugin) {
-        super(plugin);
+    public BukkitKitManager(SkyWarsReloaded skywars) {
+        super(skywars);
     }
 
     @Override
     public SWKit initKit(String id) {
-        return new BukkitSWKit(plugin, id);
+        return new BukkitSWKit(skywars, id);
     }
 }

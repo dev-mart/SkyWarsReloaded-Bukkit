@@ -189,11 +189,11 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
                 if (object instanceof Item) {
                     item = (Item) object;
                 } else if (object instanceof Map) {
-                    item = plugin.getItemManager().getItem((Map<String, Object>) object);
+                    item = skywars.getItemManager().getItem((Map<String, Object>) object);
                 }
 
                 if (item != null) items.add(item);
-                else plugin.getLogger().error("Invalid item found in list for property '" + property + "': " + object.getClass().getName());
+                else skywars.getLogger().error("Invalid item found in list for property '" + property + "': " + object.getClass().getName());
             }
         });
 
@@ -330,7 +330,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
         if (map.isEmpty()) return def;
 
         if (!map.containsKey("material")) map.put("material", def == null ? "STONE" : def.getMaterial());
-        final Item item = plugin.getItemManager().getItem(map);
+        final Item item = skywars.getItemManager().getItem(map);
 
         return item == null ? def : item;
     }
@@ -357,9 +357,9 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
         }
 
         try {
-            return new CoreSWCoord(plugin, fileConfiguration.getString(property));
+            return new CoreSWCoord(skywars, fileConfiguration.getString(property));
         } catch (Exception e) {
-            plugin.getLogger().error("Failed to load Coord '" + property + "'. " + e.getClass().getName() + ": " + e.getLocalizedMessage());
+            skywars.getLogger().error("Failed to load Coord '" + property + "'. " + e.getClass().getName() + ": " + e.getLocalizedMessage());
             return def;
         }
     }
@@ -389,27 +389,27 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
         // Auto report if still null, the default config should catch this
         if (res == null) {
             String msg = "Return value of " + property + " is null";
-            SWLogger logger = this.plugin.getLogger();
+            SWLogger logger = this.skywars.getLogger();
             logger.error(msg);
             logger.reportException(new NullPointerException("Return value of " + property + " is null"));
-            return new CoreMessage(plugin, "<error, please check console and report this>");
+            return new CoreMessage(skywars, "<error, please check console and report this>");
         }
 
         if (res instanceof String) {
-            return new CoreMessage(plugin, (String) res);
+            return new CoreMessage(skywars, (String) res);
         } else if (res instanceof List) {
             // Sanity check
 
             @SuppressWarnings("rawtypes")
             List list = (List) res;
             if (!list.isEmpty() && !(list.get(0) instanceof String)) {
-                this.plugin.getLogger().error("Invalid configuration message list for '" + property +
+                this.skywars.getLogger().error("Invalid configuration message list for '" + property +
                         "': the type of the first list item is a " + list.get(0).getClass().getTypeName() + ". " +
                         "Please make sure the message is surrounded with quotes.");
             }
             @SuppressWarnings("unchecked")
             List<String> stringList = (List<String>) list;
-            return new CoreMessage(plugin, stringList.toArray(new String[0]));
+            return new CoreMessage(skywars, stringList.toArray(new String[0]));
         }
         return null;
     }
@@ -421,8 +421,8 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public Message getMessage(String property, String def) {
-        if (!contains(property)) return new CoreMessage(plugin, def);
-        return new CoreMessage(plugin, getString(property));
+        if (!contains(property)) return new CoreMessage(skywars, def);
+        return new CoreMessage(skywars, getString(property));
     }
 
     @Override
@@ -432,8 +432,8 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public Message getMessage(String property, List<String> def) {
-        if (!contains(property)) return new CoreMessage(plugin, def.toArray(new String[0]));
-        return new CoreMessage(plugin, getStringList(property).toArray(new String[0]));
+        if (!contains(property)) return new CoreMessage(skywars, def.toArray(new String[0]));
+        return new CoreMessage(skywars, getStringList(property).toArray(new String[0]));
     }
 
     @Override
@@ -467,13 +467,13 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
                 try {
                     PlayerStat playerStat = PlayerStat.fromString(stat);
                     if (playerStat == null) {
-                        plugin.getLogger().error("Invalid stat '" + stat + "' in unlockable '" + unlockable.getId() + "'");
+                        skywars.getLogger().error("Invalid stat '" + stat + "' in unlockable '" + unlockable.getId() + "'");
                         return;
                     }
 
                     unlockable.addMinimumStat(playerStat, section.getInt(KitProperties.REQUIREMENTS_STATS + "." + stat, 0));
                 } catch (Exception e) {
-                    plugin.getLogger().error(String.format("Failed to load %s stat requirement for kit %s. Ignoring it. (%s)", stat, unlockable.getId(), e.getClass().getName() + ": " + e.getLocalizedMessage()));
+                    skywars.getLogger().error(String.format("Failed to load %s stat requirement for kit %s. Ignoring it. (%s)", stat, unlockable.getId(), e.getClass().getName() + ": " + e.getLocalizedMessage()));
                 }
             });
         }
@@ -489,7 +489,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
         try {
             fileConfiguration.save(getFile());
         } catch (IOException e) {
-            plugin.getLogger().error("SkyWarsReloaded failed to save the YAML file called '" + getFileName() + "'.");
+            skywars.getLogger().error("SkyWarsReloaded failed to save the YAML file called '" + getFileName() + "'.");
         }
     }
 }

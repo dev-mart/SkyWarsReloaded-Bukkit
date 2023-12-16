@@ -9,7 +9,6 @@ import com.grinderwolf.swm.api.loaders.SlimeLoader;
 import com.grinderwolf.swm.api.world.SlimeWorld;
 import com.grinderwolf.swm.api.world.properties.SlimeProperties;
 import com.grinderwolf.swm.api.world.properties.SlimePropertyMap;
-import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.game.GamePlayer;
 import net.devmart.skywarsreloaded.api.game.GameTemplate;
 import net.devmart.skywarsreloaded.api.game.gameinstance.GameInstance;
@@ -18,6 +17,7 @@ import net.devmart.skywarsreloaded.api.game.types.GameState;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
 import net.devmart.skywarsreloaded.api.utils.properties.ConfigProperties;
 import net.devmart.skywarsreloaded.api.utils.properties.RuntimeDataProperties;
+import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.game.BukkitLocalGameInstance;
 import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
 import org.bukkit.Bukkit;
@@ -37,7 +37,7 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
     private final HashMap<GameInstance, SlimePropertyMap> templatePropertyMap;
     private final HashMap<GameInstance, SlimeWorld> slimeWorldMap;
 
-    public SlimeWorldLoader(SkyWarsReloaded skywars) {
+    public SlimeWorldLoader(BukkitSkyWarsReloaded skywars) {
         super(skywars);
 
         this.slimeWorldManagerPlugin = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SlimeWorldManager");

@@ -1,6 +1,5 @@
 package net.devmart.skywarsreloaded.bukkit.listener;
 
-import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.enums.DeathCause;
 import net.devmart.skywarsreloaded.api.listener.PlatformSWEventListener;
 import net.devmart.skywarsreloaded.api.utils.Item;
@@ -12,6 +11,7 @@ import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.event.*;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
+import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.managers.BukkitInventoryManager;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWDroppedItem;
@@ -38,9 +38,9 @@ import java.util.stream.Collectors;
 
 public class BukkitSWEventListener implements Listener, PlatformSWEventListener {
 
-    private final SkyWarsReloaded skywars;
+    private final BukkitSkyWarsReloaded skywars;
 
-    public BukkitSWEventListener(SkyWarsReloaded skywars) {
+    public BukkitSWEventListener(BukkitSkyWarsReloaded skywars) {
         this.skywars = skywars;
     }
 

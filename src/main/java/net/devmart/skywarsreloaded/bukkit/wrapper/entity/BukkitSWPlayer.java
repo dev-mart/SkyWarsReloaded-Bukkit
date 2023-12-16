@@ -1,6 +1,5 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 
-import net.devmart.skywarsreloaded.api.command.CommandArgumentValidator;
 import net.devmart.skywarsreloaded.api.data.player.stats.SWPlayerData;
 import net.devmart.skywarsreloaded.api.game.gameinstance.GameInstance;
 import net.devmart.skywarsreloaded.api.hook.SWVaultHook;
@@ -34,14 +33,12 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     private SWPlayerData playerData;
     private GameInstance gameWorld;
     private SWParty party;
-    private final CommandArgumentValidator commandArgumentValidator;
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, UUID uuid, boolean online) {
         super(plugin, uuid);
         this.online = new AtomicBoolean(online);
         this.gameWorld = null;
         this.frozen = new AtomicBoolean(false);
-        this.commandArgumentValidator = plugin.getCommandManager().createArgumentValidator(this);
         this.fetchParentPlayer();
     }
 
@@ -244,11 +241,6 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     @Override
     public void setParty(@Nullable SWParty partyIn) {
         this.party = partyIn;
-    }
-
-    @Override
-    public CommandArgumentValidator getArgumentValidator() {
-        return this.commandArgumentValidator;
     }
 
     @Override

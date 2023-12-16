@@ -239,8 +239,8 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     }
 
     @Override
-    public void setParty(@Nullable SWParty partyIn) {
-        this.party = partyIn;
+    public void setParty(@Nullable SWParty party) {
+        this.party = party;
     }
 
     @Override

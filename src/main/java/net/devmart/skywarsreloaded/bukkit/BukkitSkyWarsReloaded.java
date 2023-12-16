@@ -26,8 +26,8 @@ public class BukkitSkyWarsReloaded extends AbstractSkyWarsReloaded {
 
     private final BukkitSkyWarsReloadedPlugin plugin;
 
-    public BukkitSkyWarsReloaded(BukkitSkyWarsReloadedPlugin pluginIn) {
-        this.plugin = pluginIn;
+    public BukkitSkyWarsReloaded(BukkitSkyWarsReloadedPlugin plugin) {
+        this.plugin = plugin;
     }
 
     // Internal Utils

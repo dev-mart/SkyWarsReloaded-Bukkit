@@ -1,5 +1,6 @@
 package net.devmart.skywarsreloaded.bukkit.data.config;
 
+import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.data.player.stats.PlayerStat;
 import net.devmart.skywarsreloaded.api.unlockable.Unlockable;
 import net.devmart.skywarsreloaded.api.utils.Item;
@@ -8,7 +9,6 @@ import net.devmart.skywarsreloaded.api.utils.SWCoord;
 import net.devmart.skywarsreloaded.api.utils.SWLogger;
 import net.devmart.skywarsreloaded.api.utils.properties.KitProperties;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
-import net.devmart.skywarsreloaded.core.AbstractSkyWarsReloaded;
 import net.devmart.skywarsreloaded.core.data.config.AbstractYAMLConfig;
 import net.devmart.skywarsreloaded.core.utils.CoreMessage;
 import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
@@ -28,25 +28,25 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     private FileConfiguration fileConfiguration;
     private FileConfiguration defaultFileConfiguration;
 
-    public BukkitYAMLConfig(AbstractSkyWarsReloaded skyWars, String id, File directory, String fileName) {
-        super(skyWars, id, directory, fileName);
+    public BukkitYAMLConfig(SkyWarsReloaded skywars, String id, File directory, String fileName) {
+        super(skywars, id, directory, fileName);
 
         this.onSetup();
     }
 
-    public BukkitYAMLConfig(AbstractSkyWarsReloaded skyWars, String id, @Nullable String directory, String fileName) {
-        super(skyWars, id, directory, fileName);
+    public BukkitYAMLConfig(SkyWarsReloaded skywars, String id, @Nullable String directory, String fileName) {
+        super(skywars, id, directory, fileName);
 
         this.onSetup();
     }
 
-    public BukkitYAMLConfig(AbstractSkyWarsReloaded skyWars, String id, File directory, String fileName, String defaultFile) {
-        super(skyWars, id, directory, fileName, defaultFile);
+    public BukkitYAMLConfig(SkyWarsReloaded skywars, String id, File directory, String fileName, String defaultFile) {
+        super(skywars, id, directory, fileName, defaultFile);
 
         this.onSetup();
     }
 
-    public BukkitYAMLConfig(AbstractSkyWarsReloaded skyWars, String id, @Nullable String directory, String fileName, String defaultFile) {
+    public BukkitYAMLConfig(SkyWarsReloaded skyWars, String id, @Nullable String directory, String fileName, String defaultFile) {
         super(skyWars, id, directory, fileName, defaultFile);
 
         this.onSetup();

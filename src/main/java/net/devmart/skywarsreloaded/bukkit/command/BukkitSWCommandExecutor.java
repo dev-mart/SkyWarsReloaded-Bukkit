@@ -10,10 +10,10 @@ import java.util.List;
 
 public class BukkitSWCommandExecutor implements CommandExecutor, TabCompleter {
 
-    private SkyWarsReloaded main;
+    protected SkyWarsReloaded skywars;
 
-    public BukkitSWCommandExecutor(SkyWarsReloaded mainIn) {
-        this.main = mainIn;
+    public BukkitSWCommandExecutor(SkyWarsReloaded skywars) {
+        this.skywars = skywars;
     }
 
     @Override
@@ -21,12 +21,12 @@ public class BukkitSWCommandExecutor implements CommandExecutor, TabCompleter {
         SWCommandSender swSender;
 
         if (sender instanceof Player)
-            swSender = main.getPlayerManager().getPlayerByUUID(((Player) sender).getUniqueId());
+            swSender = skywars.getPlayerManager().getPlayerByUUID(((Player) sender).getUniqueId());
         else if (sender instanceof ConsoleCommandSender)
-            swSender = main.getConsoleSender();
+            swSender = skywars.getConsoleSender();
         else return true;
 
-        this.main.getCommandManager().runCommand(swSender, command.getName(), args.length > 0 ? args[0] : "", args);
+        this.skywars.getCommandManager().runCommand(swSender, command.getName(), args.length > 0 ? args[0] : "", args);
         return true;
     }
 
@@ -36,12 +36,12 @@ public class BukkitSWCommandExecutor implements CommandExecutor, TabCompleter {
 
         if (sender instanceof Player)
             // creating the player if not existing.
-            swSender = main.getPlayerManager().getPlayerByUUID(((Player) sender).getUniqueId());
+            swSender = skywars.getPlayerManager().getPlayerByUUID(((Player) sender).getUniqueId());
         else if (sender instanceof ConsoleCommandSender)
-            swSender = main.getConsoleSender();
+            swSender = skywars.getConsoleSender();
         else return new ArrayList<>();
 
-        return this.main.getCommandManager().runTabCompletion(swSender, command.getName(), args.length > 0 ? args[0] : "", args);
+        return this.skywars.getCommandManager().runTabCompletion(swSender, command.getName(), args.length > 0 ? args[0] : "", args);
     }
 
 }

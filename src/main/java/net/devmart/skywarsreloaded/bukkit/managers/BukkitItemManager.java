@@ -11,11 +11,11 @@ import java.util.*;
 
 public class BukkitItemManager implements ItemManager {
 
-    private final SkyWarsReloaded plugin;
+    protected final SkyWarsReloaded skywars;
     private final HashMap<String, Item> defaultItems;
 
-    public BukkitItemManager(SkyWarsReloaded plugin) {
-        this.plugin = plugin;
+    public BukkitItemManager(SkyWarsReloaded skywars) {
+        this.skywars = skywars;
         this.defaultItems = new HashMap<>();
     }
 
@@ -24,13 +24,13 @@ public class BukkitItemManager implements ItemManager {
         this.defaultItems.clear();
 
         Set<String> groups = new HashSet<>();
-        groups.addAll(plugin.getConfig().getKeys("items"));
-        groups.addAll(plugin.getMessages().getKeys("items"));
+        groups.addAll(skywars.getConfig().getKeys("items"));
+        groups.addAll(skywars.getMessages().getKeys("items"));
 
         groups.forEach(itemGroup -> {
             Set<String> items = new HashSet<>();
-            items.addAll(plugin.getConfig().getKeys("items." + itemGroup));
-            items.addAll(plugin.getMessages().getKeys("items." + itemGroup));
+            items.addAll(skywars.getConfig().getKeys("items." + itemGroup));
+            items.addAll(skywars.getMessages().getKeys("items." + itemGroup));
 
             items.forEach(itemId -> {
                 String fullPath = "items." + itemGroup + "." + itemId;
@@ -49,12 +49,12 @@ public class BukkitItemManager implements ItemManager {
 
     @Override
     public Item createItem(String material) {
-        return new BukkitItem(plugin, material);
+        return new BukkitItem(skywars, material);
     }
 
     @Override
     public Item createItem(String material, int amount) {
-        Item item = new BukkitItem(plugin, material);
+        Item item = new BukkitItem(skywars, material);
         item.setAmount(amount);
         return item;
     }
@@ -105,7 +105,7 @@ public class BukkitItemManager implements ItemManager {
 
             return item;
         } catch (Exception e) {
-            plugin.getLogger().error(String.format("Failed to load item with material %s. Ignoring it. (%s)",
+            skywars.getLogger().error(String.format("Failed to load item with material %s. Ignoring it. (%s)",
                     map.get("material"), e.getClass().getName() + ": " + e.getLocalizedMessage()));
         }
         return null;
@@ -115,9 +115,9 @@ public class BukkitItemManager implements ItemManager {
     public Item getItemFromConfig(String path) {
         if (isDefaultLoaded(path)) return this.defaultItems.get(path).clone();
 
-        final Item item = plugin.getConfig().getItem(path);
+        final Item item = skywars.getConfig().getItem(path);
         if (item != null) {
-            item.withMessages(plugin.getMessages().getItem(path));
+            item.withMessages(skywars.getMessages().getItem(path));
         }
         return item;
     }

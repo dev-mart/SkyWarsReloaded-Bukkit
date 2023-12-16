@@ -7,11 +7,11 @@ import org.bukkit.Chunk;
 
 public class BukkitSWChunk implements SWChunk {
 
-    private final BukkitSkyWarsReloaded plugin;
+    private final BukkitSkyWarsReloaded skywars;
     private final Chunk chunk;
 
-    public BukkitSWChunk(BukkitSkyWarsReloaded plugin, Chunk chunk) {
-        this.plugin = plugin;
+    public BukkitSWChunk(BukkitSkyWarsReloaded skywars, Chunk chunk) {
+        this.skywars = skywars;
         this.chunk = chunk;
     }
 
@@ -32,7 +32,7 @@ public class BukkitSWChunk implements SWChunk {
 
     @Override
     public SWWorld getWorld() {
-        return plugin.getServer().getWorld(chunk.getWorld().getName());
+        return skywars.getServer().getWorld(chunk.getWorld().getName());
     }
 
     public Chunk getChunk() {

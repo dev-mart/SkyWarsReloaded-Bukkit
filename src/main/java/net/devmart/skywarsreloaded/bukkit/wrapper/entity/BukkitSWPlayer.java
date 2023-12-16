@@ -34,16 +34,16 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     private GameInstance gameWorld;
     private SWParty party;
 
-    public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, UUID uuid, boolean online) {
-        super(plugin, uuid);
+    public BukkitSWPlayer(BukkitSkyWarsReloaded skywars, UUID uuid, boolean online) {
+        super(skywars, uuid);
         this.online = new AtomicBoolean(online);
         this.gameWorld = null;
         this.frozen = new AtomicBoolean(false);
         this.fetchParentPlayer();
     }
 
-    public BukkitSWPlayer(BukkitSkyWarsReloaded plugin, Player player, boolean online) {
-        this(plugin, player.getUniqueId(), online);
+    public BukkitSWPlayer(BukkitSkyWarsReloaded skywars, Player player, boolean online) {
+        this(skywars, player.getUniqueId(), online);
     }
 
     @Nullable
@@ -67,12 +67,12 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     public Item getItemInHand(boolean offHand) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
         ItemStack item;
-        if (this.plugin.getUtils().getServerVersion() >= 9) {
+        if (this.skywars.getUtils().getServerVersion() >= 9) {
             if (offHand) item = player.getInventory().getItemInOffHand();
             else item = player.getInventory().getItemInMainHand();
         } else item = player.getInventory().getItemInHand();
         if (item == null || item.getType() == Material.AIR) return null;
-        return new BukkitItem(plugin, item);
+        return new BukkitItem(skywars, item);
     }
 
     @Override
@@ -91,13 +91,13 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     @Override
     public Item getSlot(int slot) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        return new BukkitItem(plugin, player.getInventory().getItem(slot));
+        return new BukkitItem(skywars, player.getInventory().getItem(slot));
     }
 
     @Override
     public Item getHelmet() throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        return new BukkitItem(plugin, player.getInventory().getHelmet());
+        return new BukkitItem(skywars, player.getInventory().getHelmet());
     }
 
     @Override
@@ -109,7 +109,7 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     @Override
     public Item getChestplate() throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        return new BukkitItem(plugin, player.getInventory().getChestplate());
+        return new BukkitItem(skywars, player.getInventory().getChestplate());
     }
 
     @Override
@@ -121,7 +121,7 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     @Override
     public Item getLeggings() throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        return new BukkitItem(plugin, player.getInventory().getLeggings());
+        return new BukkitItem(skywars, player.getInventory().getLeggings());
     }
 
     @Override
@@ -133,7 +133,7 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     @Override
     public Item getBoots() throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        return new BukkitItem(plugin, player.getInventory().getBoots());
+        return new BukkitItem(skywars, player.getInventory().getBoots());
     }
 
     @Override
@@ -174,7 +174,7 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     @SuppressWarnings("deprecation")
     public void sendTitle(String title, String subtitle, int fadeIn, int stay, int fadeOut) throws NullPointerException {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
-        if (plugin.getUtils().getServerVersion() >= 11) player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+        if (skywars.getUtils().getServerVersion() >= 11) player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
         else player.sendTitle(title, subtitle);
     }
 
@@ -239,8 +239,8 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     }
 
     @Override
-    public void setParty(@Nullable SWParty partyIn) {
-        this.party = partyIn;
+    public void setParty(@Nullable SWParty party) {
+        this.party = party;
     }
 
     @Override
@@ -266,12 +266,12 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
 
     @Override
     public void fetchParentPlayer() {
-        if (plugin.getServer().isPrimaryThread()) {
+        if (skywars.getServer().isPrimaryThread()) {
             this.player = Bukkit.getPlayer(this.getUuid());
         }
         this.entity = this.player;
 
-        if (this.player != null) this.inventory = new BukkitSWInventory(plugin, player.getInventory(), "Inventory");
+        if (this.player != null) this.inventory = new BukkitSWInventory(skywars, player.getInventory(), "Inventory");
     }
 
     @Override
@@ -369,25 +369,25 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
         try {
             this.player.removePotionEffect(Objects.requireNonNull(PotionEffectType.getByName(value.toUpperCase())));
         } catch (Exception e) {
-            plugin.getLogger().error("No potion effect type could be found with the name '" + value + "' when removing.");
+            skywars.getLogger().error("No potion effect type could be found with the name '" + value + "' when removing.");
         }
     }
 
     @Override
     public boolean hasBalance(int money) {
-        SWVaultHook vaultHook = plugin.getHookManager().getHook(SWVaultHook.class);
+        SWVaultHook vaultHook = skywars.getHookManager().getHook(SWVaultHook.class);
         return vaultHook != null && vaultHook.isEnabled() && vaultHook.hasBalance(this, money);
     }
 
     @Override
     public boolean depositBalance(int amount) {
-        SWVaultHook vaultHook = plugin.getHookManager().getHook(SWVaultHook.class);
+        SWVaultHook vaultHook = skywars.getHookManager().getHook(SWVaultHook.class);
         return vaultHook != null && vaultHook.isEnabled() && vaultHook.deposit(this, amount);
     }
 
     @Override
     public boolean withdrawBalance(int amount) {
-        SWVaultHook vaultHook = plugin.getHookManager().getHook(SWVaultHook.class);
+        SWVaultHook vaultHook = skywars.getHookManager().getHook(SWVaultHook.class);
         return vaultHook != null && vaultHook.isEnabled() && vaultHook.withdraw(this, amount);
     }
 }

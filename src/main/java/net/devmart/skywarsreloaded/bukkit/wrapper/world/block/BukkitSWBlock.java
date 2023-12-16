@@ -10,22 +10,22 @@ import org.bukkit.block.Block;
 
 public class BukkitSWBlock implements SWBlock {
 
-    protected final BukkitSkyWarsReloaded plugin;
-    private Block block;
+    protected final BukkitSkyWarsReloaded skywars;
+    protected final Block block;
 
-    public BukkitSWBlock(BukkitSkyWarsReloaded plugin, Block block) {
-        this.plugin = plugin;
+    public BukkitSWBlock(BukkitSkyWarsReloaded skywars, Block block) {
+        this.skywars = skywars;
         this.block = block;
     }
 
     @Override
     public SWChunk getChunk() {
-        return new BukkitSWChunk(plugin, block.getChunk());
+        return new BukkitSWChunk(skywars, block.getChunk());
     }
 
     @Override
     public SWCoord getCoord() {
-        return new CoreSWCoord(plugin.getServer().getWorld(block.getWorld().getName()), block.getX(), block.getY(), block.getZ());
+        return new CoreSWCoord(skywars.getServer().getWorld(block.getWorld().getName()), block.getX(), block.getY(), block.getZ());
     }
 
     @Override

@@ -20,8 +20,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class BukkitNMS_13 extends BukkitNMS_12 {
 
-    public BukkitNMS_13(BukkitSkyWarsReloaded plugin, String serverPackage) {
-        super(plugin, serverPackage);
+    public BukkitNMS_13(BukkitSkyWarsReloaded skywars, String serverPackage) {
+        super(skywars, serverPackage);
     }
 
     @Override

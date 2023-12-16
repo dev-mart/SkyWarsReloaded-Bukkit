@@ -37,13 +37,13 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
     private final HashMap<GameInstance, SlimePropertyMap> templatePropertyMap;
     private final HashMap<GameInstance, SlimeWorld> slimeWorldMap;
 
-    public SlimeWorldLoader(SkyWarsReloaded plugin) {
-        super(plugin);
+    public SlimeWorldLoader(SkyWarsReloaded skywars) {
+        super(skywars);
 
         this.slimeWorldManagerPlugin = (SlimePlugin) Bukkit.getPluginManager().getPlugin("SlimeWorldManager");
         assert this.slimeWorldManagerPlugin != null;
 
-        slimeLoaderType = this.plugin.getConfig().getString(ConfigProperties.SLIME_WORLD_LOADER, "file");
+        slimeLoaderType = this.skywars.getConfig().getString(ConfigProperties.SLIME_WORLD_LOADER, "file");
         slimeLoader = slimeWorldManagerPlugin.getLoader(slimeLoaderType);
 
         this.templatePropertyMap = new HashMap<>();
@@ -53,7 +53,7 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
     @Override
     public CompletableFuture<Boolean> generateWorldInstance(LocalGameInstance gameWorld) {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
-        this.plugin.getScheduler().runAsync(() -> {
+        this.skywars.getScheduler().runAsync(() -> {
             try {
                 this.createEmptyWorld(gameWorld).get();
             } catch (InterruptedException | ExecutionException e) {
@@ -71,7 +71,7 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
                 SlimeWorld tmpWorld = templateWorld.clone(gameWorld.getId().toString());
 
                 // This method must be called synchronously
-                plugin.getScheduler().callSyncMethod(() -> {
+                skywars.getScheduler().callSyncMethod(() -> {
                     slimeWorldManagerPlugin.generateWorld(tmpWorld);
                     future.complete(true);
                     return null;
@@ -82,20 +82,20 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
                 }
 
             } catch (UnknownWorldException ex) {
-                plugin.getLogger().error(String.format("Attempted to load template '%s$' from SWM but doesn't exist! (loader: %s$)", templateName, slimeLoaderType));
+                skywars.getLogger().error(String.format("Attempted to load template '%s$' from SWM but doesn't exist! (loader: %s$)", templateName, slimeLoaderType));
                 future.complete(false);
             } catch (IOException ex) {
                 ex.printStackTrace();
-                plugin.getLogger().reportException(ex);
+                skywars.getLogger().reportException(ex);
                 future.complete(false);
             } catch (CorruptedWorldException ex) {
-                plugin.getLogger().error(String.format("The world template '%s$' is corrupted! (loader: %s$)", templateName, slimeLoaderType));
+                skywars.getLogger().error(String.format("The world template '%s$' is corrupted! (loader: %s$)", templateName, slimeLoaderType));
                 future.complete(false);
             } catch (NewerFormatException ex) {
-                plugin.getLogger().error(String.format("The world template '%s$' is in a newer format! (loader: %s$)", templateName, slimeLoaderType));
+                skywars.getLogger().error(String.format("The world template '%s$' is in a newer format! (loader: %s$)", templateName, slimeLoaderType));
                 future.complete(false);
             } catch (WorldInUseException ex) {
-                plugin.getLogger().error(String.format("The world template '%s$' is in use by another server in non read-only mode! (loader: %s$)", templateName, slimeLoaderType));
+                skywars.getLogger().error(String.format("The world template '%s$' is in use by another server in non read-only mode! (loader: %s$)", templateName, slimeLoaderType));
                 future.complete(false);
             } catch (ExecutionException | InterruptedException ex) {
                 future.complete(false);
@@ -123,16 +123,16 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
 
     @Override
     public void deleteWorldInstance(LocalGameInstance gameWorld) {
-        String spawnLocationStr = this.plugin.getDataConfig().getString(RuntimeDataProperties.LOBBY_SPAWN, null);
+        String spawnLocationStr = this.skywars.getDataConfig().getString(RuntimeDataProperties.LOBBY_SPAWN, null);
         SWCoord coord = null;
         try {
-            coord = new CoreSWCoord(this.plugin, spawnLocationStr);
+            coord = new CoreSWCoord(this.skywars, spawnLocationStr);
         } catch (IndexOutOfBoundsException | IllegalArgumentException ex) {
             ex.printStackTrace();
         }
 
         if (coord == null) {
-            coord = this.plugin.getServer().getDefaultWorld().getDefaultSpawnLocation();
+            coord = this.skywars.getServer().getDefaultWorld().getDefaultSpawnLocation();
         }
 
         for (GamePlayer player : gameWorld.getPlayersCopy()) {
@@ -145,7 +145,7 @@ public class SlimeWorldLoader extends BukkitWorldLoader {
     @Override
     public void deleteMap(GameTemplate gameTemplate, boolean forceUnloadInstances) {
         if (forceUnloadInstances) {
-            for (GameInstance gameWorld : this.plugin.getGameInstanceManager().getGameInstancesByTemplate(gameTemplate)) {
+            for (GameInstance gameWorld : this.skywars.getGameInstanceManager().getGameInstancesByTemplate(gameTemplate)) {
                 if (!gameWorld.getState().equals(GameState.DISABLED)) {
                     // todo gameWorld.forceStop();
                 }

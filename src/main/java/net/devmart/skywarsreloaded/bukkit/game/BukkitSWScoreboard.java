@@ -20,8 +20,8 @@ public class BukkitSWScoreboard extends AbstractSWBoard {
 
     private final HashMap<Integer, String> cache = new HashMap<>();
 
-    public BukkitSWScoreboard(SkyWarsReloaded plugin, BukkitSWPlayer player, int lineCount) {
-        super(plugin, player, lineCount);
+    public BukkitSWScoreboard(SkyWarsReloaded skywars, BukkitSWPlayer player, int lineCount) {
+        super(skywars, player, lineCount);
         setup();
     }
 
@@ -79,7 +79,7 @@ public class BukkitSWScoreboard extends AbstractSWBoard {
         if (string == null || string.trim().isEmpty()) return new String[]{" ", " "};
 
         // check if it's a legacy version < 12 for splitting.
-        if (plugin.getUtils().getServerVersion() >= 13) {
+        if (skywars.getUtils().getServerVersion() >= 13) {
             return new String[]{string, ""};
         }
 

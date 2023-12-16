@@ -10,23 +10,23 @@ public class BukkitSkyWarsReloadedPlugin extends JavaPlugin {
      * Use {@link BukkitSkyWarsReloaded} instead.
      */
 
-    private BukkitSkyWarsReloaded plugin;
+    private BukkitSkyWarsReloaded skywars;
     private boolean hasBeenEnabled;
 
     public BukkitSkyWarsReloadedPlugin() {
-        plugin = new BukkitSkyWarsReloaded(this);
+        skywars = new BukkitSkyWarsReloaded(this);
         hasBeenEnabled = false;
     }
 
     @Override
     public void onEnable() {
-        plugin.onEnable();
+        skywars.onEnable();
         hasBeenEnabled = true;
     }
 
     @Override
     public void onDisable() {
-        plugin.onDisable();
+        skywars.onDisable();
     }
 
     /**
@@ -40,12 +40,12 @@ public class BukkitSkyWarsReloadedPlugin extends JavaPlugin {
      * @param implementation The new {@link SkyWarsReloaded} implementation.
      */
     public void overrideSkyWarsImplementation(BukkitSkyWarsReloaded implementation) {
-        if (!hasBeenEnabled) this.plugin = implementation;
+        if (!hasBeenEnabled) this.skywars = implementation;
         else
             throw new IllegalStateException("You can't change the SkyWars implementation after onEnable() was already called!");
     }
 
-    public BukkitSkyWarsReloaded getPlugin() {
-        return plugin;
+    public BukkitSkyWarsReloaded getSkywars() {
+        return skywars;
     }
 }

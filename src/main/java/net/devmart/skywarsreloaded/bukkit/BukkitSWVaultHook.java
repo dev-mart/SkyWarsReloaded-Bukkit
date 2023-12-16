@@ -11,9 +11,9 @@ public class BukkitSWVaultHook extends AbstractSWVaultHook {
 
     private final BukkitSWServer bukkitServer;
 
-    public BukkitSWVaultHook(BukkitSkyWarsReloaded plugin) {
-        super(plugin);
-        this.bukkitServer = ((BukkitSWServer) plugin.getServer());
+    public BukkitSWVaultHook(BukkitSkyWarsReloaded skywars) {
+        super(skywars);
+        this.bukkitServer = skywars.getServer();
     }
 
     @Override
@@ -23,7 +23,7 @@ public class BukkitSWVaultHook extends AbstractSWVaultHook {
         }
         RegisteredServiceProvider<Economy> rsp = bukkitServer.getBukkitServer().getServicesManager().getRegistration(Economy.class);
         if (rsp == null) {
-            plugin.getLogger().warn("Vault was found but no economy plugin was found. Economy features will be disabled.");
+            skywars.getLogger().warn("Vault was found but no economy plugin was found. Economy features will be disabled.");
             return false;
         }
         economy = rsp.getProvider();

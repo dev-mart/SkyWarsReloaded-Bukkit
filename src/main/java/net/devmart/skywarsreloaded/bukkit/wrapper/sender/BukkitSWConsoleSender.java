@@ -7,8 +7,8 @@ public class BukkitSWConsoleSender extends AbstractSWConsoleSender {
 
     private final ConsoleCommandSender consoleSender;
 
-    public BukkitSWConsoleSender(ConsoleCommandSender consoleSenderIn) {
-        this.consoleSender = consoleSenderIn;
+    public BukkitSWConsoleSender(ConsoleCommandSender consoleSender) {
+        this.consoleSender = consoleSender;
     }
 
     @Override

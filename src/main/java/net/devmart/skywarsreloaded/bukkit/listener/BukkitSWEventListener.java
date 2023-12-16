@@ -38,10 +38,10 @@ import java.util.stream.Collectors;
 
 public class BukkitSWEventListener implements Listener, PlatformSWEventListener {
 
-    private final SkyWarsReloaded plugin;
+    private final SkyWarsReloaded skywars;
 
-    public BukkitSWEventListener(SkyWarsReloaded plugin) {
-        this.plugin = plugin;
+    public BukkitSWEventListener(SkyWarsReloaded skywars) {
+        this.skywars = skywars;
     }
 
     @EventHandler
@@ -53,7 +53,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
         SWAsyncPlayerPreLoginEvent swEvent = new CoreSWAsyncPlayerPreLoginEvent(event.getUniqueId(), event.getName(),
                 event.getAddress(), result, null);
 
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         // Update changes
         SWAsyncPlayerPreLoginEvent.Result updatedResult = swEvent.getResult();
@@ -71,7 +71,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
         // Fire Event
         SWPlayerJoinEvent swEvent = new CoreSWPlayerJoinEvent(p, event.getJoinMessage());
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
     }
 
     @EventHandler
@@ -81,19 +81,19 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
         // Fire Event
         SWPlayerQuitEvent swEvent = new CoreSWPlayerQuitEvent(p, event.getQuitMessage());
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
     }
 
     @EventHandler
     public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
         // Get data
         SWPlayer p = this.getPlayerFromBukkitPlayer(event.getPlayer());
-        SWWorld from = this.plugin.getServer().getWorld(event.getFrom().getName());
-        SWWorld to = this.plugin.getServer().getWorld(event.getPlayer().getWorld().getName());
+        SWWorld from = this.skywars.getServer().getWorld(event.getFrom().getName());
+        SWWorld to = this.skywars.getServer().getWorld(event.getPlayer().getWorld().getName());
 
         // Fire Event
         SWPlayerChangedWorldEvent swEvent = new CoreSWPlayerChangedWorldEvent(p, from, to);
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
     }
 
     @EventHandler
@@ -107,14 +107,14 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
         if (block != null) {
             Location loc = block.getLocation();
-            location = new CoreSWCoord(plugin.getUtils().getSWWorld(loc.getWorld().getName()), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+            location = new CoreSWCoord(skywars.getUtils().getSWWorld(loc.getWorld().getName()), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
             blockType = block.getType().name();
         }
         SWPlayerInteractEvent.Action action = SWPlayerInteractEvent.Action.valueOf(event.getAction().name());
 
         // Fire Event
         SWPlayerInteractEvent swEvent = new CoreSWPlayerInteractEvent(p, location, blockType, action);
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         // Update changes
         if (swEvent.isCancelled()) {
@@ -128,12 +128,12 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
         SWPlayer p = this.getPlayerFromBukkitPlayer(event.getPlayer());
         Block block = event.getBlock();
         Location loc = block.getLocation();
-        SWCoord coord = new CoreSWCoord(plugin.getUtils().getSWWorld(loc.getWorld().getName()), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        SWCoord coord = new CoreSWCoord(skywars.getUtils().getSWWorld(loc.getWorld().getName()), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         String wName = block.getType().name();
 
         // Fire core event
         SWBlockBreakEvent swEvent = new CoreSWBlockBreakEvent(p, coord, wName);
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         // Update changes
         if (swEvent.isCancelled()) {
@@ -146,7 +146,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
         SWPlayer p = this.getPlayerFromBukkitPlayer(e.getPlayer());
 
         SWAsyncPlayerChatEvent swEvent = new CoreSWAsyncPlayerChatEvent(p, e.getMessage());
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         e.setMessage(swEvent.getMessage());
         if (swEvent.isCancelled()) {
@@ -160,12 +160,12 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
         SWPlayer p = this.getPlayerFromBukkitPlayer(event.getPlayer());
         Block block = event.getBlock();
         Location loc = block.getLocation();
-        SWCoord coord = new CoreSWCoord(plugin.getUtils().getSWWorld(loc.getWorld().getName()), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+        SWCoord coord = new CoreSWCoord(skywars.getUtils().getSWWorld(loc.getWorld().getName()), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         String wName = event.getBlockPlaced().getType().name();
 
         // Fire core event
         SWBlockPlaceEvent swEvent = new CoreSWBlockPlaceEvent(p, coord, wName);
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         // Update changes
         if (swEvent.isCancelled()) {
@@ -178,21 +178,21 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
         // Get data
         int x = event.getChunk().getX();
         int z = event.getChunk().getZ();
-        SWWorld world = this.plugin.getServer().getWorld(event.getWorld().getName());
+        SWWorld world = this.skywars.getServer().getWorld(event.getWorld().getName());
 
         // Fire core event
         SWChunkLoadEvent swEvent = new CoreSWChunkLoadEvent(world, x, z, event.isNewChunk());
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
     }
 
     @EventHandler
     public void onWorldInitEvent(WorldInitEvent event) {
         // Get data
-        SWWorld world = this.plugin.getServer().getWorld(event.getWorld().getName());
+        SWWorld world = this.skywars.getServer().getWorld(event.getWorld().getName());
 
         // Fire core event
         SWWorldInitEvent swEvent = new CoreSWWorldInitEvent(world);
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
     }
 
     @EventHandler
@@ -202,9 +202,9 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
         SWPlayerFoodLevelChangeEvent swEvent = new BukkitSWPlayerFoodLevelChangeEvent(
                 event, p, event.getFoodLevel(),
-                new BukkitItem(plugin, event.getItem())
+                new BukkitItem(skywars, event.getItem())
         );
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         if (swEvent.isCancelled()) {
             event.setCancelled(true);
@@ -220,14 +220,14 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
         if (from.getWorld() == null || to == null || to.getWorld() == null) return;
 
-        SWCoord coordFrom = new CoreSWCoord(plugin.getUtils().getSWWorld(from.getWorld().getName()),
+        SWCoord coordFrom = new CoreSWCoord(skywars.getUtils().getSWWorld(from.getWorld().getName()),
                 from.getBlockX(), from.getBlockY(), from.getBlockZ());
-        SWCoord coordTo = new CoreSWCoord(plugin.getUtils().getSWWorld(to.getWorld().getName()),
+        SWCoord coordTo = new CoreSWCoord(skywars.getUtils().getSWWorld(to.getWorld().getName()),
                 to.getBlockX(), to.getBlockY(), to.getBlockZ());
 
         // Fire core event
         SWPlayerMoveEvent swEvent = new CoreSWPlayerMoveEvent(p, coordFrom, coordTo);
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         // Update changes
         if (swEvent.isCancelled()) {
@@ -238,14 +238,14 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         // Get data
-        SWEntity entity = plugin.getEntityManager().getEntityByUUID(event.getEntity().getUniqueId());
+        SWEntity entity = skywars.getEntityManager().getEntityByUUID(event.getEntity().getUniqueId());
         DeathCause reason = DeathCause.fromString(event.getCause().name());
         double damage = event.getDamage();
         double finalDamage = event.getFinalDamage();
 
         // Fire core event
         SWEntityDamageEvent swEvent = new CoreSWEntityDamageEvent(entity, damage, finalDamage, reason);
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         // Update changes
         if (swEvent.isCancelled()) {
@@ -261,12 +261,12 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
         List<Item> drops = new ArrayList<>();
         for (ItemStack stack : event.getDrops()) {
-            drops.add(new BukkitItem(plugin, stack));
+            drops.add(new BukkitItem(skywars, stack));
         }
 
         // Fire core event
         SWPlayerDeathEvent swEvent = new CoreSWPlayerDeathEvent(p, event.getDeathMessage(), event.getKeepInventory(), drops);
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         // Update changes
         event.setDeathMessage(swEvent.getDeathMessage());
@@ -278,15 +278,15 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         // Get data
-        SWEntity entity = plugin.getEntityManager().getEntityByUUID(event.getEntity().getUniqueId());
-        SWEntity damager = plugin.getEntityManager().getEntityByUUID(event.getDamager().getUniqueId());
+        SWEntity entity = skywars.getEntityManager().getEntityByUUID(event.getEntity().getUniqueId());
+        SWEntity damager = skywars.getEntityManager().getEntityByUUID(event.getDamager().getUniqueId());
         DeathCause reason = DeathCause.fromString(event.getCause().name());
         double damage = event.getDamage();
         double finalDamage = event.getFinalDamage();
 
         // Fire core event
         SWEntityDamageByEntityEvent swEvent = new CoreSWEntityDamageByEntityEvent(entity, damager, damage, finalDamage, reason);
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         // Update changes
         if (swEvent.isCancelled()) {
@@ -297,7 +297,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        SWInventory inv = ((BukkitInventoryManager) this.plugin.getInventoryManager()).getSWInventory(event.getInventory());
+        SWInventory inv = ((BukkitInventoryManager) this.skywars.getInventoryManager()).getSWInventory(event.getInventory());
         SWGuiClickHandler.ClickType clickType;
         switch (event.getClick()) {
             case RIGHT:
@@ -319,9 +319,9 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
                 event.getSlot(),
                 event.getRawSlot(),
                 event.isShiftClick(),
-                new BukkitItem(plugin, event.getCurrentItem())
+                new BukkitItem(skywars, event.getCurrentItem())
         );
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         if (swEvent.isCancelled()) {
             event.setCancelled(true);
@@ -334,10 +334,10 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
         if (!(e.getEntity() instanceof Player)) return;
 
         SWPlayer p = this.getPlayerFromBukkitPlayer((Player) e.getEntity());
-        SWDroppedItem item = new BukkitSWDroppedItem(plugin, e.getItem());
+        SWDroppedItem item = new BukkitSWDroppedItem(skywars, e.getItem());
 
         SWPlayerPickupItemEvent swEvent = new CoreSWPlayerPickupItemEvent(p, item, e.getRemaining());
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         if (swEvent.isCancelled()) {
             e.setCancelled(true);
@@ -347,10 +347,10 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent e) {
         SWPlayer p = this.getPlayerFromBukkitPlayer(e.getPlayer());
-        SWDroppedItem item = new BukkitSWDroppedItem(plugin, e.getItemDrop());
+        SWDroppedItem item = new BukkitSWDroppedItem(skywars, e.getItemDrop());
 
         SWPlayerDropItemEvent swEvent = new CoreSWPlayerDropItemEvent(p, item);
-        plugin.getEventManager().callEvent(swEvent);
+        skywars.getEventManager().callEvent(swEvent);
 
         if (swEvent.isCancelled()) {
             e.setCancelled(true);
@@ -360,7 +360,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     // Utils
 
     private SWPlayer getPlayerFromBukkitPlayer(Player player) {
-        return this.plugin.getPlayerManager().getPlayerByUUID(player.getUniqueId());
+        return this.skywars.getPlayerManager().getPlayerByUUID(player.getUniqueId());
     }
 
 }

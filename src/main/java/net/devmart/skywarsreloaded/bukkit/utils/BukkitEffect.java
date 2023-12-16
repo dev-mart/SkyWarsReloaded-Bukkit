@@ -13,12 +13,12 @@ public class BukkitEffect extends AbstractEffect {
 
     private PotionEffect effect;
 
-    public BukkitEffect(SkyWarsReloaded plugin, String input) {
-        super(plugin, input);
+    public BukkitEffect(SkyWarsReloaded skywars, String input) {
+        super(skywars, input);
         try {
             effect = new PotionEffect(PotionEffectType.getByKey(NamespacedKey.fromString(getType())), getDuration(), getStrength(), true, showParticles());
         } catch (Exception e) {
-            plugin.getLogger().error(
+            skywars.getLogger().error(
                     "Failed to load bukkit effect from string %s. Using the default: %d. (%s)",
                     input, 1, e.getClass().getName() + ": " + e.getLocalizedMessage()
             );

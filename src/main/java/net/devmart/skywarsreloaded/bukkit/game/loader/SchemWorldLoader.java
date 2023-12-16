@@ -23,19 +23,15 @@ import java.util.concurrent.CompletableFuture;
 
 public class SchemWorldLoader extends BukkitWorldLoader {
 
-    private final BukkitSkyWarsReloaded plugin;
-
-    public SchemWorldLoader(BukkitSkyWarsReloaded pluginIn) {
-        super(pluginIn);
-        this.plugin = pluginIn;
-
+    public SchemWorldLoader(BukkitSkyWarsReloaded skywars) {
+        super(skywars);
     }
 
     @Override
     public CompletableFuture<Boolean> generateWorldInstance(LocalGameInstance gameWorld) throws IllegalStateException, IllegalArgumentException {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
         this.createEmptyWorld(gameWorld).thenRun(() -> {
-            plugin.getScheduler().runSync(() -> postWorldGenerateTask(gameWorld, future));
+            skywars.getScheduler().runSync(() -> postWorldGenerateTask(gameWorld, future));
         });
         return future;
     }
@@ -57,11 +53,11 @@ public class SchemWorldLoader extends BukkitWorldLoader {
         creator.type(WorldType.FLAT);
 
         // Apply generator settings based on the MC version
-        String generatorSettings = this.plugin.getNMSManager().getNMS().getVoidGeneratorSettings();
+        String generatorSettings = this.skywars.getNMSManager().getNMS().getVoidGeneratorSettings();
         creator.generatorSettings(generatorSettings);
 
         // Override world generator
-        creator.generator(((BukkitSWChunkGenerator) this.plugin.getNMSManager().getNMS().getChunkGenerator()).getGenerator());
+        creator.generator(((BukkitSWChunkGenerator) this.skywars.getNMSManager().getNMS().getChunkGenerator()).getGenerator());
 
         World createdWorld = creator.createWorld();
         assert createdWorld != null;
@@ -89,7 +85,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
         // todo: Later make this work with FAWE
         CompletableFuture<Boolean> futureOk = CompletableFuture.completedFuture(true);
 
-        File schemFolder = new File(plugin.getDataFolder(), FolderProperties.WORLD_SCHEMATICS_FOLDER);
+        File schemFolder = new File(skywars.getDataFolder(), FolderProperties.WORLD_SCHEMATICS_FOLDER);
         String schemFileName = gameWorld.getTemplate().getName() + ".schem";
 
         File schemFile = new File(schemFolder, schemFileName);
@@ -97,7 +93,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
             return futureFail;
         }
 
-        Clipboard clip = plugin.getSchematicManager().getSchematic(schemFolder, schemFileName);
+        Clipboard clip = skywars.getSchematicManager().getSchematic(schemFolder, schemFileName);
         if (clip == null) {
             return futureFail; // todo throw error?
         }
@@ -112,7 +108,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
 
         // The returned EditSession is already auto-closed using a try-w/ statement inside pasteSchematic()
         //noinspection resource
-        plugin.getSchematicManager().pasteSchematic(clip, new BukkitWorld(world), BlockVector3.at(0, 0, 0), true);
+        skywars.getSchematicManager().pasteSchematic(clip, new BukkitWorld(world), BlockVector3.at(0, 0, 0), true);
         return futureOk;
     }
 
@@ -125,7 +121,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
             return;
         }
 
-        final SWCoord loc = plugin.getDataConfig().getCoord(RuntimeDataProperties.LOBBY_SPAWN);
+        final SWCoord loc = skywars.getDataConfig().getCoord(RuntimeDataProperties.LOBBY_SPAWN);
 
         for (SWPlayer player : gameWorld.getWorld().getAllPlayers()) {
             player.teleport(loc);
@@ -135,13 +131,13 @@ public class SchemWorldLoader extends BukkitWorldLoader {
         try {
             FileUtils.deleteDirectory(world.getWorldFolder());
         } catch (IOException e) {
-            plugin.getLogger().error(String.format("Failed to delete world %s. (%s)", world.getName(), e.getClass().getName() + ": " + e.getLocalizedMessage()));
+            skywars.getLogger().error(String.format("Failed to delete world %s. (%s)", world.getName(), e.getClass().getName() + ": " + e.getLocalizedMessage()));
         }
     }
 
     @Override
     public void deleteMap(GameTemplate gameTemplate, boolean forceUnloadInstances) {
-        File schemFolder = new File(plugin.getDataFolder(), FolderProperties.WORLD_SCHEMATICS_FOLDER);
+        File schemFolder = new File(skywars.getDataFolder(), FolderProperties.WORLD_SCHEMATICS_FOLDER);
         String schemFileName = gameTemplate.getName() + ".schem";
 
         File schemFile = new File(schemFolder, schemFileName);
@@ -149,7 +145,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
             try {
                 FileUtils.forceDelete(schemFile);
             } catch (IOException e) {
-                plugin.getLogger().error(String.format("Failed to delete schematic file %s. (%s)", schemFileName, e.getClass().getName() + ": " + e.getLocalizedMessage()));
+                skywars.getLogger().error(String.format("Failed to delete schematic file %s. (%s)", schemFileName, e.getClass().getName() + ": " + e.getLocalizedMessage()));
             }
         }
     }
@@ -168,9 +164,9 @@ public class SchemWorldLoader extends BukkitWorldLoader {
 
     @Override
     public CompletableFuture<Boolean> save(LocalGameInstance gameInstance) {
-        boolean successful = plugin.getSchematicManager().saveGameWorldToSchematic(
+        boolean successful = skywars.getSchematicManager().saveGameWorldToSchematic(
                 gameInstance,
-                plugin.getUtils().getWorldEditWorld(gameInstance.getWorldName())
+                skywars.getUtils().getWorldEditWorld(gameInstance.getWorldName())
         );
         return CompletableFuture.completedFuture(successful);
     }

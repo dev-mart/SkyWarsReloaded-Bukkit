@@ -8,8 +8,8 @@ import java.io.File;
 
 public class BukkitYAMLManager extends AbstractYAMLManager {
 
-    public BukkitYAMLManager(BukkitSkyWarsReloaded plugin) {
-        super(plugin);
+    public BukkitYAMLManager(BukkitSkyWarsReloaded skywars) {
+        super(skywars);
     }
 
     public BukkitYAMLConfig createConfigInstance(String id, File directory, String fileName) {

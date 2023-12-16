@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 
 public class BukkitSWInventory implements SWInventory {
 
-    private final SkyWarsReloaded plugin;
+    private final SkyWarsReloaded skywars;
     private final Inventory inventory;
     private final String title;
     private final int size;
 
-    public BukkitSWInventory(SkyWarsReloaded plugin, String title, int size) {
-        this.plugin = plugin;
+    public BukkitSWInventory(SkyWarsReloaded skywars, String title, int size) {
+        this.skywars = skywars;
         this.title = title;
         this.size = size;
         inventory = Bukkit.getServer().createInventory(null, size, title);
@@ -31,15 +31,15 @@ public class BukkitSWInventory implements SWInventory {
         // todo add support for different inventory types in the future?
     }
 
-    public BukkitSWInventory(SkyWarsReloaded plugin, String title, String inventoryType) {
-        this.plugin = plugin;
+    public BukkitSWInventory(SkyWarsReloaded skywars, String title, String inventoryType) {
+        this.skywars = skywars;
         this.title = title;
         this.size = 0;
         inventory = Bukkit.getServer().createInventory(null, InventoryType.valueOf(inventoryType.toUpperCase()), title);
     }
 
-    public BukkitSWInventory(SkyWarsReloaded plugin, Inventory bukkitInventory, String title) {
-        this.plugin = plugin;
+    public BukkitSWInventory(SkyWarsReloaded skywars, Inventory bukkitInventory, String title) {
+        this.skywars = skywars;
         this.inventory = bukkitInventory;
         this.title = title;
         this.size = bukkitInventory.getSize();
@@ -57,7 +57,7 @@ public class BukkitSWInventory implements SWInventory {
 
     @Override
     public Item getItem(int slot) {
-        return new BukkitItem(plugin, inventory.getItem(slot));
+        return new BukkitItem(skywars, inventory.getItem(slot));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class BukkitSWInventory implements SWInventory {
 
         for (int i = 0; i < bukkitContents.length; i++) {
             final ItemStack item = bukkitContents[i];
-            contents[i] = item == null || item.getType() == Material.AIR ? null : new BukkitItem(plugin, item);
+            contents[i] = item == null || item.getType() == Material.AIR ? null : new BukkitItem(skywars, item);
         }
 
         return contents;
@@ -102,7 +102,7 @@ public class BukkitSWInventory implements SWInventory {
     @Override
     public List<SWPlayer> getViewers() {
         return this.inventory.getViewers().stream()
-                .map(viewer -> plugin.getPlayerManager().getPlayerByUUID(viewer.getUniqueId()))
+                .map(viewer -> skywars.getPlayerManager().getPlayerByUUID(viewer.getUniqueId()))
                 .collect(Collectors.toList());
     }
 

@@ -11,10 +11,10 @@ import org.bukkit.ChatColor;
 
 public class BukkitPlatformUtils extends AbstractPlatformUtils {
 
-    private final BukkitSkyWarsReloaded plugin;
+    private final BukkitSkyWarsReloaded skywars;
 
-    public BukkitPlatformUtils(BukkitSkyWarsReloaded plugin) {
-        this.plugin = plugin;
+    public BukkitPlatformUtils(BukkitSkyWarsReloaded skywars) {
+        this.skywars = skywars;
     }
 
     @Override
@@ -41,6 +41,6 @@ public class BukkitPlatformUtils extends AbstractPlatformUtils {
 
     @Override
     public SWWorld getSWWorld(String worldName) {
-        return new BukkitSWWorld(plugin, Bukkit.getWorld(worldName));
+        return new BukkitSWWorld(skywars, Bukkit.getWorld(worldName));
     }
 }

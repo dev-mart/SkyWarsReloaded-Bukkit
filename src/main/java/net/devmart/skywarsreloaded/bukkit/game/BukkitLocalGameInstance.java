@@ -13,8 +13,8 @@ import java.util.UUID;
 
 public class BukkitLocalGameInstance extends AbstractLocalGameInstance {
 
-    public BukkitLocalGameInstance(BukkitSkyWarsReloaded plugin, UUID id, GameTemplate gameData) {
-        super(plugin, id, gameData);
+    public BukkitLocalGameInstance(BukkitSkyWarsReloaded skywars, UUID id, GameTemplate gameData) {
+        super(skywars, id, gameData);
     }
 
     public World getBukkitWorld() {
@@ -25,13 +25,13 @@ public class BukkitLocalGameInstance extends AbstractLocalGameInstance {
     public SWWorld getWorld() {
         World bukkitWorld = getBukkitWorld();
         if (bukkitWorld == null) return null;
-        return new BukkitSWWorld((BukkitSkyWarsReloaded) plugin, bukkitWorld);
+        return new BukkitSWWorld((BukkitSkyWarsReloaded) skywars, bukkitWorld);
     }
 
     @Override
     public void makeReadyForEditing() {
         World world = getBukkitWorld();
-        plugin.getWorldLoader().updateWorldBorder(this);
+        skywars.getWorldLoader().updateWorldBorder(this);
         // Place beacons for each player spawn point
         getTemplate().getTeamSpawnpoints().forEach(swCoords ->
                 swCoords.forEach(swCoord ->

@@ -11,8 +11,8 @@ public class BukkitSWChest extends BukkitSWBlock implements SWChest {
 
     private final Chest chest;
 
-    public BukkitSWChest(BukkitSkyWarsReloaded plugin, Chest chest) {
-        super(plugin, chest.getBlock());
+    public BukkitSWChest(BukkitSkyWarsReloaded skywars, Chest chest) {
+        super(skywars, chest.getBlock());
         this.chest = chest;
     }
 
@@ -22,7 +22,7 @@ public class BukkitSWChest extends BukkitSWBlock implements SWChest {
         final Item[] contents = new Item[bukkitContents.length];
 
         for (int i = 0; i < bukkitContents.length; i++) {
-            contents[i] = new BukkitItem(this.plugin, bukkitContents[i]);
+            contents[i] = new BukkitItem(this.skywars, bukkitContents[i]);
         }
 
         return contents;

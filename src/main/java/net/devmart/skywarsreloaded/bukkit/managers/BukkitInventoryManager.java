@@ -10,11 +10,11 @@ import java.util.HashMap;
 
 public class BukkitInventoryManager implements SWInventoryManager {
 
-    private final SkyWarsReloaded plugin;
+    protected final SkyWarsReloaded skywars;
     private final HashMap<Inventory, SWInventory> inventories;
 
-    public BukkitInventoryManager(SkyWarsReloaded plugin) {
-        this.plugin = plugin;
+    public BukkitInventoryManager(SkyWarsReloaded skywars) {
+        this.skywars = skywars;
         inventories = new HashMap<>();
     }
 

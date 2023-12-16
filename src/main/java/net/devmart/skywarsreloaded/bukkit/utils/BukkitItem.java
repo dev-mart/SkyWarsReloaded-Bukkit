@@ -23,16 +23,16 @@ import java.util.stream.Collectors;
 
 public class BukkitItem extends AbstractItem implements ConfigurationSerializable {
 
-    private final SkyWarsReloaded plugin;
+    private final SkyWarsReloaded skywars;
     private ItemStack itemStack;
 
-    public BukkitItem(SkyWarsReloaded plugin, String material) {
-        this.plugin = plugin;
+    public BukkitItem(SkyWarsReloaded skywars, String material) {
+        this.skywars = skywars;
         this.itemStack = new ItemStack(validateMaterial(material));
     }
 
-    public BukkitItem(SkyWarsReloaded plugin, ItemStack itemStack) {
-        this.plugin = plugin;
+    public BukkitItem(SkyWarsReloaded skywars, ItemStack itemStack) {
+        this.skywars = skywars;
         this.itemStack = itemStack;
     }
 
@@ -50,7 +50,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
         try {
             this.itemStack.setType(Material.valueOf(material));
         } catch (Exception ex) {
-            this.plugin.getLogger().warn("Attempted to use a material that doesn't exist! \"" + material + "\"");
+            this.skywars.getLogger().warn("Attempted to use a material that doesn't exist! \"" + material + "\"");
             ex.printStackTrace();
             this.itemStack.setType(Material.STONE);
         }
@@ -82,16 +82,16 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
             String type = split[0];
             int level = 1;
-            if (split.length > 1 && plugin.getUtils().isInt(split[1])) {
+            if (split.length > 1 && skywars.getUtils().isInt(split[1])) {
                 level = Integer.parseInt(split[1]);
             }
 
             try {
-                Enchantment ench = ((BukkitSWEnchantmentType) plugin.getNMSManager().getNMS().getEnchantment(type)).getEnchantment();
+                Enchantment ench = ((BukkitSWEnchantmentType) skywars.getNMSManager().getNMS().getEnchantment(type)).getEnchantment();
                 assert meta != null;
                 meta.addEnchant(ench, level, true);
             } catch (Exception e) {
-                plugin.getLogger().error("Enchantment with name '" + type + "' could not be resolved for item " + itemStack.getType().name() + ". Ignoring it.");
+                skywars.getLogger().error("Enchantment with name '" + type + "' could not be resolved for item " + itemStack.getType().name() + ". Ignoring it.");
             }
         });
         itemStack.setItemMeta(meta);
@@ -108,7 +108,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
         ItemMeta meta = itemStack.getItemMeta();
         assert meta != null;
 
-        lore.replaceAll(s -> plugin.getUtils().colorize(s));
+        lore.replaceAll(s -> skywars.getUtils().colorize(s));
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
     }
@@ -123,7 +123,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) return;
 
-        meta.setDisplayName(plugin.getUtils().colorize(displayName));
+        meta.setDisplayName(skywars.getUtils().colorize(displayName));
         itemStack.setItemMeta(meta);
     }
 
@@ -145,7 +145,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
             try {
                 meta.addItemFlags(ItemFlag.valueOf(flag));
             } catch (Exception e) {
-                plugin.getLogger().error("Flag with name '" + flag + "' could not be resolved for item " + itemStack.getType().name() + ". Ignoring it.");
+                skywars.getLogger().error("Flag with name '" + flag + "' could not be resolved for item " + itemStack.getType().name() + ". Ignoring it.");
             }
         });
         itemStack.setItemMeta(meta);
@@ -159,7 +159,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
         try {
             meta.addItemFlags(ItemFlag.valueOf(flag));
         } catch (Exception e) {
-            plugin.getLogger().error("Flag with name '" + flag + "' could not be resolved for item " + itemStack.getType().name() + ". Ignoring it.");
+            skywars.getLogger().error("Flag with name '" + flag + "' could not be resolved for item " + itemStack.getType().name() + ". Ignoring it.");
         }
         itemStack.setItemMeta(meta);
     }
@@ -242,7 +242,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
         try {
             return Material.valueOf(material);
         } catch (Exception e) {
-            this.plugin.getLogger().error("Invalid material found for item: " + material);
+            this.skywars.getLogger().error("Invalid material found for item: " + material);
             return Material.STONE;
         }
     }
@@ -258,7 +258,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public Item clone() {
-        return new BukkitItem(plugin, itemStack.clone());
+        return new BukkitItem(skywars, itemStack.clone());
     }
 
     @Override
@@ -274,7 +274,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     public static BukkitItem deserialize(Map<String, Object> map) {
         BukkitSkyWarsReloadedPlugin plugin = (BukkitSkyWarsReloadedPlugin) Bukkit.getPluginManager().getPlugin("SkyWarsReloaded");
-        return new BukkitItem(plugin.getPlugin(), ItemStack.deserialize(map));
+        return new BukkitItem(plugin.getSkywars(), ItemStack.deserialize(map));
     }
 
 }

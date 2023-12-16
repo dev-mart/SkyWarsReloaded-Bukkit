@@ -9,9 +9,9 @@ public class BukkitSWLogger extends AbstractSWLogger {
 
     protected final Logger bukkitLogger;
 
-    public BukkitSWLogger(SkyWarsReloaded pluginIn, Logger bukkitLoggerIn, boolean isDebugModeActive) {
-        super(pluginIn, isDebugModeActive);
-        this.bukkitLogger = bukkitLoggerIn;
+    public BukkitSWLogger(SkyWarsReloaded skywars, Logger bukkitLogger, boolean isDebugModeActive) {
+        super(skywars, isDebugModeActive);
+        this.bukkitLogger = bukkitLogger;
     }
 
     protected String formatMessage(String message, Object... args) {

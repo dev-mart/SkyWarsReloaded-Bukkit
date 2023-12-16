@@ -19,19 +19,19 @@ import java.util.UUID;
 
 public class BukkitSWEntity extends AbstractSWEntity {
 
-    protected final SkyWarsReloaded plugin;
+    protected final SkyWarsReloaded skywars;
     protected Entity entity = null;
 
-    public BukkitSWEntity(SkyWarsReloaded plugin, Entity entity) {
+    public BukkitSWEntity(SkyWarsReloaded skywars, Entity entity) {
         super(entity.getUniqueId());
-        this.plugin = plugin;
+        this.skywars = skywars;
         this.entity = entity;
     }
 
-    public BukkitSWEntity(SkyWarsReloaded plugin, UUID uuid) {
+    public BukkitSWEntity(SkyWarsReloaded skywars, UUID uuid) {
         super(uuid);
-        this.plugin = plugin;
-        if (plugin.getServer().isPrimaryThread()) {
+        this.skywars = skywars;
+        if (skywars.getServer().isPrimaryThread()) {
             this.entity = Bukkit.getEntity(uuid);
         }
     }
@@ -44,7 +44,7 @@ public class BukkitSWEntity extends AbstractSWEntity {
     public SWCoord getLocation() throws NullPointerException {
         if (this.entity == null) throw new NullPointerException("Bukkit entity is null");
         final Location location = entity.getLocation();
-        return new CoreSWCoord(new BukkitSWWorld((BukkitSkyWarsReloaded) plugin, location.getWorld()), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        return new CoreSWCoord(new BukkitSWWorld((BukkitSkyWarsReloaded) skywars, location.getWorld()), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
     }
 
     @Override
@@ -78,7 +78,7 @@ public class BukkitSWEntity extends AbstractSWEntity {
     @Override
     public SWCompletableFuture<Boolean> teleportAsync(String world, double x, double y, double z) {
         World bukkitWorld = Bukkit.getWorld(world);
-        CoreSWCCompletableFuture<Boolean> successFuture = new CoreSWCCompletableFuture<>(this.plugin);
+        CoreSWCCompletableFuture<Boolean> successFuture = new CoreSWCCompletableFuture<>(this.skywars);
         if (bukkitWorld == null || entity == null) {
             successFuture.complete(false);
             return successFuture;

@@ -67,6 +67,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public String getMaterial() {
+        if (itemStack == null) return null;
         return this.itemStack.getType().toString();
     }
 

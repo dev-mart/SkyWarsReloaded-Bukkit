@@ -2,18 +2,21 @@ package net.devmart.skywarsreloaded.bukkit.utils;
 
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.world.World;
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.devmart.skywarsreloaded.api.wrapper.sender.SWCommandSender;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWWorld;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.core.utils.AbstractPlatformUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public class BukkitPlatformUtils extends AbstractPlatformUtils {
 
-    private final BukkitSkyWarsReloaded skywars;
+    protected final BukkitSkyWarsReloaded skywars;
 
     public BukkitPlatformUtils(BukkitSkyWarsReloaded skywars) {
+        super(skywars);
         this.skywars = skywars;
     }
 
@@ -41,6 +44,15 @@ public class BukkitPlatformUtils extends AbstractPlatformUtils {
 
     @Override
     public SWWorld getSWWorld(String worldName) {
-        return new BukkitSWWorld(skywars, Bukkit.getWorld(worldName));
+        return skywars.getServer().getWorld(worldName);
+    }
+
+    @Override
+    public String parsePlaceholders(String message, SWCommandSender player) {
+        if (!(player instanceof BukkitSWPlayer) || !Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            return message;
+        }
+
+        return PlaceholderAPI.setPlaceholders(((BukkitSWPlayer) player).getPlayer(), message);
     }
 }

@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 public class BukkitItem extends AbstractItem implements ConfigurationSerializable {
 
-    protected final SkyWarsReloaded skywars;
     protected ItemStack itemStack;
     protected String displayName;
     protected List<String> lore;
@@ -33,23 +32,37 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     protected SWPlayer placeholderPlayer;
 
     public BukkitItem(SkyWarsReloaded skywars, String material) {
-        this.skywars = skywars;
-        this.itemStack = new ItemStack(validateMaterial(material));
-        this.lore = new ArrayList<>();
+        super(skywars);
         this.replacements = new HashMap<>();
         this.placeholderPlayer = null;
+
+        setItemStack(new ItemStack(validateMaterial(material)));
     }
 
     public BukkitItem(SkyWarsReloaded skywars, ItemStack itemStack) {
-        this.skywars = skywars;
-        this.itemStack = itemStack;
-        this.lore = new ArrayList<>();
+        super(skywars);
         this.replacements = new HashMap<>();
         this.placeholderPlayer = null;
+
+        setItemStack(itemStack);
     }
 
-    public void setItemStack(ItemStack itemStack) {
+    public BukkitItem setItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
+
+        if (itemStack != null) {
+            ItemMeta meta = itemStack.getItemMeta();
+
+            if (meta != null) {
+                this.lore = meta.getLore() == null ? new ArrayList<>() : meta.getLore();
+                this.displayName = meta.getDisplayName();
+                return this;
+            }
+        }
+
+        this.lore = new ArrayList<>();
+        this.displayName = null;
+        return this;
     }
 
     @Override
@@ -63,26 +76,28 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
             this.itemStack.setType(Material.valueOf(material));
         } catch (Exception ex) {
             this.skywars.getLogger().warn("Attempted to use a material that doesn't exist! \"" + material + "\"");
-            ex.printStackTrace();
             this.itemStack.setType(Material.STONE);
+            ex.printStackTrace();
         }
         return this;
     }
 
     @Override
     public int getAmount() {
+        if (itemStack == null) return 0;
         return this.itemStack.getAmount();
     }
 
     @Override
     public BukkitItem setAmount(int amount) {
+        if (itemStack == null) return this;
         this.itemStack.setAmount(amount);
         return this;
     }
 
     @Override
     public List<String> getEnchantments() {
-        // ENCHANTMENT:LEVEL
+        if (this.itemStack == null) return new ArrayList<>();
         return this.itemStack.getEnchantments().entrySet().stream()
                 .map((enchantType) -> enchantType.getKey().getKey().getKey() + ":" + enchantType.getValue().toString())
                 .collect(Collectors.toList());
@@ -90,6 +105,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public BukkitItem setEnchantments(List<String> enchantments) {
+        if (itemStack == null) return this;
         ItemMeta meta = itemStack.getItemMeta();
         enchantments.forEach(enchantment -> {
             String[] split = enchantment.split(":");
@@ -114,7 +130,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public List<String> getLore() {
-        return itemStack.hasItemMeta() ? itemStack.getItemMeta().getLore() : null;
+        return this.lore;
     }
 
     @Override
@@ -126,7 +142,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public String getDisplayName() {
-        return itemStack.getItemMeta() == null ? "" : itemStack.getItemMeta().getDisplayName();
+        return this.displayName;
     }
 
     @Override
@@ -137,6 +153,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public List<String> getItemFlags() {
+        if (itemStack == null) return new ArrayList<>();
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta == null) return new ArrayList<>();
 
@@ -147,6 +164,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public BukkitItem setItemFlags(List<String> itemFlags) {
+        if (itemStack == null) return this;
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) return this;
 
@@ -165,6 +183,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public BukkitItem addItemFlag(String flag) {
+        if (itemStack == null) return this;
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) return this;
 
@@ -179,6 +198,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public BukkitItem addAllItemFlags() {
+        if (itemStack == null) return this;
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) return this;
 
@@ -206,17 +226,21 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public byte getDamage() {
+        if (itemStack == null) return 0;
         return itemStack.getData().getData();
     }
 
     @Override
     public BukkitItem setDamage(byte damage) {
+        if (itemStack == null) return this;
         itemStack.getData().setData(damage);
         return this;
     }
 
     @Override
     public java.awt.Color getColor() {
+        if (itemStack == null) return null;
+
         Color color = null;
         if (itemStack.getItemMeta() instanceof LeatherArmorMeta) {
             color = ((LeatherArmorMeta) itemStack.getItemMeta()).getColor();
@@ -229,6 +253,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public BukkitItem setColor(java.awt.Color color) {
+        if (itemStack == null) return this;
         final Color bukkitColor = Color.fromRGB(color.getRed(), color.getGreen(), color.getBlue());
 
         if (itemStack.getItemMeta() instanceof LeatherArmorMeta) {
@@ -242,6 +267,8 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     @Override
     @Nullable
     public String getSkullOwner() {
+        if (itemStack == null) return null;
+
         if (itemStack.getItemMeta() instanceof SkullMeta) {
             return ((SkullMeta) itemStack.getItemMeta()).getOwner();
         }
@@ -250,6 +277,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public BukkitItem setSkullOwner(String owner) {
+        if (itemStack == null) return this;
         if (itemStack.getItemMeta() instanceof SkullMeta) {
             ((SkullMeta) itemStack.getItemMeta()).setOwner(owner);
         }
@@ -267,7 +295,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public boolean isSimilar(Item item) {
-        return itemStack.isSimilar(((BukkitItem) item).getBukkitItem());
+        return getBukkitItem().isSimilar(((BukkitItem) item).getBukkitItem());
     }
 
     @Override
@@ -285,8 +313,10 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     }
 
     public ItemStack getBukkitItem() {
-        ItemMeta meta = this.itemStack.getItemMeta();
-        if (meta == null) return this.itemStack;
+        if (this.itemStack == null) return null;
+        ItemStack item = this.itemStack.clone();
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
 
         if (this.displayName != null) {
             meta.setDisplayName(parseMessage(this.displayName));
@@ -297,8 +327,8 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
                 .collect(Collectors.toList());
         meta.setLore(parsedLore);
 
-        this.itemStack.setItemMeta(meta);
-        return this.itemStack;
+        item.setItemMeta(meta);
+        return item;
     }
 
     @Override
@@ -309,7 +339,8 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public Item clone() {
-        return new BukkitItem(skywars, itemStack.clone());
+        return new BukkitItem(skywars, getBukkitItem())
+                .withExternalPlaceholders(placeholderPlayer);
     }
 
     @Override

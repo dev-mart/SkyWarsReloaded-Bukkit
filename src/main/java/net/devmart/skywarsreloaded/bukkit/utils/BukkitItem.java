@@ -2,6 +2,7 @@ package net.devmart.skywarsreloaded.bukkit.utils;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.utils.Item;
+import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloadedPlugin;
 import net.devmart.skywarsreloaded.bukkit.wrapper.item.BukkitSWEnchantmentType;
 import net.devmart.skywarsreloaded.core.utils.AbstractItem;
@@ -17,23 +18,34 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BukkitItem extends AbstractItem implements ConfigurationSerializable {
 
-    private final SkyWarsReloaded skywars;
-    private ItemStack itemStack;
+    protected final SkyWarsReloaded skywars;
+    protected ItemStack itemStack;
+    protected String displayName;
+    protected List<String> lore;
+    protected Map<String, String> replacements;
+    protected SWPlayer placeholderPlayer;
 
     public BukkitItem(SkyWarsReloaded skywars, String material) {
         this.skywars = skywars;
         this.itemStack = new ItemStack(validateMaterial(material));
+        this.lore = new ArrayList<>();
+        this.replacements = new HashMap<>();
+        this.placeholderPlayer = null;
     }
 
     public BukkitItem(SkyWarsReloaded skywars, ItemStack itemStack) {
         this.skywars = skywars;
         this.itemStack = itemStack;
+        this.lore = new ArrayList<>();
+        this.replacements = new HashMap<>();
+        this.placeholderPlayer = null;
     }
 
     public void setItemStack(ItemStack itemStack) {
@@ -46,7 +58,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     }
 
     @Override
-    public void setMaterial(String material) {
+    public BukkitItem setMaterial(String material) {
         try {
             this.itemStack.setType(Material.valueOf(material));
         } catch (Exception ex) {
@@ -54,6 +66,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
             ex.printStackTrace();
             this.itemStack.setType(Material.STONE);
         }
+        return this;
     }
 
     @Override
@@ -62,8 +75,9 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     }
 
     @Override
-    public void setAmount(int amount) {
+    public BukkitItem setAmount(int amount) {
         this.itemStack.setAmount(amount);
+        return this;
     }
 
     @Override
@@ -75,7 +89,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     }
 
     @Override
-    public void setEnchantments(List<String> enchantments) {
+    public BukkitItem setEnchantments(List<String> enchantments) {
         ItemMeta meta = itemStack.getItemMeta();
         enchantments.forEach(enchantment -> {
             String[] split = enchantment.split(":");
@@ -87,14 +101,15 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
             }
 
             try {
-                Enchantment ench = ((BukkitSWEnchantmentType) skywars.getNMSManager().getNMS().getEnchantment(type)).getEnchantment();
+                Enchantment bukkitEnchantment = ((BukkitSWEnchantmentType) skywars.getNMSManager().getNMS().getEnchantment(type)).getEnchantment();
                 assert meta != null;
-                meta.addEnchant(ench, level, true);
+                meta.addEnchant(bukkitEnchantment, level, true);
             } catch (Exception e) {
                 skywars.getLogger().error("Enchantment with name '" + type + "' could not be resolved for item " + itemStack.getType().name() + ". Ignoring it.");
             }
         });
         itemStack.setItemMeta(meta);
+        return this;
     }
 
     @Override
@@ -103,14 +118,10 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     }
 
     @Override
-    public void setLore(List<String> lore) {
+    public BukkitItem setLore(List<String> lore) {
         if (lore == null) lore = new ArrayList<>();
-        ItemMeta meta = itemStack.getItemMeta();
-        assert meta != null;
-
-        lore.replaceAll(s -> skywars.getUtils().colorize(s));
-        meta.setLore(lore);
-        itemStack.setItemMeta(meta);
+        this.lore = lore;
+        return this;
     }
 
     @Override
@@ -119,25 +130,25 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     }
 
     @Override
-    public void setDisplayName(String displayName) {
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta == null) return;
-
-        meta.setDisplayName(skywars.getUtils().colorize(displayName));
-        itemStack.setItemMeta(meta);
+    public BukkitItem setDisplayName(String displayName) {
+        this.displayName = displayName;
+        return this;
     }
 
     @Override
     public List<String> getItemFlags() {
-        return itemStack.getItemMeta().getItemFlags().stream()
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) return new ArrayList<>();
+
+        return itemMeta.getItemFlags().stream()
                 .map(Enum::name)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void setItemFlags(List<String> itemFlags) {
+    public BukkitItem setItemFlags(List<String> itemFlags) {
         ItemMeta meta = itemStack.getItemMeta();
-        if (meta == null) return;
+        if (meta == null) return this;
 
         meta.removeItemFlags(meta.getItemFlags().toArray(ItemFlag[]::new));
 
@@ -149,12 +160,13 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
             }
         });
         itemStack.setItemMeta(meta);
+        return this;
     }
 
     @Override
-    public void addItemFlag(String flag) {
+    public BukkitItem addItemFlag(String flag) {
         ItemMeta meta = itemStack.getItemMeta();
-        if (meta == null) return;
+        if (meta == null) return this;
 
         try {
             meta.addItemFlags(ItemFlag.valueOf(flag));
@@ -162,15 +174,17 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
             skywars.getLogger().error("Flag with name '" + flag + "' could not be resolved for item " + itemStack.getType().name() + ". Ignoring it.");
         }
         itemStack.setItemMeta(meta);
+        return this;
     }
 
     @Override
-    public void addAllItemFlags() {
+    public BukkitItem addAllItemFlags() {
         ItemMeta meta = itemStack.getItemMeta();
-        if (meta == null) return;
+        if (meta == null) return this;
 
         meta.addItemFlags(ItemFlag.values());
         itemStack.setItemMeta(meta);
+        return this;
     }
 
     @Override
@@ -183,10 +197,11 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     }
 
     @Override
-    public void setDurability(short durability) {
+    public BukkitItem setDurability(short durability) {
         if (itemStack instanceof Damageable) {
             ((Damageable) itemStack).setDamage(durability);
         }
+        return this;
     }
 
     @Override
@@ -195,8 +210,9 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     }
 
     @Override
-    public void setDamage(byte damage) {
+    public BukkitItem setDamage(byte damage) {
         itemStack.getData().setData(damage);
+        return this;
     }
 
     @Override
@@ -212,7 +228,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     }
 
     @Override
-    public void setColor(java.awt.Color color) {
+    public BukkitItem setColor(java.awt.Color color) {
         final Color bukkitColor = Color.fromRGB(color.getRed(), color.getGreen(), color.getBlue());
 
         if (itemStack.getItemMeta() instanceof LeatherArmorMeta) {
@@ -220,6 +236,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
         } else if (itemStack.getItemMeta() instanceof PotionMeta) {
             ((PotionMeta) itemStack.getItemMeta()).setColor(bukkitColor);
         }
+        return this;
     }
 
     @Override
@@ -232,10 +249,11 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
     }
 
     @Override
-    public void setSkullOwner(String owner) {
+    public BukkitItem setSkullOwner(String owner) {
         if (itemStack.getItemMeta() instanceof SkullMeta) {
             ((SkullMeta) itemStack.getItemMeta()).setOwner(owner);
         }
+        return this;
     }
 
     private Material validateMaterial(String material) {
@@ -252,8 +270,41 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
         return itemStack.isSimilar(((BukkitItem) item).getBukkitItem());
     }
 
+    @Override
+    public Item replace(String search, String replace) {
+        this.replacements.put(search, replace);
+        return this;
+    }
+
+    protected String parseMessage(String message) {
+        message = skywars.getUtils().formatMessage(message, this.replacements, true);
+        if (placeholderPlayer != null) {
+            message = skywars.getUtils().parsePlaceholders(message, placeholderPlayer);
+        }
+        return message;
+    }
+
     public ItemStack getBukkitItem() {
+        ItemMeta meta = this.itemStack.getItemMeta();
+        if (meta == null) return this.itemStack;
+
+        if (this.displayName != null) {
+            meta.setDisplayName(parseMessage(this.displayName));
+        }
+
+        List<String> parsedLore = this.lore.stream()
+                .map(this::parseMessage)
+                .collect(Collectors.toList());
+        meta.setLore(parsedLore);
+
+        this.itemStack.setItemMeta(meta);
         return this.itemStack;
+    }
+
+    @Override
+    public Item withExternalPlaceholders(SWPlayer player) {
+        this.placeholderPlayer = player;
+        return this;
     }
 
     @Override

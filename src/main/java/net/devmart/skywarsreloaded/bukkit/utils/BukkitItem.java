@@ -227,7 +227,7 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
 
     @Override
     public byte getDamage() {
-        if (itemStack == null) return 0;
+        if (itemStack == null || skywars.getUtils().getServerVersion() > 12) return 0;
         return itemStack.getData().getData();
     }
 

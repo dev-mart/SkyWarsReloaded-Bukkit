@@ -2,6 +2,7 @@ package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 
 import net.devmart.skywarsreloaded.api.data.player.stats.SWPlayerData;
 import net.devmart.skywarsreloaded.api.game.gameinstance.GameInstance;
+import net.devmart.skywarsreloaded.api.game.types.GameState;
 import net.devmart.skywarsreloaded.api.hook.SWVaultHook;
 import net.devmart.skywarsreloaded.api.party.SWParty;
 import net.devmart.skywarsreloaded.api.utils.Item;
@@ -226,6 +227,11 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     @Override
     public GameInstance getGameInstance() {
         return this.gameWorld;
+    }
+
+    @Override
+    public boolean canJoinGame() {
+        return this.gameWorld == null || this.gameWorld.getState() != GameState.PLAYING;
     }
 
     @Override

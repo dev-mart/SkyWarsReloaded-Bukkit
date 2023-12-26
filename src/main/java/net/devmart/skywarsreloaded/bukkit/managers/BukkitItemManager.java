@@ -8,6 +8,7 @@ import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class BukkitItemManager implements ItemManager {
 
@@ -39,8 +40,16 @@ public class BukkitItemManager implements ItemManager {
         });
     }
 
-    private void loadDefaultItem(String path) {
-        this.defaultItems.put(path, getItemFromConfig(path));
+    protected void loadDefaultItem(String path) {
+        // only cache if it doesn't contain any placeholders
+        Item item = getItemFromConfig(path);
+
+        Pattern pattern = Pattern.compile("%\\S+%");
+        if (item == null || pattern.matcher(item.getDisplayName()).find() || item.getLore().stream().anyMatch(
+                loreLine -> pattern.matcher(loreLine).find()
+        )) return;
+
+        this.defaultItems.put(path, item);
     }
 
     private boolean isDefaultLoaded(String property) {
@@ -113,7 +122,9 @@ public class BukkitItemManager implements ItemManager {
 
     @Override
     public Item getItemFromConfig(String path) {
-        if (isDefaultLoaded(path)) return this.defaultItems.get(path).clone();
+        if (isDefaultLoaded(path)) {
+            return this.defaultItems.get(path).clone();
+        }
 
         final Item item = skywars.getConfig().getItem(path);
         if (item != null) {

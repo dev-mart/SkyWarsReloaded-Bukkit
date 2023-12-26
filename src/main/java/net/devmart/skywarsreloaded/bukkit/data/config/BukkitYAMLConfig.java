@@ -207,10 +207,8 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public Map<String, String> getStringMap(String property) {
-        ConfigurationSection section = this.fileConfiguration.getConfigurationSection(property);
-        if (section == null) return new HashMap<>();
         HashMap<String, String> convertedMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : section.getValues(false).entrySet()) {
+        for (Map.Entry<String, Object> entry : getValues(property, false).entrySet()) {
             convertedMap.put(entry.getKey(), entry.getValue().toString());
         }
         return convertedMap;
@@ -269,9 +267,9 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
             if (item.getAmount() != 1) fileConfiguration.set(property + ".amount", item.getAmount());
             if (item.getDamage() > 0) fileConfiguration.set(property + ".damage", item.getDamage());
             if (item.getDurability() > 0) fileConfiguration.set(property + ".durability", item.getDurability());
-            if (item.getDisplayName() != null && item.getDisplayName().isEmpty())
+            if (item.getDisplayName() != null && !item.getDisplayName().isEmpty())
                 fileConfiguration.set(property + ".display-name", item.getDisplayName());
-            if (item.getLore() != null) fileConfiguration.set(property + ".lore", item.getLore());
+            if (item.getLore() != null && !item.getLore().isEmpty()) fileConfiguration.set(property + ".lore", item.getLore());
             if (!item.getEnchantments().isEmpty())
                 fileConfiguration.set(property + ".enchantments", item.getEnchantments());
             if (!item.getItemFlags().isEmpty()) fileConfiguration.set(property + ".item-flags", item.getItemFlags());
@@ -300,7 +298,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public boolean contains(String property) {
-        return fileConfiguration.contains(property);
+        return fileConfiguration.contains(property) || defaultFileConfiguration.contains(property);
     }
 
     @Override
@@ -321,12 +319,24 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public Map<String, Object> getValues(String property, boolean deep) {
+        ConfigurationSection section = defaultFileConfiguration.getConfigurationSection(property);
+        return getValues(property, deep, section == null ? new HashMap<>() : section.getValues(true));
+    }
+
+    @Override
+    public Map<String, Object> getValues(String property, boolean deep, Map<String, Object> defaultValue) {
+        ConfigurationSection section = fileConfiguration.getConfigurationSection(property);
+        if (section == null) return defaultValue;
+
+        return section.getValues(true);
+    }
+
+    @Override
     public Item getItem(String category, Item def) {
         if (!contains(category)) return def;
-        ConfigurationSection section = fileConfiguration.getConfigurationSection(category);
-        if (section == null) return def;
 
-        Map<String, Object> map = section.getValues(true);
+        Map<String, Object> map = getValues(category, true);
         if (map.isEmpty()) return def;
 
         if (!map.containsKey("material")) map.put("material", def == null ? "STONE" : def.getMaterial());

@@ -30,12 +30,13 @@ public class BukkitSkyWarsReloadedPlugin extends JavaPlugin {
     }
 
     /**
-     * Use this to override initializers in the {@link SkyWarsReloaded} implementation.
+     * <p>Use this to override initializers in the {@link SkyWarsReloaded} implementation.
      * Only use this to make major changes to the plugin such as replacing certain parts of the plugin with your
-     * own logic.
-     * <br><br>
-     * Note: You can't use this method after {@link #onEnable()} has been called on SkyWars. Doing so would
-     * completely break everything.
+     * own logic.</p><br>
+     * <p>
+     * <b>Note:</b> You can't use this method after {@link #onEnable()} has been called on SkyWars. Doing so would
+     * completely <u>break everything</u>.
+     * </p>
      *
      * @param implementation The new {@link SkyWarsReloaded} implementation.
      */

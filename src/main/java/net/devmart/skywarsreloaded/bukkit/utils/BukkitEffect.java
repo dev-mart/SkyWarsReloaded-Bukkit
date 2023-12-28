@@ -31,4 +31,11 @@ public class BukkitEffect extends AbstractEffect {
         Player p = ((BukkitSWPlayer) player).getPlayer();
         p.addPotionEffect(effect);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BukkitEffect)) return false;
+        BukkitEffect other = (BukkitEffect) obj;
+        return other.effect.equals(this.effect);
+    }
 }

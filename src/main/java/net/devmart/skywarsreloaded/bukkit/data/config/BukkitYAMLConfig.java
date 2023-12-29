@@ -7,7 +7,7 @@ import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.Message;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
 import net.devmart.skywarsreloaded.api.utils.SWLogger;
-import net.devmart.skywarsreloaded.api.utils.properties.KitProperties;
+import net.devmart.skywarsreloaded.api.utils.properties.UnlockableProperties;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
 import net.devmart.skywarsreloaded.core.data.config.AbstractYAMLConfig;
 import net.devmart.skywarsreloaded.core.utils.CoreMessage;
@@ -470,10 +470,11 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
         ConfigurationSection section = fileConfiguration.getConfigurationSection(property);
         if (section == null) return;
 
-        unlockable.setNeedPermission(section.getBoolean(KitProperties.REQUIREMENTS_PERMISSION, false));
-        unlockable.setCost(section.getInt(KitProperties.REQUIREMENTS_COST, 0));
-        if (section.contains(KitProperties.REQUIREMENTS_STATS)) {
-            section.getConfigurationSection(KitProperties.REQUIREMENTS_STATS).getKeys(false).forEach(stat -> {
+        unlockable.setNeedPermission(section.getBoolean(UnlockableProperties.REQUIREMENTS_PERMISSION, false));
+        unlockable.setCost(section.getInt(UnlockableProperties.REQUIREMENTS_COST, 0));
+        unlockable.setMenuPosition(section.getInt(UnlockableProperties.MENU_POSITION, 0));
+        if (section.contains(UnlockableProperties.REQUIREMENTS_STATS)) {
+            section.getConfigurationSection(UnlockableProperties.REQUIREMENTS_STATS).getKeys(false).forEach(stat -> {
                 try {
                     PlayerStat playerStat = PlayerStat.fromString(stat);
                     if (playerStat == null) {
@@ -481,7 +482,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
                         return;
                     }
 
-                    unlockable.addMinimumStat(playerStat, section.getInt(KitProperties.REQUIREMENTS_STATS + "." + stat, 0));
+                    unlockable.addMinimumStat(playerStat, section.getInt(UnlockableProperties.REQUIREMENTS_STATS + "." + stat, 0));
                 } catch (Exception e) {
                     skywars.getLogger().error(String.format("Failed to load %s stat requirement for kit %s. Ignoring it. (%s)", stat, unlockable.getId(), e.getClass().getName() + ": " + e.getLocalizedMessage()));
                 }

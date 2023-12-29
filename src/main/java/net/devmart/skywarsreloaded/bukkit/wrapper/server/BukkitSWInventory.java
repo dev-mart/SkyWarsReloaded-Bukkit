@@ -52,7 +52,7 @@ public class BukkitSWInventory implements SWInventory {
 
     @Override
     public void setItem(int slot, Item item) {
-        inventory.setItem(slot, ((BukkitItem) item).getBukkitItem());
+        inventory.setItem(slot, item == null ? null : ((BukkitItem) item).getBukkitItem());
     }
 
     @Override

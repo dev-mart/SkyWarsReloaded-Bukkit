@@ -19,8 +19,8 @@ public class BukkitEffect extends AbstractEffect {
             effect = new PotionEffect(PotionEffectType.getByKey(NamespacedKey.fromString(getType())), getDuration(), getStrength(), true, showParticles());
         } catch (Exception e) {
             skywars.getLogger().error(
-                    "Failed to load bukkit effect from string %s. Using the default: %d. (%s)",
-                    input, 1, e.getClass().getName() + ": " + e.getLocalizedMessage()
+                    "Failed to load bukkit effect from string %s. Extracted values: type=%s, duration=%d, strength=%d (%s)",
+                    input, getType(), getDuration(), getStrength(), e.getClass().getName() + ": " + e.getLocalizedMessage()
             );
         }
     }

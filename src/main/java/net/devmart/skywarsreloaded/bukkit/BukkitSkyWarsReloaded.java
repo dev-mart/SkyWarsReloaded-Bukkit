@@ -15,6 +15,7 @@ import net.devmart.skywarsreloaded.core.AbstractSkyWarsReloaded;
 import net.devmart.skywarsreloaded.core.manager.CoreSWCommandManager;
 import net.devmart.skywarsreloaded.core.manager.CoreUnlockablesManager;
 import net.devmart.skywarsreloaded.core.manager.game.CoreCageManager;
+import net.devmart.skywarsreloaded.core.manager.game.CoreVoteOptionManager;
 import net.devmart.skywarsreloaded.core.manager.game.instance.CoreRemoteGameInstanceManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.HandlerList;
@@ -100,6 +101,11 @@ public class BukkitSkyWarsReloaded extends AbstractSkyWarsReloaded {
     @Override
     protected void initUnlockablesManager() {
         setUnlockablesManager(new CoreUnlockablesManager(this));
+    }
+
+    @Override
+    protected void initVoteOptionManager() {
+        setVoteOptionManager(new CoreVoteOptionManager(this));
     }
 
     @Override

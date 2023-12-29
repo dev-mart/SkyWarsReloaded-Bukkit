@@ -3,6 +3,7 @@ package net.devmart.skywarsreloaded.bukkit.utils;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.world.World;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.devmart.skywarsreloaded.api.utils.Effect;
 import net.devmart.skywarsreloaded.api.wrapper.sender.SWCommandSender;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
@@ -45,6 +46,11 @@ public class BukkitPlatformUtils extends AbstractPlatformUtils {
     @Override
     public SWWorld getSWWorld(String worldName) {
         return skywars.getServer().getWorld(worldName);
+    }
+
+    @Override
+    public Effect getEffect(String effect) {
+        return new BukkitEffect(skywars, effect);
     }
 
     @Override

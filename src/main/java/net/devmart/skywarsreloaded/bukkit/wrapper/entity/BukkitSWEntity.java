@@ -129,6 +129,10 @@ public class BukkitSWEntity extends AbstractSWEntity {
         if (!(this.entity instanceof LivingEntity)) throw new NullPointerException("Bukkit entity is not a living entity");
         LivingEntity livingEntity = (LivingEntity) this.entity;
 
+        if (getHealth() > maxHealth) {
+            setHealth(maxHealth);
+        }
+
         if (skywars.getUtils().getServerVersion() >= 9) {
             org.bukkit.attribute.AttributeInstance attribute = livingEntity.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH);
             if (attribute != null) {

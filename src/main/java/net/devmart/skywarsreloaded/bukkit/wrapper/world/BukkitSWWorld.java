@@ -102,7 +102,38 @@ public class BukkitSWWorld extends AbstractSWWorld {
         this.bukkitWorld.setKeepSpawnInMemory(keepSpawnLoaded);
     }
 
+    @Override
+    public long getTime() {
+        return bukkitWorld.getTime();
+    }
+
+    @Override
+    public void setTime(long time) {
+        bukkitWorld.setTime(time);
+    }
+
+    @Override
+    public void setRaining(boolean raining) {
+        bukkitWorld.setStorm(raining);
+    }
+
+    @Override
+    public boolean isRaining() {
+        return bukkitWorld.hasStorm();
+    }
+
+    @Override
+    public void setThundering(boolean thunder) {
+        bukkitWorld.setThundering(thunder);
+    }
+
+    @Override
+    public boolean isThundering() {
+        return bukkitWorld.isThundering();
+    }
+
     public World getBukkitWorld() {
         return bukkitWorld;
     }
+
 }

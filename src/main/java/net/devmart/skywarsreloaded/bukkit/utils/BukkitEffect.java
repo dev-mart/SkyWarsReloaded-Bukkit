@@ -11,7 +11,12 @@ import org.bukkit.potion.PotionEffectType;
 
 public class BukkitEffect extends AbstractEffect {
 
-    private PotionEffect effect;
+    protected PotionEffect effect;
+
+    public BukkitEffect(SkyWarsReloaded skywars, PotionEffect bukkitEffect) {
+        super(skywars, bukkitEffect.getType().getName(), bukkitEffect.getDuration(), bukkitEffect.getAmplifier(), bukkitEffect.hasParticles());
+        this.effect = bukkitEffect;
+    }
 
     public BukkitEffect(SkyWarsReloaded skywars, String input) {
         super(skywars, input);

@@ -13,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +26,7 @@ public class BukkitNMS_13 extends BukkitNMS_12 {
     @Override
     public void initVersionedAPI() {
         // Versioned enums
-        voidBiome = Biome.valueOf("THE_VOID");
+        voidBiome = "THE_VOID";
     }
 
     @Override

@@ -16,6 +16,7 @@ import net.devmart.skywarsreloaded.bukkit.managers.BukkitInventoryManager;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWDroppedItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.event.BukkitSWPlayerFoodLevelChangeEvent;
+import net.devmart.skywarsreloaded.bukkit.wrapper.server.BukkitSWInventory;
 import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
 import net.devmart.skywarsreloaded.core.wrapper.event.*;
 import org.bukkit.Location;
@@ -27,6 +28,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.WorldInitEvent;
@@ -298,6 +300,8 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         SWInventory inv = ((BukkitInventoryManager) this.skywars.getInventoryManager()).getSWInventory(event.getInventory());
+        if (inv == null) inv = new BukkitSWInventory(skywars, event.getInventory(), "Inventory");
+
         SWGuiClickHandler.ClickType clickType;
         switch (event.getClick()) {
             case RIGHT:
@@ -355,6 +359,16 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
         if (swEvent.isCancelled()) {
             e.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent e) {
+        SWPlayer p = this.getPlayerFromBukkitPlayer((Player) e.getPlayer());
+        SWInventory inv = ((BukkitInventoryManager) this.skywars.getInventoryManager()).getSWInventory(e.getInventory());
+        if (inv == null) inv = new BukkitSWInventory(skywars, e.getInventory(), "Inventory");
+
+        SWInventoryCloseEvent swEvent = new CoreSWInventoryCloseEvent(p, inv);
+        skywars.getEventManager().callEvent(swEvent);
     }
 
     // Utils

@@ -6,6 +6,7 @@ import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWChunkGenerator;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.generator.ChunkGenerator;
 import org.jetbrains.annotations.NotNull;
 
@@ -70,6 +71,20 @@ public class BukkitNMS_12 extends BukkitNMS_9_11 {
     @NotNull
     @Override
     public SWChunkGenerator getChunkGenerator() {
+        return this.getChunkGenerator(voidBiome);
+
+    }
+
+    @Override
+    public SWChunkGenerator getChunkGenerator(String biome) {
+        Biome bukkitBiome;
+        try {
+            bukkitBiome = Biome.valueOf(biome);
+        } catch (IllegalArgumentException e) {
+            bukkitBiome = Biome.valueOf(voidBiome);
+        }
+
+        Biome finalBukkitBiome = bukkitBiome;
         return new BukkitSWChunkGenerator(
                 new ChunkGenerator() {
                     @Override
@@ -77,7 +92,7 @@ public class BukkitNMS_12 extends BukkitNMS_9_11 {
                         ChunkData chunkData = createChunkData(world);
                         for (int x = 0; x < 16; x++) {
                             for (int z = 0; z < 16; z++) {
-                                biome.setBiome(x, z, voidBiome);
+                                biome.setBiome(x, z, finalBukkitBiome);
                             }
                         }
                         return chunkData;

@@ -18,7 +18,6 @@ import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.generator.BlockPopulator;
@@ -54,7 +53,7 @@ public class BukkitNMS_8 implements NMS {
     protected Field playerConnection;
 
     // Versioned types
-    protected Biome voidBiome;
+    protected String voidBiome;
 
     public BukkitNMS_8(BukkitSkyWarsReloaded skywars, String serverPackage) {
         this.skywars = skywars;
@@ -98,7 +97,7 @@ public class BukkitNMS_8 implements NMS {
 
     public void initVersionedAPI() {
         // Versioned enums
-        voidBiome = Biome.valueOf("FOREST"); // VOID doesn't exist in 1.8 - 1.11
+        voidBiome = "FOREST"; // VOID doesn't exist in 1.8 - 1.11
     }
 
     @Override
@@ -210,6 +209,11 @@ public class BukkitNMS_8 implements NMS {
                     }
                 }
         );
+    }
+
+    @Override
+    public SWChunkGenerator getChunkGenerator(String biome) {
+        return this.getChunkGenerator();
     }
 
     @Override

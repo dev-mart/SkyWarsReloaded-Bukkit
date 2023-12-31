@@ -11,7 +11,12 @@ import org.bukkit.potion.PotionEffectType;
 
 public class BukkitEffect extends AbstractEffect {
 
-    private PotionEffect effect;
+    protected PotionEffect effect;
+
+    public BukkitEffect(SkyWarsReloaded skywars, PotionEffect bukkitEffect) {
+        super(skywars, bukkitEffect.getType().getName(), bukkitEffect.getDuration(), bukkitEffect.getAmplifier(), bukkitEffect.hasParticles());
+        this.effect = bukkitEffect;
+    }
 
     public BukkitEffect(SkyWarsReloaded skywars, String input) {
         super(skywars, input);
@@ -19,8 +24,8 @@ public class BukkitEffect extends AbstractEffect {
             effect = new PotionEffect(PotionEffectType.getByKey(NamespacedKey.fromString(getType())), getDuration(), getStrength(), true, showParticles());
         } catch (Exception e) {
             skywars.getLogger().error(
-                    "Failed to load bukkit effect from string %s. Using the default: %d. (%s)",
-                    input, 1, e.getClass().getName() + ": " + e.getLocalizedMessage()
+                    "Failed to load bukkit effect from string %s. Extracted values: type=%s, duration=%d, strength=%d (%s)",
+                    input, getType(), getDuration(), getStrength(), e.getClass().getName() + ": " + e.getLocalizedMessage()
             );
         }
     }

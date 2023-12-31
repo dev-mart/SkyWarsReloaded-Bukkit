@@ -4,7 +4,7 @@ import net.devmart.skywarsreloaded.api.game.GameTemplate;
 import net.devmart.skywarsreloaded.api.game.gameinstance.LocalGameInstance;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.game.BukkitLocalGameInstance;
-import net.devmart.skywarsreloaded.core.manager.gameinstance.CoreLocalGameInstanceManager;
+import net.devmart.skywarsreloaded.core.manager.game.instance.CoreLocalGameInstanceManager;
 
 import java.util.List;
 import java.util.UUID;

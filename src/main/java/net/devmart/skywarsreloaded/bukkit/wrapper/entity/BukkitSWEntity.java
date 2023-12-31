@@ -98,7 +98,48 @@ public class BukkitSWEntity extends AbstractSWEntity {
     public void setHealth(double health) {
         if (this.entity == null) throw new NullPointerException("Bukkit entity is null");
         if (entity instanceof LivingEntity) {
-            ((LivingEntity) this.entity).setHealth(health);
+            LivingEntity livingEntity = (LivingEntity) this.entity;
+            if (getMaxHealth() < health) {
+                setMaxHealth(health);
+            }
+
+            livingEntity.setHealth(health);
+        }
+    }
+
+    @Override
+    public double getMaxHealth() {
+        if (!(this.entity instanceof LivingEntity)) throw new NullPointerException("Bukkit entity is not a living entity");
+        LivingEntity livingEntity = (LivingEntity) this.entity;
+
+        if (skywars.getUtils().getServerVersion() >= 9) {
+            org.bukkit.attribute.AttributeInstance attribute = livingEntity.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH);
+            if (attribute != null) {
+                return attribute.getBaseValue();
+            }
+        } else {
+            return livingEntity.getMaxHealth();
+        }
+
+        return 20;
+    }
+
+    @Override
+    public void setMaxHealth(double maxHealth) {
+        if (!(this.entity instanceof LivingEntity)) throw new NullPointerException("Bukkit entity is not a living entity");
+        LivingEntity livingEntity = (LivingEntity) this.entity;
+
+        if (getHealth() > maxHealth) {
+            setHealth(maxHealth);
+        }
+
+        if (skywars.getUtils().getServerVersion() >= 9) {
+            org.bukkit.attribute.AttributeInstance attribute = livingEntity.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH);
+            if (attribute != null) {
+                attribute.setBaseValue(maxHealth);
+            }
+        } else {
+            livingEntity.setMaxHealth(maxHealth);
         }
     }
 

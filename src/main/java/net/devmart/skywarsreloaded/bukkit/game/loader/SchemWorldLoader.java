@@ -57,7 +57,10 @@ public class SchemWorldLoader extends BukkitWorldLoader {
         creator.generatorSettings(generatorSettings);
 
         // Override world generator
-        creator.generator(((BukkitSWChunkGenerator) this.skywars.getNMSManager().getNMS().getChunkGenerator()).getGenerator());
+        creator.generator(((BukkitSWChunkGenerator) this.skywars.getNMSManager()
+                .getNMS()
+                .getChunkGenerator(gameInstance.getTemplate().getBiome())
+        ).getGenerator());
 
         World createdWorld = creator.createWorld();
         assert createdWorld != null;

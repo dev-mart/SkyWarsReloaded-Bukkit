@@ -8,6 +8,7 @@ import net.devmart.skywarsreloaded.bukkit.listener.BukkitSWEventListener;
 import net.devmart.skywarsreloaded.bukkit.managers.*;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitPlatformUtils;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitSWLogger;
+import net.devmart.skywarsreloaded.bukkit.utils.proxy.BungeeCordMessaging;
 import net.devmart.skywarsreloaded.bukkit.wrapper.scheduler.BukkitSWScheduler;
 import net.devmart.skywarsreloaded.bukkit.wrapper.sender.BukkitSWConsoleSender;
 import net.devmart.skywarsreloaded.bukkit.wrapper.server.BukkitSWServer;
@@ -110,6 +111,11 @@ public class BukkitSkyWarsReloaded extends AbstractSkyWarsReloaded {
     @Override
     public void initNMSManager() throws IllegalStateException {
         setNMSManager(new BukkitNMSManager(this));
+    }
+
+    @Override
+    protected void initPluginMessaging() {
+        setPluginMessaging(new BungeeCordMessaging(this.plugin));
     }
 
     @Override

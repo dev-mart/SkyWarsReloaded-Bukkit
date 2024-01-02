@@ -19,7 +19,7 @@ public class BukkitGameInstanceManager extends CoreLocalGameInstanceManager {
     @Override
     public CompletableFuture<LocalGameInstance> createGameInstance(GameTemplate data) {
         final List<LocalGameInstance> idleInstances = getIdleGameInstances();
-        if (data != null && idleInstances.size() > 0) {
+        if (data != null && !idleInstances.isEmpty()) {
             final LocalGameInstance localGameInstance = idleInstances.get(0);
             localGameInstance.setTemplate(data);
         }

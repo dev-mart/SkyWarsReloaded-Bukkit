@@ -30,9 +30,9 @@ public class SchemWorldLoader extends BukkitWorldLoader {
     @Override
     public CompletableFuture<Boolean> generateWorldInstance(LocalGameInstance gameWorld) throws IllegalStateException, IllegalArgumentException {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
-        this.createEmptyWorld(gameWorld).thenRun(() -> {
-            skywars.getScheduler().runSync(() -> postWorldGenerateTask(gameWorld, future));
-        });
+        this.createEmptyWorld(gameWorld).thenRun(() -> skywars.getScheduler().runSync(
+                () -> postWorldGenerateTask(gameWorld, future)
+        ));
         return future;
     }
 
@@ -71,9 +71,8 @@ public class SchemWorldLoader extends BukkitWorldLoader {
         World world = sl.getWorld();
         if (world == null) throw new IllegalStateException("How is the world null? We just made it!!");
 
-        PaperLib.getChunkAtAsyncUrgently(world, sl.getBlockX() / 16, sl.getBlockZ() / 16, true).thenAccept(chunk -> {
-            future.complete(null);
-        });
+        PaperLib.getChunkAtAsyncUrgently(world, sl.getBlockX() / 16, sl.getBlockZ() / 16, true)
+                .thenAccept(chunk -> future.complete(null));
         return future;
     }
 
@@ -167,6 +166,8 @@ public class SchemWorldLoader extends BukkitWorldLoader {
 
     @Override
     public CompletableFuture<Boolean> save(LocalGameInstance gameInstance) {
+        if (gameInstance == null) return CompletableFuture.completedFuture(false);
+
         boolean successful = skywars.getSchematicManager().saveGameWorldToSchematic(
                 gameInstance,
                 skywars.getUtils().getWorldEditWorld(gameInstance.getWorldName())

@@ -79,7 +79,7 @@ public class BukkitNMS_12 extends BukkitNMS_9_11 {
     public SWChunkGenerator getChunkGenerator(String biome) {
         Biome bukkitBiome;
         try {
-            bukkitBiome = Biome.valueOf(biome);
+            bukkitBiome = Biome.valueOf(biome == null || biome.isEmpty() ? voidBiome : biome);
         } catch (IllegalArgumentException e) {
             bukkitBiome = Biome.valueOf(voidBiome);
         }

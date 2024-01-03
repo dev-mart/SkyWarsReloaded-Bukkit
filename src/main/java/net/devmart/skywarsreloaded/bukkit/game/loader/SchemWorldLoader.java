@@ -168,10 +168,16 @@ public class SchemWorldLoader extends BukkitWorldLoader {
     public CompletableFuture<Boolean> save(LocalGameInstance gameInstance) {
         if (gameInstance == null) return CompletableFuture.completedFuture(false);
 
-        boolean successful = skywars.getSchematicManager().saveGameWorldToSchematic(
-                gameInstance,
-                skywars.getUtils().getWorldEditWorld(gameInstance.getWorldName())
-        );
-        return CompletableFuture.completedFuture(successful);
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        skywars.getScheduler().runAsync(() -> {
+            boolean successful = skywars.getSchematicManager().saveGameWorldToSchematic(
+                    gameInstance,
+                    skywars.getUtils().getWorldEditWorld(gameInstance.getWorldName())
+            );
+            future.complete(successful);
+        });
+
+        return future;
     }
 }

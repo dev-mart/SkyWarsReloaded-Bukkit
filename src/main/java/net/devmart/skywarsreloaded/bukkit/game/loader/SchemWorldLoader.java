@@ -30,7 +30,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
     @Override
     public CompletableFuture<Boolean> generateWorldInstance(LocalGameInstance gameWorld) throws IllegalStateException, IllegalArgumentException {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
-        this.createEmptyWorld(gameWorld).thenRun(() -> skywars.getScheduler().runSync(
+        this.createEmptyWorld(gameWorld).thenRun(() -> skywars.getScheduler().runAsync(
                 () -> postWorldGenerateTask(gameWorld, future)
         ));
         return future;

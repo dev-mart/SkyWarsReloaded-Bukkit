@@ -41,11 +41,10 @@ public class BukkitLocalGameInstance extends AbstractLocalGameInstance {
 
     @Override
     public void delete() {
-        World bukkitWorld;
         WeakReference<World> weakRef;
 
         if (skywars.getLogger().isDebugModeActive()) {
-            bukkitWorld = getBukkitWorld();
+            World bukkitWorld = getBukkitWorld();
             weakRef = new WeakReference<>(bukkitWorld);
             skywars.getLogger().debug("Debug mode active! Checking for world references...");
         } else {
@@ -54,16 +53,19 @@ public class BukkitLocalGameInstance extends AbstractLocalGameInstance {
 
         super.delete();
 
-        if (skywars.getLogger().isDebugModeActive()) {
-            skywars.getScheduler().runSyncTimer(() -> {
-                World world = weakRef.get();
-                if (world == null) {
-                    skywars.getLogger().debug("World has no references!");
-                } else {
-                    skywars.getLogger().debug("World still has references!");
-                }
-            }, 0, 20);
-        }
+        if (skywars.getLogger().isDebugModeActive()) startCheckingForRefs(weakRef, "World::" + getWorldName());
+    }
 
+    private void startCheckingForRefs(WeakReference weakRef, String name) {
+        if (weakRef == null) return;
+
+        skywars.getScheduler().runSyncTimer(() -> {
+            Object obj = weakRef.get();
+            if (obj == null) {
+                skywars.getLogger().debug(String.format("Object \"%s\" has no references!", name));
+            } else {
+                skywars.getLogger().debug(String.format("Object \"%s\" still has %d references!", name, weakRef.get()));
+            }
+        }, 0, 20);
     }
 }

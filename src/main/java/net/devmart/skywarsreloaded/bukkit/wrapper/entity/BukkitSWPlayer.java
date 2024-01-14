@@ -1,8 +1,6 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 
 import net.devmart.skywarsreloaded.api.data.player.stats.SWPlayerData;
-import net.devmart.skywarsreloaded.api.game.gameinstance.GameInstance;
-import net.devmart.skywarsreloaded.api.game.types.GameState;
 import net.devmart.skywarsreloaded.api.hook.SWVaultHook;
 import net.devmart.skywarsreloaded.api.party.SWParty;
 import net.devmart.skywarsreloaded.api.utils.Effect;
@@ -36,13 +34,11 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     private final AtomicBoolean frozen;
 
     private SWPlayerData playerData;
-    private GameInstance gameWorld;
     private SWParty party;
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded skywars, UUID uuid, boolean online) {
         super(skywars, uuid);
         this.online = new AtomicBoolean(online);
-        this.gameWorld = null;
         this.frozen = new AtomicBoolean(false);
         this.fetchParentPlayer();
     }
@@ -226,21 +222,6 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     @Override
     public void setPlayerData(SWPlayerData playerData) {
         this.playerData = playerData;
-    }
-
-    @Override
-    public GameInstance getGameInstance() {
-        return this.gameWorld;
-    }
-
-    @Override
-    public boolean canJoinGame() {
-        return this.gameWorld == null || this.gameWorld.getState() != GameState.PLAYING;
-    }
-
-    @Override
-    public void setGameWorld(GameInstance world) {
-        this.gameWorld = world;
     }
 
     @Override

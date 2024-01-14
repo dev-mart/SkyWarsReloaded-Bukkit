@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 
+import java.lang.ref.WeakReference;
 import java.util.UUID;
 
 public class BukkitLocalGameInstance extends AbstractLocalGameInstance {
@@ -36,5 +37,33 @@ public class BukkitLocalGameInstance extends AbstractLocalGameInstance {
         getTemplate().getTeamSpawnpoints().forEach(swCoords ->
                 swCoords.forEach(swCoord ->
                         world.getBlockAt(swCoord.x(), swCoord.y(), swCoord.z()).setType(Material.BEACON)));
+    }
+
+    @Override
+    public void delete() {
+        World bukkitWorld;
+        WeakReference<World> weakRef;
+
+        if (skywars.getLogger().isDebugModeActive()) {
+            bukkitWorld = getBukkitWorld();
+            weakRef = new WeakReference<>(bukkitWorld);
+            skywars.getLogger().debug("Debug mode active! Checking for world references...");
+        } else {
+            weakRef = null;
+        }
+
+        super.delete();
+
+        if (skywars.getLogger().isDebugModeActive()) {
+            skywars.getScheduler().runSyncTimer(() -> {
+                World world = weakRef.get();
+                if (world == null) {
+                    skywars.getLogger().debug("World has no references!");
+                } else {
+                    skywars.getLogger().debug("World still has references!");
+                }
+            }, 0, 20);
+        }
+
     }
 }

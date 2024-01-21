@@ -1,6 +1,5 @@
 package net.devmart.skywarsreloaded.bukkit.game;
 
-import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.game.GameTemplate;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
@@ -55,20 +54,6 @@ public class BukkitLocalGameInstance extends AbstractLocalGameInstance {
         }
 
         super.delete();
-
-        if (skywars.getLogger().isDebugModeActive()) startCheckingForRefs(skywars, weakRef, "World::" + getWorldName());
     }
 
-    private static void startCheckingForRefs(SkyWarsReloaded skywars, WeakReference weakRef, String name) {
-        if (weakRef == null) return;
-
-        skywars.getScheduler().runSyncTimer(() -> {
-            Object obj = weakRef.get();
-            if (obj == null) {
-                skywars.getLogger().debug("Object \"%s\" has no references!", name);
-            } else {
-                skywars.getLogger().debug("Object \"%s\" still has references!", name);
-            }
-        }, 0, 20);
-    }
 }

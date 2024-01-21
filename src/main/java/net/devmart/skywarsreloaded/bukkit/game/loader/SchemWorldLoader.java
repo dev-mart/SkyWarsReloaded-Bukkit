@@ -7,7 +7,7 @@ import io.papermc.lib.PaperLib;
 import net.devmart.skywarsreloaded.api.game.GameTemplate;
 import net.devmart.skywarsreloaded.api.game.gameinstance.LocalGameInstance;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
-import net.devmart.skywarsreloaded.api.utils.properties.FolderProperties;
+import net.devmart.skywarsreloaded.api.utils.properties.FileProperties;
 import net.devmart.skywarsreloaded.api.utils.properties.InternalProperties;
 import net.devmart.skywarsreloaded.api.utils.properties.RuntimeDataProperties;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
@@ -30,7 +30,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
     @Override
     public CompletableFuture<Boolean> generateWorldInstance(LocalGameInstance gameWorld) throws IllegalStateException, IllegalArgumentException {
         CompletableFuture<Boolean> future = new CompletableFuture<>();
-        this.createEmptyWorld(gameWorld).thenRun(() -> skywars.getScheduler().runSync(
+        this.createEmptyWorld(gameWorld).thenRun(() -> skywars.getScheduler().runAsync(
                 () -> postWorldGenerateTask(gameWorld, future)
         ));
         return future;
@@ -84,11 +84,10 @@ public class SchemWorldLoader extends BukkitWorldLoader {
      */
     public CompletableFuture<Boolean> pasteTemplateSchematic(LocalGameInstance gameWorld) throws IllegalStateException, IllegalArgumentException {
         CompletableFuture<Boolean> futureFail = CompletableFuture.completedFuture(false);
-        // todo: Later make this work with FAWE
         CompletableFuture<Boolean> futureOk = CompletableFuture.completedFuture(true);
 
-        File schemFolder = new File(skywars.getDataFolder(), FolderProperties.WORLD_SCHEMATICS_FOLDER);
-        String schemFileName = gameWorld.getTemplate().getName() + ".schem";
+        File schemFolder = new File(skywars.getDataFolder(), FileProperties.SCHEMATICS_FOLDER);
+        String schemFileName = gameWorld.getTemplate().getSchematic() + ".schem";
 
         File schemFile = new File(schemFolder, schemFileName);
         if (!schemFile.exists()) {
@@ -139,7 +138,7 @@ public class SchemWorldLoader extends BukkitWorldLoader {
 
     @Override
     public void deleteMap(GameTemplate gameTemplate, boolean forceUnloadInstances) {
-        File schemFolder = new File(skywars.getDataFolder(), FolderProperties.WORLD_SCHEMATICS_FOLDER);
+        File schemFolder = new File(skywars.getDataFolder(), FileProperties.SCHEMATICS_FOLDER);
         String schemFileName = gameTemplate.getName() + ".schem";
 
         File schemFile = new File(schemFolder, schemFileName);
@@ -168,10 +167,16 @@ public class SchemWorldLoader extends BukkitWorldLoader {
     public CompletableFuture<Boolean> save(LocalGameInstance gameInstance) {
         if (gameInstance == null) return CompletableFuture.completedFuture(false);
 
-        boolean successful = skywars.getSchematicManager().saveGameWorldToSchematic(
-                gameInstance,
-                skywars.getUtils().getWorldEditWorld(gameInstance.getWorldName())
-        );
-        return CompletableFuture.completedFuture(successful);
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        skywars.getScheduler().runAsync(() -> {
+            boolean successful = skywars.getSchematicManager().saveGameWorldToSchematic(
+                    gameInstance,
+                    skywars.getUtils().getWorldEditWorld(gameInstance.getWorldName())
+            );
+            future.complete(successful);
+        });
+
+        return future;
     }
 }

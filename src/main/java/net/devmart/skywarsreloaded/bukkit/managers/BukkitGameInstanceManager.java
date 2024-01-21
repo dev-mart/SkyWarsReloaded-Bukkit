@@ -25,6 +25,7 @@ public class BukkitGameInstanceManager extends CoreLocalGameInstanceManager {
         }
 
         LocalGameInstance localGameInstance = new BukkitLocalGameInstance((BukkitSkyWarsReloaded) skywars, UUID.randomUUID(), data);
+
         this.registerGameInstance(localGameInstance);
         return CompletableFuture.completedFuture(localGameInstance);
     }

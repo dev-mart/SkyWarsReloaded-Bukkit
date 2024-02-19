@@ -1,10 +1,10 @@
 package net.devmart.skywarsreloaded.bukkit.listener;
 
 import net.devmart.skywarsreloaded.api.enums.DeathCause;
+import net.devmart.skywarsreloaded.api.gui.handlers.SWGuiClickHandler;
 import net.devmart.skywarsreloaded.api.listener.PlatformSWEventListener;
 import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
-import net.devmart.skywarsreloaded.api.utils.gui.handlers.SWGuiClickHandler;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWDroppedItem;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWEntity;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;

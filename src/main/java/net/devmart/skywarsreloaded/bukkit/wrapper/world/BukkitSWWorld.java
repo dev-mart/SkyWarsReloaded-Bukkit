@@ -2,10 +2,12 @@ package net.devmart.skywarsreloaded.bukkit.wrapper.world;
 
 import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
+import net.devmart.skywarsreloaded.api.wrapper.entity.SWDroppedItem;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.world.block.SWBlock;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWDroppedItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.block.BukkitSWBlock;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.block.BukkitSWChest;
 import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
@@ -125,6 +127,15 @@ public class BukkitSWWorld extends AbstractSWWorld {
     @Override
     public void setThundering(boolean thunder) {
         bukkitWorld.setThundering(thunder);
+    }
+
+    @Override
+    public SWDroppedItem dropItemNaturally(SWCoord location, Item item) {
+        if (item == null) return null;
+        return new BukkitSWDroppedItem(skywars, bukkitWorld.dropItemNaturally(
+                new Location(bukkitWorld, location.xPrecise(), location.yPrecise(), location.zPrecise()),
+                ((BukkitItem) item).getBukkitItem())
+        );
     }
 
     @Override

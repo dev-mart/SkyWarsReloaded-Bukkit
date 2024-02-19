@@ -470,6 +470,12 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
         ConfigurationSection section = fileConfiguration.getConfigurationSection(property);
         if (section == null) return;
 
+        unlockable.setDisplayName(section.getString(UnlockableProperties.DISPLAY_NAME, id));
+        unlockable.setIcon(this.getItem(property + "." + UnlockableProperties.ICON));
+        unlockable.setUnavailableIcon(this.getItem(property + "." + UnlockableProperties.UNAVAILABLE_ICON));
+        unlockable.setDescription(section.getString(UnlockableProperties.DESCRIPTION, "SkyWarsReloaded Unlockable"));
+        unlockable.setLore(section.getStringList(UnlockableProperties.LORE));
+
         unlockable.setNeedPermission(section.getBoolean(UnlockableProperties.REQUIREMENTS_PERMISSION, false));
         unlockable.setCost(section.getInt(UnlockableProperties.REQUIREMENTS_COST, 0));
         unlockable.setMenuPosition(section.getInt(UnlockableProperties.MENU_POSITION, 0));

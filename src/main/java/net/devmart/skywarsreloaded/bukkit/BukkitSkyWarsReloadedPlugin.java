@@ -20,7 +20,11 @@ public class BukkitSkyWarsReloadedPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        skywars.onEnable();
+        try {
+            skywars.onEnable();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         hasBeenEnabled = true;
     }
 

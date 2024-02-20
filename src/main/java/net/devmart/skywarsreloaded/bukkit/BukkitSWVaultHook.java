@@ -18,7 +18,7 @@ public class BukkitSWVaultHook extends AbstractSWVaultHook {
 
     @Override
     public boolean setupEconomy() {
-        if (bukkitServer.isPluginEnabled("Vault")) {
+        if (!bukkitServer.isPluginEnabled("Vault")) {
             return false;
         }
         RegisteredServiceProvider<Economy> rsp = bukkitServer.getBukkitServer().getServicesManager().getRegistration(Economy.class);

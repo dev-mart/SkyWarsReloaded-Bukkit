@@ -1,5 +1,6 @@
 package net.devmart.skywarsreloaded.bukkit;
 
+import net.devmart.skywarsreloaded.api.hook.SWVaultHook;
 import net.devmart.skywarsreloaded.api.utils.properties.ConfigProperties;
 import net.devmart.skywarsreloaded.bukkit.command.BukkitSWCommandExecutor;
 import net.devmart.skywarsreloaded.bukkit.game.loader.SchemWorldLoader;
@@ -63,7 +64,7 @@ public class BukkitSkyWarsReloaded extends AbstractSkyWarsReloaded {
     public void registerDefaultHooks() {
         super.registerDefaultHooks();
 
-        getHookManager().registerHook(new BukkitSWVaultHook(this));
+        getHookManager().registerHook(SWVaultHook.class, new BukkitSWVaultHook(this));
     }
 
     @Override

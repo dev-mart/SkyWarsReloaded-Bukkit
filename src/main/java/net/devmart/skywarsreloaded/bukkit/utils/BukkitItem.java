@@ -1,6 +1,7 @@
 package net.devmart.skywarsreloaded.bukkit.utils;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
+import net.devmart.skywarsreloaded.api.hook.SWHeadDatabaseHook;
 import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloadedPlugin;
@@ -35,6 +36,25 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
         super(skywars);
         this.replacements = new HashMap<>();
         this.placeholderPlayer = null;
+
+        if (material != null && material.toUpperCase().startsWith("HDB-")) {
+            SWHeadDatabaseHook hook = skywars.getHookManager().getHook(SWHeadDatabaseHook.class);
+            if (!hook.isEnabled()) {
+                skywars.getLogger().warn("Attempted to use a HeadDatabase head without having the HeadDatabase plugin installed!");
+                setItemStack(new ItemStack(Material.STONE));
+                return;
+            }
+
+            Item headFromId = hook.getHeadFromId(material.substring(4));
+            if (headFromId == null) {
+                skywars.getLogger().warn("Attempted to use a HeadDatabase head that doesn't exist! \"" + material + "\"");
+                setItemStack(new ItemStack(Material.STONE));
+                return;
+            }
+
+            setItemStack(((BukkitItem)headFromId).getBukkitItem());
+            return;
+        }
 
         setItemStack(new ItemStack(validateMaterial(material)));
     }

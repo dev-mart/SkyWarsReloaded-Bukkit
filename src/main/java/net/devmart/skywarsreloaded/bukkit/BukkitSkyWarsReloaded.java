@@ -1,10 +1,13 @@
 package net.devmart.skywarsreloaded.bukkit;
 
+import net.devmart.skywarsreloaded.api.hook.SWHeadDatabaseHook;
 import net.devmart.skywarsreloaded.api.hook.SWVaultHook;
 import net.devmart.skywarsreloaded.api.utils.properties.ConfigProperties;
 import net.devmart.skywarsreloaded.bukkit.command.BukkitSWCommandExecutor;
 import net.devmart.skywarsreloaded.bukkit.game.loader.SchemWorldLoader;
 import net.devmart.skywarsreloaded.bukkit.game.loader.SlimeWorldLoader;
+import net.devmart.skywarsreloaded.bukkit.hook.BukkitHeadDatabaseHook;
+import net.devmart.skywarsreloaded.bukkit.hook.BukkitSWVaultHook;
 import net.devmart.skywarsreloaded.bukkit.listener.BukkitSWEventListener;
 import net.devmart.skywarsreloaded.bukkit.managers.*;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitPlatformUtils;
@@ -65,6 +68,7 @@ public class BukkitSkyWarsReloaded extends AbstractSkyWarsReloaded {
         super.registerDefaultHooks();
 
         getHookManager().registerHook(SWVaultHook.class, new BukkitSWVaultHook(this));
+        getHookManager().registerHook(SWHeadDatabaseHook.class, new BukkitHeadDatabaseHook(this));
     }
 
     @Override

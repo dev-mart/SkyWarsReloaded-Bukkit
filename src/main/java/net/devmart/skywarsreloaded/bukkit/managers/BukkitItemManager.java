@@ -2,8 +2,8 @@ package net.devmart.skywarsreloaded.bukkit.managers;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.manager.ItemManager;
-import net.devmart.skywarsreloaded.api.utils.Item;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 
 import java.awt.*;
 import java.util.List;

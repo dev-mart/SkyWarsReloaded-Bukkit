@@ -1,8 +1,8 @@
 package net.devmart.skywarsreloaded.bukkit.protocol;
 
 import net.devmart.skywarsreloaded.api.protocol.NMS;
-import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.item.SWEnchantmentType;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWGameRule;
@@ -10,7 +10,7 @@ import net.devmart.skywarsreloaded.api.wrapper.world.SWChunk;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWChunkGenerator;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.bukkit.wrapper.item.BukkitSWEnchantmentType;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWChunkGenerator;

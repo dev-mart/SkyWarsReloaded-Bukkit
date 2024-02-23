@@ -1,10 +1,10 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.server;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
-import net.devmart.skywarsreloaded.api.utils.Item;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;

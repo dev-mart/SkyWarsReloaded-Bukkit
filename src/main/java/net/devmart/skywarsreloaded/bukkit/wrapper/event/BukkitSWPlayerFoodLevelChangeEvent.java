@@ -1,6 +1,6 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.event;
 
-import net.devmart.skywarsreloaded.api.utils.Item;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.core.wrapper.event.CoreSWPlayerFoodLevelChangeEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;

@@ -2,7 +2,7 @@ package net.devmart.skywarsreloaded.bukkit.unlockable.kits;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitEffect;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitPotionEffect;
 import net.devmart.skywarsreloaded.core.unlockable.kits.AbstractSWKit;
 
 import java.util.HashSet;
@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class BukkitSWKit extends AbstractSWKit {
 
-    protected Set<BukkitEffect> effects;
+    protected Set<BukkitPotionEffect> effects;
 
     public BukkitSWKit(SkyWarsReloaded skywars, String id) {
         super(skywars, id);
@@ -23,7 +23,7 @@ public class BukkitSWKit extends AbstractSWKit {
 
         getEffects().forEach(s -> {
             try {
-                effects.add(new BukkitEffect(skywars, s));
+                effects.add(new BukkitPotionEffect(skywars, s));
             } catch (Exception ignored) {
             }
         });
@@ -31,8 +31,8 @@ public class BukkitSWKit extends AbstractSWKit {
 
     @Override
     public void applyEffects(SWPlayer player) {
-        effects.forEach(bukkitEffect -> {
-            if (bukkitEffect != null) bukkitEffect.applyToPlayer(player);
+        effects.forEach(bukkitPotionEffect -> {
+            if (bukkitPotionEffect != null) bukkitPotionEffect.applyToPlayer(player);
         });
     }
 

@@ -11,12 +11,14 @@ import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.event.*;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
+import net.devmart.skywarsreloaded.api.wrapper.world.block.SWBlock;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.managers.BukkitInventoryManager;
 import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWDroppedItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.event.BukkitSWPlayerFoodLevelChangeEvent;
 import net.devmart.skywarsreloaded.bukkit.wrapper.server.BukkitSWInventory;
+import net.devmart.skywarsreloaded.bukkit.wrapper.world.block.BukkitSWBlock;
 import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
 import net.devmart.skywarsreloaded.core.wrapper.event.*;
 import org.bukkit.Location;
@@ -369,6 +371,36 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
         SWInventoryCloseEvent swEvent = new CoreSWInventoryCloseEvent(p, inv);
         skywars.getEventManager().callEvent(swEvent);
+    }
+
+    @EventHandler
+    public void onEntitySpawn(EntitySpawnEvent e) {
+        SWEntity entity = skywars.getEntityManager().getEntityByUUID(e.getEntity().getUniqueId());
+        Location loc = e.getEntity().getLocation();
+        SWCoord location = new CoreSWCoord(loc.getWorld() != null ? skywars.getUtils().getSWWorld(loc.getWorld().getName()) : null,
+                loc.getX(), loc.getY(), loc.getZ());
+
+        SWEntitySpawnEvent swEvent = new CoreSWEntitySpawnEvent(entity, location);
+        skywars.getEventManager().callEvent(swEvent);
+
+        if (swEvent.isCancelled()) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent e) {
+        SWEntity projectile = skywars.getEntityManager().getEntityByUUID(e.getEntity().getUniqueId());
+        SWEntity hitEntity = e.getHitEntity() != null ? skywars.getEntityManager().getEntityByUUID(e.getHitEntity().getUniqueId()) : null;
+
+        SWBlock hitBlock = e.getHitBlock() != null ? new BukkitSWBlock(skywars, e.getHitBlock()) : null;
+
+        SWProjectileHitEvent swEvent = new CoreProjectileHitEvent(projectile, hitEntity, hitBlock);
+        skywars.getEventManager().callEvent(swEvent);
+
+        if (swEvent.isCancelled()) {
+            e.setCancelled(true);
+        }
     }
 
     // Utils

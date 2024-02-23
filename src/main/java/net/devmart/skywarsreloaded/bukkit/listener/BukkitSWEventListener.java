@@ -8,6 +8,7 @@ import net.devmart.skywarsreloaded.api.wrapper.Item;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWDroppedItem;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWEntity;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
+import net.devmart.skywarsreloaded.api.wrapper.entity.SWProjectile;
 import net.devmart.skywarsreloaded.api.wrapper.event.*;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
@@ -395,7 +396,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
         SWBlock hitBlock = e.getHitBlock() != null ? new BukkitSWBlock(skywars, e.getHitBlock()) : null;
 
-        SWProjectileHitEvent swEvent = new CoreProjectileHitEvent(projectile, hitEntity, hitBlock);
+        SWProjectileHitEvent swEvent = new CoreProjectileHitEvent((SWProjectile) projectile, hitEntity, hitBlock);
         skywars.getEventManager().callEvent(swEvent);
 
         if (swEvent.isCancelled()) {

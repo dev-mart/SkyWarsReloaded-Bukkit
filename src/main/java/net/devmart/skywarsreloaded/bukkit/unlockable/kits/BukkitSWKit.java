@@ -1,9 +1,9 @@
-package net.devmart.skywarsreloaded.bukkit.game.kits;
+package net.devmart.skywarsreloaded.bukkit.unlockable.kits;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.bukkit.utils.BukkitEffect;
-import net.devmart.skywarsreloaded.core.game.kits.AbstractSWKit;
+import net.devmart.skywarsreloaded.core.unlockable.kits.AbstractSWKit;
 
 import java.util.HashSet;
 import java.util.Set;

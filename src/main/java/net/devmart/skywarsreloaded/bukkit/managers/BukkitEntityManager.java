@@ -6,6 +6,7 @@ import net.devmart.skywarsreloaded.api.wrapper.entity.SWEntity;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWEntity;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWOwnedEntity;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWProjectile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 
@@ -27,14 +28,7 @@ public class BukkitEntityManager implements EntityManager {
         if (entity.getType() == EntityType.PLAYER) {
             return skywars.getPlayerManager().getPlayerByUUID(uuid);
         } else if (entity instanceof Projectile) {
-            Projectile projectile = (Projectile) entity;
-
-            SWPlayer owner = null;
-            if (projectile.getShooter() instanceof Player) {
-                owner = skywars.getPlayerManager().getPlayerByUUID(((Player) projectile.getShooter()).getUniqueId());
-            }
-
-            return new BukkitSWOwnedEntity(skywars, entity, owner);
+            return new BukkitSWProjectile(skywars,  (Projectile) entity);
         } else if (entity instanceof TNTPrimed) {
             TNTPrimed tnt = (TNTPrimed) entity;
 

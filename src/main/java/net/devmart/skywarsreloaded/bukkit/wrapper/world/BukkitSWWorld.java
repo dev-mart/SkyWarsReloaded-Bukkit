@@ -154,7 +154,7 @@ public class BukkitSWWorld extends AbstractSWWorld {
                 location.xPrecise(), location.yPrecise(), location.zPrecise(),
                 particleEffect.getCount(),
                 particleEffect.getOffsetX(), particleEffect.getOffsetY(), particleEffect.getOffsetZ(),
-                particleEffect.getData()
+                particleEffect.getFormattedData()
         );
     }
 

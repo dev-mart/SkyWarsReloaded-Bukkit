@@ -1,9 +1,9 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.world.block;
 
-import net.devmart.skywarsreloaded.api.utils.Item;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
 import net.devmart.skywarsreloaded.api.wrapper.world.block.SWChest;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 

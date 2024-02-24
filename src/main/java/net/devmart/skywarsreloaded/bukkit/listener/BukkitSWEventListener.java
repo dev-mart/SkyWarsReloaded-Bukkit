@@ -3,20 +3,24 @@ package net.devmart.skywarsreloaded.bukkit.listener;
 import net.devmart.skywarsreloaded.api.enums.DeathCause;
 import net.devmart.skywarsreloaded.api.gui.handlers.SWGuiClickHandler;
 import net.devmart.skywarsreloaded.api.listener.PlatformSWEventListener;
-import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWDroppedItem;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWEntity;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
+import net.devmart.skywarsreloaded.api.wrapper.entity.SWProjectile;
 import net.devmart.skywarsreloaded.api.wrapper.event.*;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
+import net.devmart.skywarsreloaded.api.wrapper.world.block.SWBlock;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
+import net.devmart.skywarsreloaded.bukkit.managers.BukkitEntityManager;
 import net.devmart.skywarsreloaded.bukkit.managers.BukkitInventoryManager;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWDroppedItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.event.BukkitSWPlayerFoodLevelChangeEvent;
 import net.devmart.skywarsreloaded.bukkit.wrapper.server.BukkitSWInventory;
+import net.devmart.skywarsreloaded.bukkit.wrapper.world.block.BukkitSWBlock;
 import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
 import net.devmart.skywarsreloaded.core.wrapper.event.*;
 import org.bukkit.Location;
@@ -240,7 +244,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         // Get data
-        SWEntity entity = skywars.getEntityManager().getEntityByUUID(event.getEntity().getUniqueId());
+        SWEntity entity = ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(event.getEntity());
         DeathCause reason = DeathCause.fromString(event.getCause().name());
         double damage = event.getDamage();
         double finalDamage = event.getFinalDamage();
@@ -280,8 +284,8 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         // Get data
-        SWEntity entity = skywars.getEntityManager().getEntityByUUID(event.getEntity().getUniqueId());
-        SWEntity damager = skywars.getEntityManager().getEntityByUUID(event.getDamager().getUniqueId());
+        SWEntity entity = ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(event.getEntity());
+        SWEntity damager = ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(event.getDamager());
         DeathCause reason = DeathCause.fromString(event.getCause().name());
         double damage = event.getDamage();
         double finalDamage = event.getFinalDamage();
@@ -369,6 +373,36 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
         SWInventoryCloseEvent swEvent = new CoreSWInventoryCloseEvent(p, inv);
         skywars.getEventManager().callEvent(swEvent);
+    }
+
+    @EventHandler
+    public void onEntitySpawn(EntitySpawnEvent e) {
+        SWEntity entity = ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(e.getEntity());
+        Location loc = e.getEntity().getLocation();
+        SWCoord location = new CoreSWCoord(loc.getWorld() != null ? skywars.getUtils().getSWWorld(loc.getWorld().getName()) : null,
+                loc.getX(), loc.getY(), loc.getZ());
+
+        SWEntitySpawnEvent swEvent = new CoreSWEntitySpawnEvent(entity, location);
+        skywars.getEventManager().callEvent(swEvent);
+
+        if (swEvent.isCancelled()) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent e) {
+        SWEntity projectile = ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(e.getEntity());
+        SWEntity hitEntity = e.getHitEntity() != null ? ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(e.getHitEntity()) : null;
+
+        SWBlock hitBlock = e.getHitBlock() != null ? new BukkitSWBlock(skywars, e.getHitBlock()) : null;
+
+        SWProjectileHitEvent swEvent = new CoreProjectileHitEvent((SWProjectile) projectile, hitEntity, hitBlock);
+        skywars.getEventManager().callEvent(swEvent);
+
+        if (swEvent.isCancelled()) {
+            e.setCancelled(true);
+        }
     }
 
     // Utils

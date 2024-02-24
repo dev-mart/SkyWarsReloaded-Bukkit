@@ -3,14 +3,16 @@ package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 import net.devmart.skywarsreloaded.api.data.player.stats.SWPlayerData;
 import net.devmart.skywarsreloaded.api.hook.SWVaultHook;
 import net.devmart.skywarsreloaded.api.party.SWParty;
-import net.devmart.skywarsreloaded.api.utils.Effect;
-import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
+import net.devmart.skywarsreloaded.api.wrapper.ParticleEffect;
+import net.devmart.skywarsreloaded.api.wrapper.PotionEffect;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitEffect;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitParticleEffect;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitPotionEffect;
 import net.devmart.skywarsreloaded.bukkit.wrapper.server.BukkitSWInventory;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -365,11 +367,31 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     }
 
     @Override
-    public List<Effect> getPotionEffects() {
+    public List<PotionEffect> getPotionEffects() {
         if (this.player == null) throw new NullPointerException("Bukkit player is null");
         return this.player.getActivePotionEffects().stream()
-                .map(bukkitEffect -> new BukkitEffect(skywars, bukkitEffect))
+                .map(bukkitEffect -> new BukkitPotionEffect(skywars, bukkitEffect))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void spawnParticle(SWCoord location, ParticleEffect particleEffect) {
+        if (this.player == null) throw new NullPointerException("Bukkit player is null");
+
+        Particle bukkitParticle = ((BukkitParticleEffect) particleEffect).getBukkitParticle();
+        if (bukkitParticle == null) {
+            skywars.getLogger().error("Failed to apply particle effect to player because the effect is not valid.");
+            return;
+        }
+
+        player.spawnParticle(
+                bukkitParticle,
+                location.xPrecise(), location.yPrecise(), location.zPrecise(),
+                particleEffect.getCount(),
+                particleEffect.getOffsetX(), particleEffect.getOffsetY(), particleEffect.getOffsetZ(),
+                0,
+                particleEffect.getFormattedData()
+        );
     }
 
     @Override

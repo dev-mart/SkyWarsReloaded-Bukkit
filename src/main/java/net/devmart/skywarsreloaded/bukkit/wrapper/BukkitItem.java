@@ -1,12 +1,12 @@
-package net.devmart.skywarsreloaded.bukkit.utils;
+package net.devmart.skywarsreloaded.bukkit.wrapper;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.hook.SWHeadDatabaseHook;
-import net.devmart.skywarsreloaded.api.utils.Item;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloadedPlugin;
 import net.devmart.skywarsreloaded.bukkit.wrapper.item.BukkitSWEnchantmentType;
-import net.devmart.skywarsreloaded.core.utils.AbstractItem;
+import net.devmart.skywarsreloaded.core.wrapper.AbstractItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;

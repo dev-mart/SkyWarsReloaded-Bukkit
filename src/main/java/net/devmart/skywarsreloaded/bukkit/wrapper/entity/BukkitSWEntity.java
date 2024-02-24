@@ -154,4 +154,13 @@ public class BukkitSWEntity extends AbstractSWEntity {
         return entity == null ? null : this.entity.getType().name();
     }
 
+    @Override
+    public boolean isDead() {
+        return entity == null || this.entity.isDead();
+    }
+
+    @Override
+    public boolean isValid() {
+        return entity != null && entity.isValid();
+    }
 }

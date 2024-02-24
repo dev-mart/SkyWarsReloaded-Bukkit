@@ -3,8 +3,8 @@ package net.devmart.skywarsreloaded.bukkit.hook;
 import me.arcaniax.hdb.api.HeadDatabaseAPI;
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.hook.SWHeadDatabaseHook;
-import net.devmart.skywarsreloaded.api.utils.Item;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import net.devmart.skywarsreloaded.core.hook.AbstractSWHook;
 import org.bukkit.inventory.ItemStack;
 

@@ -386,7 +386,7 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
 
         player.spawnParticle(
                 bukkitParticle,
-                location.x(), location.y(), location.z(),
+                location.xPrecise(), location.yPrecise(), location.zPrecise(),
                 particleEffect.getCount(),
                 particleEffect.getOffsetX(), particleEffect.getOffsetY(), particleEffect.getOffsetZ(),
                 particleEffect.getData()

@@ -14,6 +14,7 @@ import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
 import net.devmart.skywarsreloaded.api.wrapper.world.block.SWBlock;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
+import net.devmart.skywarsreloaded.bukkit.managers.BukkitEntityManager;
 import net.devmart.skywarsreloaded.bukkit.managers.BukkitInventoryManager;
 import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWDroppedItem;
@@ -376,7 +377,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent e) {
-        SWEntity entity = skywars.getEntityManager().getEntityByUUID(e.getEntity().getUniqueId());
+        SWEntity entity = ((BukkitEntityManager) skywars.getEntityManager()).getEntityByBukkitEntity(e.getEntity());
         Location loc = e.getEntity().getLocation();
         SWCoord location = new CoreSWCoord(loc.getWorld() != null ? skywars.getUtils().getSWWorld(loc.getWorld().getName()) : null,
                 loc.getX(), loc.getY(), loc.getZ());

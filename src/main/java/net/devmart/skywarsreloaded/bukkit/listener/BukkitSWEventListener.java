@@ -244,7 +244,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         // Get data
-        SWEntity entity = skywars.getEntityManager().getEntityByUUID(event.getEntity().getUniqueId());
+        SWEntity entity = ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(event.getEntity());
         DeathCause reason = DeathCause.fromString(event.getCause().name());
         double damage = event.getDamage();
         double finalDamage = event.getFinalDamage();
@@ -284,8 +284,8 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         // Get data
-        SWEntity entity = skywars.getEntityManager().getEntityByUUID(event.getEntity().getUniqueId());
-        SWEntity damager = skywars.getEntityManager().getEntityByUUID(event.getDamager().getUniqueId());
+        SWEntity entity = ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(event.getEntity());
+        SWEntity damager = ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(event.getDamager());
         DeathCause reason = DeathCause.fromString(event.getCause().name());
         double damage = event.getDamage();
         double finalDamage = event.getFinalDamage();
@@ -377,7 +377,7 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
     @EventHandler
     public void onEntitySpawn(EntitySpawnEvent e) {
-        SWEntity entity = ((BukkitEntityManager) skywars.getEntityManager()).getEntityByBukkitEntity(e.getEntity());
+        SWEntity entity = ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(e.getEntity());
         Location loc = e.getEntity().getLocation();
         SWCoord location = new CoreSWCoord(loc.getWorld() != null ? skywars.getUtils().getSWWorld(loc.getWorld().getName()) : null,
                 loc.getX(), loc.getY(), loc.getZ());
@@ -392,8 +392,8 @@ public class BukkitSWEventListener implements Listener, PlatformSWEventListener 
 
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent e) {
-        SWEntity projectile = skywars.getEntityManager().getEntityByUUID(e.getEntity().getUniqueId());
-        SWEntity hitEntity = e.getHitEntity() != null ? skywars.getEntityManager().getEntityByUUID(e.getHitEntity().getUniqueId()) : null;
+        SWEntity projectile = ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(e.getEntity());
+        SWEntity hitEntity = e.getHitEntity() != null ? ((BukkitEntityManager) skywars.getEntityManager()).getByBukkitEntity(e.getHitEntity()) : null;
 
         SWBlock hitBlock = e.getHitBlock() != null ? new BukkitSWBlock(skywars, e.getHitBlock()) : null;
 

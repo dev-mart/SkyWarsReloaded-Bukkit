@@ -25,15 +25,14 @@ public class BukkitEntityManager implements EntityManager {
         Entity entity = Bukkit.getEntity(uuid);
         if (entity == null) return null;
 
-        return this.getEntityByBukkitEntity(entity);
+        return this.getByBukkitEntity(entity);
     }
 
-    public SWEntity getEntityByBukkitEntity(Entity entity) {
-        skywars.getLogger().info("Getting entity for type: " + entity.getType());
+    public SWEntity getByBukkitEntity(Entity entity) {
         if (entity.getType() == EntityType.PLAYER) {
             return skywars.getPlayerManager().getPlayerByUUID(entity.getUniqueId());
         } else if (entity instanceof Projectile) {
-            return new BukkitSWProjectile(skywars,  (Projectile) entity);
+            return new BukkitSWProjectile(skywars, (Projectile) entity);
         } else if (entity instanceof TNTPrimed) {
             TNTPrimed tnt = (TNTPrimed) entity;
 

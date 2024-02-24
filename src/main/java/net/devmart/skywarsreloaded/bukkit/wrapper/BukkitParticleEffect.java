@@ -101,11 +101,7 @@ public class BukkitParticleEffect extends AbstractParticleEffect {
             }
         }
 
-        try {
-            return Float.parseFloat(this.getRawData()[0]);
-        } catch (Exception ignored) {
-            return 0f;
-        }
+        return null;
     }
 
     protected int[] getRGB(String hexColor) {

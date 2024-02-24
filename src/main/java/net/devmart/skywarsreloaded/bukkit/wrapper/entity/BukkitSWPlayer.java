@@ -389,6 +389,7 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
                 location.xPrecise(), location.yPrecise(), location.zPrecise(),
                 particleEffect.getCount(),
                 particleEffect.getOffsetX(), particleEffect.getOffsetY(), particleEffect.getOffsetZ(),
+                0,
                 particleEffect.getFormattedData()
         );
     }

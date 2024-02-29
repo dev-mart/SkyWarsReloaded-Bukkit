@@ -2,7 +2,7 @@ package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWDroppedItem;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import org.bukkit.entity.Item;
 
 import java.util.UUID;
@@ -17,12 +17,12 @@ public class BukkitSWDroppedItem extends BukkitSWEntity implements SWDroppedItem
     }
 
     @Override
-    public net.devmart.skywarsreloaded.api.utils.Item getItem() {
+    public net.devmart.skywarsreloaded.api.wrapper.Item getItem() {
         return new BukkitItem(skywars, item.getItemStack());
     }
 
     @Override
-    public void setItem(net.devmart.skywarsreloaded.api.utils.Item newItem) {
+    public void setItem(net.devmart.skywarsreloaded.api.wrapper.Item newItem) {
         item.setItemStack(((BukkitItem) newItem).getBukkitItem());
     }
 

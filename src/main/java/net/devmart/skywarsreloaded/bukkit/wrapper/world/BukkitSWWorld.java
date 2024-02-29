@@ -1,17 +1,22 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.world;
 
-import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
+import net.devmart.skywarsreloaded.api.wrapper.ParticleEffect;
+import net.devmart.skywarsreloaded.api.wrapper.entity.SWDroppedItem;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.world.block.SWBlock;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitParticleEffect;
+import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWDroppedItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.block.BukkitSWBlock;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.block.BukkitSWChest;
 import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
 import net.devmart.skywarsreloaded.core.wrapper.world.AbstractSWWorld;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -102,7 +107,65 @@ public class BukkitSWWorld extends AbstractSWWorld {
         this.bukkitWorld.setKeepSpawnInMemory(keepSpawnLoaded);
     }
 
+    @Override
+    public long getTime() {
+        return bukkitWorld.getTime();
+    }
+
+    @Override
+    public void setTime(long time) {
+        bukkitWorld.setTime(time);
+    }
+
+    @Override
+    public void setRaining(boolean raining) {
+        bukkitWorld.setStorm(raining);
+    }
+
+    @Override
+    public boolean isRaining() {
+        return bukkitWorld.hasStorm();
+    }
+
+    @Override
+    public void setThundering(boolean thunder) {
+        bukkitWorld.setThundering(thunder);
+    }
+
+    @Override
+    public SWDroppedItem dropItemNaturally(SWCoord location, Item item) {
+        if (item == null) return null;
+        return new BukkitSWDroppedItem(skywars, bukkitWorld.dropItemNaturally(
+                new Location(bukkitWorld, location.xPrecise(), location.yPrecise(), location.zPrecise()),
+                ((BukkitItem) item).getBukkitItem())
+        );
+    }
+
+    @Override
+    public void spawnParticle(SWCoord location, ParticleEffect particleEffect) {
+       Particle bukkitParticle = ((BukkitParticleEffect) particleEffect).getBukkitParticle();
+        if (bukkitParticle == null) {
+            skywars.getLogger().error("Failed to apply particle effect to the world because the effect is not valid.");
+            return;
+        }
+
+        getBukkitWorld().spawnParticle(
+                bukkitParticle,
+                location.xPrecise(), location.yPrecise(), location.zPrecise(),
+                particleEffect.getCount(),
+                particleEffect.getOffsetX(), particleEffect.getOffsetY(), particleEffect.getOffsetZ(),
+                0,
+                particleEffect.getFormattedData()
+        );
+    }
+
+    @Override
+    public boolean isThundering() {
+        return bukkitWorld.isThundering();
+    }
+
     public World getBukkitWorld() {
         return bukkitWorld;
     }
+
 }

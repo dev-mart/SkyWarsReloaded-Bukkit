@@ -1,16 +1,18 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.entity;
 
 import net.devmart.skywarsreloaded.api.data.player.stats.SWPlayerData;
-import net.devmart.skywarsreloaded.api.game.gameinstance.GameInstance;
-import net.devmart.skywarsreloaded.api.game.types.GameState;
 import net.devmart.skywarsreloaded.api.hook.SWVaultHook;
 import net.devmart.skywarsreloaded.api.party.SWParty;
-import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
+import net.devmart.skywarsreloaded.api.wrapper.ParticleEffect;
+import net.devmart.skywarsreloaded.api.wrapper.PotionEffect;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitParticleEffect;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitPotionEffect;
 import net.devmart.skywarsreloaded.bukkit.wrapper.server.BukkitSWInventory;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -18,9 +20,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
 
@@ -32,13 +36,11 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     private final AtomicBoolean frozen;
 
     private SWPlayerData playerData;
-    private GameInstance gameWorld;
     private SWParty party;
 
     public BukkitSWPlayer(BukkitSkyWarsReloaded skywars, UUID uuid, boolean online) {
         super(skywars, uuid);
         this.online = new AtomicBoolean(online);
-        this.gameWorld = null;
         this.frozen = new AtomicBoolean(false);
         this.fetchParentPlayer();
     }
@@ -225,21 +227,6 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
     }
 
     @Override
-    public GameInstance getGameInstance() {
-        return this.gameWorld;
-    }
-
-    @Override
-    public boolean canJoinGame() {
-        return this.gameWorld == null || this.gameWorld.getState() != GameState.PLAYING;
-    }
-
-    @Override
-    public void setGameWorld(GameInstance world) {
-        this.gameWorld = world;
-    }
-
-    @Override
     public @Nullable SWParty getParty() {
         return this.party;
     }
@@ -377,6 +364,40 @@ public class BukkitSWPlayer extends BukkitSWEntity implements SWPlayer {
         } catch (Exception e) {
             skywars.getLogger().error("No potion effect type could be found with the name '" + value + "' when removing.");
         }
+    }
+
+    @Override
+    public List<PotionEffect> getPotionEffects() {
+        if (this.player == null) throw new NullPointerException("Bukkit player is null");
+        return this.player.getActivePotionEffects().stream()
+                .map(bukkitEffect -> new BukkitPotionEffect(skywars, bukkitEffect))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void spawnParticle(SWCoord location, ParticleEffect particleEffect) {
+        if (this.player == null) throw new NullPointerException("Bukkit player is null");
+
+        Particle bukkitParticle = ((BukkitParticleEffect) particleEffect).getBukkitParticle();
+        if (bukkitParticle == null) {
+            skywars.getLogger().error("Failed to apply particle effect to player because the effect is not valid.");
+            return;
+        }
+
+        player.spawnParticle(
+                bukkitParticle,
+                location.xPrecise(), location.yPrecise(), location.zPrecise(),
+                particleEffect.getCount(),
+                particleEffect.getOffsetX(), particleEffect.getOffsetY(), particleEffect.getOffsetZ(),
+                0,
+                particleEffect.getFormattedData()
+        );
+    }
+
+    @Override
+    public void clearPotionEffects() {
+        if (this.player == null) throw new NullPointerException("Bukkit player is null");
+        this.player.getActivePotionEffects().forEach(potionEffect -> this.player.removePotionEffect(potionEffect.getType()));
     }
 
     @Override

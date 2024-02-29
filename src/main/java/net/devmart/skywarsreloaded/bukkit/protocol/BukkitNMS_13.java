@@ -1,19 +1,18 @@
 package net.devmart.skywarsreloaded.bukkit.protocol;
 
-import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
 import net.devmart.skywarsreloaded.api.wrapper.item.SWEnchantmentType;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWGameRule;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.item.BukkitSWEnchantmentType;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +26,7 @@ public class BukkitNMS_13 extends BukkitNMS_12 {
     @Override
     public void initVersionedAPI() {
         // Versioned enums
-        voidBiome = Biome.valueOf("THE_VOID");
+        voidBiome = "THE_VOID";
     }
 
     @Override

@@ -1,8 +1,8 @@
 package net.devmart.skywarsreloaded.bukkit.protocol;
 
 import net.devmart.skywarsreloaded.api.protocol.NMS;
-import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.item.SWEnchantmentType;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWGameRule;
@@ -10,7 +10,7 @@ import net.devmart.skywarsreloaded.api.wrapper.world.SWChunk;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWChunkGenerator;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.bukkit.wrapper.item.BukkitSWEnchantmentType;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWChunkGenerator;
@@ -18,7 +18,6 @@ import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.generator.BlockPopulator;
@@ -54,7 +53,7 @@ public class BukkitNMS_8 implements NMS {
     protected Field playerConnection;
 
     // Versioned types
-    protected Biome voidBiome;
+    protected String voidBiome;
 
     public BukkitNMS_8(BukkitSkyWarsReloaded skywars, String serverPackage) {
         this.skywars = skywars;
@@ -98,7 +97,7 @@ public class BukkitNMS_8 implements NMS {
 
     public void initVersionedAPI() {
         // Versioned enums
-        voidBiome = Biome.valueOf("FOREST"); // VOID doesn't exist in 1.8 - 1.11
+        voidBiome = "FOREST"; // VOID doesn't exist in 1.8 - 1.11
     }
 
     @Override
@@ -210,6 +209,11 @@ public class BukkitNMS_8 implements NMS {
                     }
                 }
         );
+    }
+
+    @Override
+    public SWChunkGenerator getChunkGenerator(String biome) {
+        return this.getChunkGenerator();
     }
 
     @Override

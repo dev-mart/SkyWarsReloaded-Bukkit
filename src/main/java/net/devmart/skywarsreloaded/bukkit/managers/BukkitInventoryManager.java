@@ -21,11 +21,13 @@ public class BukkitInventoryManager implements SWInventoryManager {
 
     @Override
     public void registerInventory(SWInventory inventory) {
+        if (inventory == null) return;
         inventories.put(((BukkitSWInventory) inventory).getBukkitInventory(), inventory);
     }
 
     @Override
     public void unregisterInventory(SWInventory inventory) {
+        if (inventory == null) return;
         inventories.remove(((BukkitSWInventory) inventory).getBukkitInventory());
     }
 

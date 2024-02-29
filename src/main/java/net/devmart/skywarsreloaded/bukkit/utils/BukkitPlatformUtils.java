@@ -3,9 +3,13 @@ package net.devmart.skywarsreloaded.bukkit.utils;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.world.World;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.devmart.skywarsreloaded.api.wrapper.ParticleEffect;
+import net.devmart.skywarsreloaded.api.wrapper.PotionEffect;
 import net.devmart.skywarsreloaded.api.wrapper.sender.SWCommandSender;
 import net.devmart.skywarsreloaded.api.wrapper.world.SWWorld;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitParticleEffect;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitPotionEffect;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.core.utils.AbstractPlatformUtils;
 import org.bukkit.Bukkit;
@@ -45,6 +49,16 @@ public class BukkitPlatformUtils extends AbstractPlatformUtils {
     @Override
     public SWWorld getSWWorld(String worldName) {
         return skywars.getServer().getWorld(worldName);
+    }
+
+    @Override
+    public PotionEffect getEffect(String effect) {
+        return new BukkitPotionEffect(skywars, effect);
+    }
+
+    @Override
+    public ParticleEffect getParticleEffect(String effect) {
+        return new BukkitParticleEffect(skywars, effect);
     }
 
     @Override

@@ -5,7 +5,7 @@ import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWEntity;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
-import net.devmart.skywarsreloaded.core.manager.AbstractPlayerManager;
+import net.devmart.skywarsreloaded.core.manager.player.AbstractPlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

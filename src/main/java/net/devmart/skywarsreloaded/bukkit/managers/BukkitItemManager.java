@@ -2,8 +2,8 @@ package net.devmart.skywarsreloaded.bukkit.managers;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.manager.ItemManager;
-import net.devmart.skywarsreloaded.api.utils.Item;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 
 import java.awt.*;
 import java.util.List;
@@ -26,12 +26,12 @@ public class BukkitItemManager implements ItemManager {
 
         Set<String> groups = new HashSet<>();
         groups.addAll(skywars.getConfig().getKeys("items"));
-        groups.addAll(skywars.getMessages().getKeys("items"));
+        groups.addAll(skywars.getGeneralMessages().getKeys("items"));
 
         groups.forEach(itemGroup -> {
             Set<String> items = new HashSet<>();
             items.addAll(skywars.getConfig().getKeys("items." + itemGroup));
-            items.addAll(skywars.getMessages().getKeys("items." + itemGroup));
+            items.addAll(skywars.getGeneralMessages().getKeys("items." + itemGroup));
 
             items.forEach(itemId -> {
                 String fullPath = "items." + itemGroup + "." + itemId;
@@ -128,7 +128,7 @@ public class BukkitItemManager implements ItemManager {
 
         final Item item = skywars.getConfig().getItem(path);
         if (item != null) {
-            item.withMessages(skywars.getMessages().getItem(path));
+            item.withMessages(skywars.getItemMessages().getItem(path));
         }
         return item;
     }

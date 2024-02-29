@@ -3,12 +3,12 @@ package net.devmart.skywarsreloaded.bukkit.data.config;
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
 import net.devmart.skywarsreloaded.api.data.player.stats.PlayerStat;
 import net.devmart.skywarsreloaded.api.unlockable.Unlockable;
-import net.devmart.skywarsreloaded.api.utils.Item;
 import net.devmart.skywarsreloaded.api.utils.Message;
 import net.devmart.skywarsreloaded.api.utils.SWCoord;
 import net.devmart.skywarsreloaded.api.utils.SWLogger;
 import net.devmart.skywarsreloaded.api.utils.properties.UnlockableProperties;
-import net.devmart.skywarsreloaded.bukkit.utils.BukkitItem;
+import net.devmart.skywarsreloaded.api.wrapper.Item;
+import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
 import net.devmart.skywarsreloaded.core.data.config.AbstractYAMLConfig;
 import net.devmart.skywarsreloaded.core.utils.CoreMessage;
 import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
@@ -469,6 +469,12 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
         if (!contains(property)) return;
         ConfigurationSection section = fileConfiguration.getConfigurationSection(property);
         if (section == null) return;
+
+        unlockable.setDisplayName(section.getString(UnlockableProperties.DISPLAY_NAME, id));
+        unlockable.setIcon(this.getItem(property + "." + UnlockableProperties.ICON));
+        unlockable.setUnavailableIcon(this.getItem(property + "." + UnlockableProperties.UNAVAILABLE_ICON));
+        unlockable.setDescription(section.getString(UnlockableProperties.DESCRIPTION, "SkyWarsReloaded Unlockable"));
+        unlockable.setLore(section.getStringList(UnlockableProperties.LORE));
 
         unlockable.setNeedPermission(section.getBoolean(UnlockableProperties.REQUIREMENTS_PERMISSION, false));
         unlockable.setCost(section.getInt(UnlockableProperties.REQUIREMENTS_COST, 0));

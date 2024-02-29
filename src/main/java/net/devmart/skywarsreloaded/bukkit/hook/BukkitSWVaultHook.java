@@ -1,6 +1,7 @@
-package net.devmart.skywarsreloaded.bukkit;
+package net.devmart.skywarsreloaded.bukkit.hook;
 
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
+import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.wrapper.server.BukkitSWServer;
 import net.devmart.skywarsreloaded.core.hook.AbstractSWVaultHook;
 import net.milkbowl.vault.economy.Economy;
@@ -18,7 +19,7 @@ public class BukkitSWVaultHook extends AbstractSWVaultHook {
 
     @Override
     public boolean setupEconomy() {
-        if (bukkitServer.isPluginEnabled("Vault")) {
+        if (!bukkitServer.isPluginEnabled("Vault")) {
             return false;
         }
         RegisteredServiceProvider<Economy> rsp = bukkitServer.getBukkitServer().getServicesManager().getRegistration(Economy.class);

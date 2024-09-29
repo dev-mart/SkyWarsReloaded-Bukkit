@@ -1,6 +1,7 @@
 package net.devmart.skywarsreloaded.bukkit.data.config;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
+import net.devmart.skywarsreloaded.api.data.config.YAMLConfig;
 import net.devmart.skywarsreloaded.api.data.player.stats.PlayerStat;
 import net.devmart.skywarsreloaded.api.unlockable.Unlockable;
 import net.devmart.skywarsreloaded.api.utils.Message;
@@ -26,7 +27,9 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     private final Object reloadLock = new Object();
     private FileConfiguration fileConfiguration;
-    private FileConfiguration defaultFileConfiguration;
+    private ConfigurationSection configSection;
+    private ConfigurationSection defaultConfigSection;
+    private boolean hasParent = false;
 
     public BukkitYAMLConfig(SkyWarsReloaded skywars, String id, File directory, String fileName) {
         super(skywars, id, directory, fileName);
@@ -52,40 +55,36 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
         this.onSetup();
     }
 
+    public BukkitYAMLConfig(BukkitYAMLConfig parent, ConfigurationSection section, ConfigurationSection defaultSection) {
+        super(parent.skywars, parent.id, parent.directory, parent.fileName, parent.defaultFilePath);
+        this.hasParent = true;
+        this.fileConfiguration = parent.fileConfiguration;
+        this.configSection = section;
+        this.defaultConfigSection = defaultSection;
+    }
+
     protected boolean onSetup() {
         synchronized (reloadLock) {
             this.fileConfiguration = YamlConfiguration.loadConfiguration(this.getFile());
+            this.configSection = this.fileConfiguration.getConfigurationSection("");
             BufferedReader defaultFileReader = this.getDefaultFileReader();
-            this.defaultFileConfiguration = YamlConfiguration.loadConfiguration(defaultFileReader);
+            this.defaultConfigSection = YamlConfiguration.loadConfiguration(defaultFileReader);
             return true;
         }
     }
 
-    protected boolean onDisable(boolean save) {
-        if (!save) return true;
-        try {
-            synchronized (reloadLock) {
-                this.fileConfiguration.save(this.getFile());
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    public FileConfiguration getFileConfiguration() {
-        return fileConfiguration;
+    public ConfigurationSection getConfigSection() {
+        return configSection;
     }
 
     @Override
     public String getString(String property) {
-        return getString(property, this.defaultFileConfiguration.getString(property, ""));
+        return getString(property, this.defaultConfigSection.getString(property, ""));
     }
 
     @Override
     public String getString(String property, String defaultValue) {
-        return fileConfiguration.getString(property, defaultValue);
+        return configSection.getString(property, defaultValue);
     }
 
     @Override
@@ -100,12 +99,12 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public int getInt(String property) {
-        return getInt(property, this.defaultFileConfiguration.getInt(property, 0));
+        return getInt(property, this.defaultConfigSection.getInt(property, 0));
     }
 
     @Override
     public int getInt(String property, int defaultValue) {
-        return fileConfiguration.getInt(property, defaultValue);
+        return configSection.getInt(property, defaultValue);
     }
 
     @Override
@@ -120,12 +119,12 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public double getDouble(String property) {
-        return getDouble(property, this.defaultFileConfiguration.getDouble(property, 0));
+        return getDouble(property, this.defaultConfigSection.getDouble(property, 0));
     }
 
     @Override
     public double getDouble(String property, double defaultValue) {
-        return fileConfiguration.getDouble(property, defaultValue);
+        return configSection.getDouble(property, defaultValue);
     }
 
     @Override
@@ -140,7 +139,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public List<String> getStringList(String property) {
-        return fileConfiguration.getStringList(property);
+        return configSection.getStringList(property);
     }
 
     @Override
@@ -150,12 +149,12 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public List<?> getList(String property) {
-        return getList(property, this.defaultFileConfiguration.getList(property, null));
+        return getList(property, this.defaultConfigSection.getList(property, null));
     }
 
     @Override
     public List<?> getList(String property, List<?> defaultValue) {
-        return fileConfiguration.getList(property, defaultValue);
+        return configSection.getList(property, defaultValue);
     }
 
     @Override
@@ -170,7 +169,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public List<Map<?, ?>> getMapList(String property) {
-        return fileConfiguration.getMapList(property);
+        return configSection.getMapList(property);
     }
 
     @Override
@@ -221,12 +220,12 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public boolean getBoolean(String property) {
-        return getBoolean(property, this.defaultFileConfiguration.getBoolean(property, false));
+        return getBoolean(property, this.defaultConfigSection.getBoolean(property, false));
     }
 
     @Override
     public boolean getBoolean(String property, boolean defaultValue) {
-        return fileConfiguration.getBoolean(property, defaultValue);
+        return configSection.getBoolean(property, defaultValue);
     }
 
     @Override
@@ -241,12 +240,12 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public Object get(String property) {
-        return get(property, this.defaultFileConfiguration.get(property, null));
+        return get(property, this.defaultConfigSection.get(property, null));
     }
 
     @Override
     public Object get(String property, Object defaultValue) {
-        return fileConfiguration.get(property, defaultValue);
+        return configSection.get(property, defaultValue);
     }
 
     @Override
@@ -263,21 +262,21 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     public void set(String property, Object value) {
         if (value instanceof BukkitItem) {
             BukkitItem item = (BukkitItem) value;
-            fileConfiguration.set(property + ".material", item.getMaterial());
-            if (item.getAmount() != 1) fileConfiguration.set(property + ".amount", item.getAmount());
-            if (item.getDamage() > 0) fileConfiguration.set(property + ".damage", item.getDamage());
-            if (item.getDurability() > 0) fileConfiguration.set(property + ".durability", item.getDurability());
+            configSection.set(property + ".material", item.getMaterial());
+            if (item.getAmount() != 1) configSection.set(property + ".amount", item.getAmount());
+            if (item.getDamage() > 0) configSection.set(property + ".damage", item.getDamage());
+            if (item.getDurability() > 0) configSection.set(property + ".durability", item.getDurability());
             if (item.getDisplayName() != null && !item.getDisplayName().isEmpty())
-                fileConfiguration.set(property + ".display-name", item.getDisplayName());
-            if (item.getLore() != null && !item.getLore().isEmpty()) fileConfiguration.set(property + ".lore", item.getLore());
+                configSection.set(property + ".display-name", item.getDisplayName());
+            if (item.getLore() != null && !item.getLore().isEmpty()) configSection.set(property + ".lore", item.getLore());
             if (!item.getEnchantments().isEmpty())
-                fileConfiguration.set(property + ".enchantments", item.getEnchantments());
-            if (!item.getItemFlags().isEmpty()) fileConfiguration.set(property + ".item-flags", item.getItemFlags());
-            if (item.getSkullOwner() != null) fileConfiguration.set(property + ".owner", item.getSkullOwner());
+                configSection.set(property + ".enchantments", item.getEnchantments());
+            if (!item.getItemFlags().isEmpty()) configSection.set(property + ".item-flags", item.getItemFlags());
+            if (item.getSkullOwner() != null) configSection.set(property + ".owner", item.getSkullOwner());
             if (item.getColor() != null)
-                fileConfiguration.set(property + ".color", "#" + Integer.toHexString(item.getColor().getRGB()).substring(2));
+                configSection.set(property + ".color", "#" + Integer.toHexString(item.getColor().getRGB()).substring(2));
         } else {
-            fileConfiguration.set(property, value);
+            configSection.set(property, value);
         }
     }
 
@@ -288,7 +287,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public boolean isSet(String property) {
-        return fileConfiguration.isSet(property);
+        return configSection.isSet(property);
     }
 
     @Override
@@ -298,7 +297,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public boolean contains(String property) {
-        return fileConfiguration.contains(property) || defaultFileConfiguration.contains(property);
+        return configSection.contains(property) || defaultConfigSection.contains(property);
     }
 
     @Override
@@ -308,7 +307,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public Set<String> getKeys(String property) {
-        final ConfigurationSection sect = fileConfiguration.getConfigurationSection(property);
+        final ConfigurationSection sect = configSection.getConfigurationSection(property);
         if (sect == null) return new HashSet<>();
         return sect.getKeys(false);
     }
@@ -320,13 +319,13 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
 
     @Override
     public Map<String, Object> getValues(String property, boolean deep) {
-        ConfigurationSection section = defaultFileConfiguration.getConfigurationSection(property);
+        ConfigurationSection section = defaultConfigSection.getConfigurationSection(property);
         return getValues(property, deep, section == null ? new HashMap<>() : section.getValues(true));
     }
 
     @Override
     public Map<String, Object> getValues(String property, boolean deep, Map<String, Object> defaultValue) {
-        ConfigurationSection section = fileConfiguration.getConfigurationSection(property);
+        ConfigurationSection section = configSection.getConfigurationSection(property);
         if (section == null) return defaultValue;
 
         return section.getValues(true);
@@ -367,7 +366,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
         }
 
         try {
-            return new CoreSWCoord(skywars, fileConfiguration.getString(property));
+            return new CoreSWCoord(skywars, configSection.getString(property));
         } catch (Exception e) {
             skywars.getLogger().error("Failed to load Coord '" + property + "'. " + e.getClass().getName() + ": " + e.getLocalizedMessage());
             return def;
@@ -393,7 +392,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     public Message getMessage(String property) {
         Object res = get(property, null);
         if (res == null) {
-            res = this.defaultFileConfiguration.get(property, null);
+            res = this.defaultConfigSection.get(property, null);
         }
 
         // Auto report if still null, the default config should catch this
@@ -467,7 +466,7 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     @Override
     public void loadUnlockableData(Unlockable unlockable, String property) {
         if (!contains(property)) return;
-        ConfigurationSection section = fileConfiguration.getConfigurationSection(property);
+        ConfigurationSection section = configSection.getConfigurationSection(property);
         if (section == null) return;
 
         unlockable.setDisplayName(section.getString(UnlockableProperties.DISPLAY_NAME, id));
@@ -502,8 +501,29 @@ public class BukkitYAMLConfig extends AbstractYAMLConfig {
     }
 
     @Override
+    public YAMLConfig getSection(String path) {
+        ConfigurationSection configurationSection = configSection.getConfigurationSection(path);
+        ConfigurationSection defaultSection = defaultConfigSection.getConfigurationSection(path);
+
+        if (configurationSection == null) {
+            configurationSection = new YamlConfiguration().createSection(path);
+        }
+        if (defaultSection == null) {
+            defaultSection = new YamlConfiguration().createSection(path);
+        }
+
+        return new BukkitYAMLConfig(this, configurationSection, defaultSection);
+    }
+
+    @Override
     public void save() {
+        if (hasParent || fileConfiguration == null) {
+            skywars.getLogger().error("Cannot save configuration file %s as it is likely a section of a parent configuration file.", getFileName());
+            return;
+        }
+
         try {
+
             fileConfiguration.save(getFile());
         } catch (IOException e) {
             skywars.getLogger().error("SkyWarsReloaded failed to save the YAML file called '" + getFileName() + "'.");

@@ -380,4 +380,10 @@ public class BukkitItem extends AbstractItem implements ConfigurationSerializabl
         return new BukkitItem(plugin.getSkywars(), ItemStack.deserialize(map));
     }
 
+    @Override
+    public String toString() {
+        return "BukkitItem{" +
+                "itemStack=" + itemStack +
+                '}';
+    }
 }

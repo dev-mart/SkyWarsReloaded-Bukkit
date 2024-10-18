@@ -33,24 +33,40 @@ public class BukkitSWVaultHook extends AbstractSWVaultHook {
 
     @Override
     public double getBalance(SWPlayer player) {
+        if (economy == null) {
+            return 0;
+        }
+
         final OfflinePlayer offlinePlayer = bukkitServer.getOfflinePlayer(player);
         return economy.getBalance(offlinePlayer);
     }
 
     @Override
     public boolean hasBalance(SWPlayer player, double amount) {
+        if (economy == null) {
+            return false;
+        }
+
         final OfflinePlayer offlinePlayer = bukkitServer.getOfflinePlayer(player);
         return economy.has(offlinePlayer, amount);
     }
 
     @Override
     public boolean withdraw(SWPlayer player, double amount) {
+        if (economy == null) {
+            return false;
+        }
+
         final OfflinePlayer offlinePlayer = bukkitServer.getOfflinePlayer(player);
         return economy.withdrawPlayer(offlinePlayer, amount).transactionSuccess();
     }
 
     @Override
     public boolean deposit(SWPlayer player, double amount) {
+        if (economy == null) {
+            return false;
+        }
+
         final OfflinePlayer offlinePlayer = bukkitServer.getOfflinePlayer(player);
         return economy.depositPlayer(offlinePlayer, amount).transactionSuccess();
     }

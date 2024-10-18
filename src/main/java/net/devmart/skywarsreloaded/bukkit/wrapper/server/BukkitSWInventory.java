@@ -1,11 +1,14 @@
 package net.devmart.skywarsreloaded.bukkit.wrapper.server;
 
 import net.devmart.skywarsreloaded.api.SkyWarsReloaded;
+import net.devmart.skywarsreloaded.api.utils.SWCoord;
 import net.devmart.skywarsreloaded.api.wrapper.Item;
 import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.api.wrapper.server.SWInventory;
 import net.devmart.skywarsreloaded.bukkit.wrapper.BukkitItem;
+import net.devmart.skywarsreloaded.core.utils.CoreSWCoord;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -136,5 +139,20 @@ public class BukkitSWInventory implements SWInventory {
     @Override
     public int first(Item item) {
         return inventory.first(((BukkitItem) item).getBukkitItem());
+    }
+
+    @Override
+    public SWCoord getLocation() {
+        if (inventory == null || inventory.getLocation() == null) {
+            return null;
+        }
+
+        Location loc = inventory.getLocation();
+        return new CoreSWCoord(
+                loc.getWorld() != null ? skywars.getServer().getWorld(loc.getWorld().getName()) : null,
+                loc.getBlockX(),
+                loc.getBlockY(),
+                loc.getBlockZ()
+        );
     }
 }

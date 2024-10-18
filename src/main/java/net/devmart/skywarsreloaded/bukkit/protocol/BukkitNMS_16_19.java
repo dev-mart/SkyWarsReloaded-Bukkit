@@ -5,6 +5,8 @@ import net.devmart.skywarsreloaded.api.wrapper.entity.SWPlayer;
 import net.devmart.skywarsreloaded.bukkit.BukkitSkyWarsReloaded;
 import net.devmart.skywarsreloaded.bukkit.wrapper.entity.BukkitSWPlayer;
 import net.devmart.skywarsreloaded.bukkit.wrapper.world.BukkitSWWorld;
+import org.bukkit.Instrument;
+import org.bukkit.Note;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -55,8 +57,10 @@ public class BukkitNMS_16_19 extends BukkitNMS_14_15 {
 
         Block block = world.getBlockAt(loc.x(), loc.y(), loc.z());
         Chest chest = (Chest) block.getState();
+
         if (open) chest.open();
         else chest.close();
+        chest.update(true, true);
     }
 
     @Override
